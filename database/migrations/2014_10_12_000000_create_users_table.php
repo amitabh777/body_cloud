@@ -13,15 +13,25 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->integerIncrements('UserID')->unsigned();
+                $table->string('UniqueID',20)->unique()->comment('pattern string');
+                $table->unsignedInteger('ParentID')->nullable()->comment('parent user id, in case of staff user');
+                $table->string('Email',150)->unique();
+                $table->string('Phone',15)->unique();
+                $table->string('Password',250);
+                $table->string('Address',350)->nullable();
+                $table->enum('Status',['Active','Inactive'])->default('Inactive');
+                $table->string('DeviceType',30)->nullable();
+                $table->string('DeviceToken',50)->nullable();
+                $table->smallInteger('Otp')->unsigned()->nullable();
+                $table->timestamp('email_verified_at')->nullable();                
+                $table->rememberToken();
+                $table->timestamp('CreatedAt')->nullable();
+                $table->timestamp('UpdatedAt')->nullable();
+            });
+        }
     }
 
     /**
