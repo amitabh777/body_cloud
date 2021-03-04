@@ -1,8 +1,9 @@
 <?php
 
-namespace App\models;
+namespace Modules\User\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 class Role extends Model
 {
@@ -16,4 +17,9 @@ class Role extends Model
     ];
 
     protected $primaryKey = 'RoleID';
+
+    public function scopePatient($query){
+        return $query->where('RoleSlug', 'patient');
+    }    
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\models;
+namespace Modules\User\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +16,10 @@ class UserRole extends Model
     ];
 
     protected $primaryKey = 'UserRoleID';
+    protected $with = ['roleInfo'];
+
+    public function roleInfo(){
+        return $this->hasOne(Role::class,'RoleID','RoleID');
+    }
+  
 }

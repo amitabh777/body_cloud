@@ -13,13 +13,12 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('Roles')) {
-            Schema::create('Roles', function (Blueprint $table) {
+        if (!Schema::hasTable('roles')) {
+            Schema::create('roles', function (Blueprint $table) {
                 $table->integerIncrements('RoleID')->unsigned();
                 $table->string('RoleName', 50);
                 $table->string('RoleSlug',50);
                 $table->unsignedInteger('ParentRoleID')->nullable()->comment('parent role');
-                // $table->timestamps();
                 $table->timestamp('CreatedAt')->nullable();
                 $table->timestamp('UpdatedAt')->nullable();
             });
@@ -33,6 +32,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Roles');
+        Schema::dropIfExists('roles');
     }
 }

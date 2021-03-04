@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
@@ -25,7 +26,11 @@ class CreateUsersTable extends Migration
                 $table->enum('Status',['Active','Inactive'])->default('Inactive');
                 $table->string('DeviceType',30)->nullable();
                 $table->string('DeviceToken',50)->nullable();
-                $table->smallInteger('Otp')->unsigned()->nullable();
+                $table->mediumInteger('Otp')->unsigned()->nullable();
+                $table->string('api_token', 80)
+                        ->unique()
+                        ->nullable()
+                        ->default(null);
                 $table->timestamp('email_verified_at')->nullable();                
                 $table->rememberToken();
                 $table->timestamp('CreatedAt')->nullable();
@@ -41,6 +46,8 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::dropIfExists('users');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

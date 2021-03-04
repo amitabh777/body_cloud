@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\User\Http\Controllers;
+namespace Modules\User\Http\Controllers\Api;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,12 +14,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = config('user.const.roles');
-        $roleData = [];
-        foreach($roles as $slug=>$role){
-            $roleData[] = array('RoleName'=>$role,'RoleSlug'=>$slug);
-        }
-print_r($roleData);
         return view('user::index');
     }
 
