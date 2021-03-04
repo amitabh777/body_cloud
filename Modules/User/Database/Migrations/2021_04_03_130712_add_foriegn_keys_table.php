@@ -13,11 +13,11 @@ class AddForiegnKeysTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('patients') && Schema::hasTable('blood_groups')) {
-            Schema::table('patients', function (Blueprint $table) {
+        if (Schema::hasTable('Patients') && Schema::hasTable('blood_groups')) {
+            Schema::table('Patients', function (Blueprint $table) {
                 $table->foreign('BloodGroupID')
                     ->references('BloodGroupID')
-                    ->on('blood_groups')
+                    ->on('BloodGroups')
                     ->onDelete('SET NULL');
             });
         }

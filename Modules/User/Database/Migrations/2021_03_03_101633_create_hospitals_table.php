@@ -13,7 +13,7 @@ class CreateHospitalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hospitals', function (Blueprint $table) {
+        Schema::create('Hospitals', function (Blueprint $table) {
             $table->integerIncrements('HospitalID')->unsigned();
             $table->unsignedInteger('UserID');
             $table->string('HospitalName',100);
@@ -42,6 +42,6 @@ class CreateHospitalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hospitals');
+        Schema::dropIfExists('Hospitals');
     }
 }

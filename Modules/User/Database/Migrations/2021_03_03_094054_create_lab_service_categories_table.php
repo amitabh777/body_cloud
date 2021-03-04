@@ -13,7 +13,7 @@ class CreateLabServiceCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('lab_service_categories', function (Blueprint $table) {
+        Schema::create('LabServiceCategories', function (Blueprint $table) {
             $table->integerIncrements('LabServiceCategoryID')->unsigned();
             $table->string('LabServiceCategoryName',100);
             $table->string('LabServiceCategoryDesc',200)->nullable();
@@ -30,6 +30,6 @@ class CreateLabServiceCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lab_service_categories');
+        Schema::dropIfExists('LabServiceCategories');
     }
 }

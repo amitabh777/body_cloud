@@ -19,7 +19,6 @@ class CreateRolesTable extends Migration
                 $table->string('RoleName', 50);
                 $table->string('RoleSlug',50);
                 $table->unsignedInteger('ParentRoleID')->nullable()->comment('parent role');
-                // $table->timestamps();
                 $table->timestamp('CreatedAt')->nullable();
                 $table->timestamp('UpdatedAt')->nullable();
             });

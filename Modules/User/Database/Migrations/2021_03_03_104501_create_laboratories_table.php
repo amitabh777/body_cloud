@@ -14,7 +14,7 @@ class CreateLaboratoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('laboratories', function (Blueprint $table) {
+        Schema::create('Laboratories', function (Blueprint $table) {
             $table->integerIncrements('LaboratoryID')->unsigned();
             $table->integer('UserID')->unsigned();
             $table->string('LaboratoryInfo');
@@ -43,7 +43,7 @@ class CreateLaboratoriesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('laboratories');
+        Schema::dropIfExists('Laboratories');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

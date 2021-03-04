@@ -14,8 +14,8 @@ class CreateAmbulancesTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('ambulances')) {
-            Schema::create('ambulances', function (Blueprint $table) {
+        if (!Schema::hasTable('Ambulances')) {
+            Schema::create('Ambulances', function (Blueprint $table) {
                 $table->integerIncrements('AmbulanceID')->unsigned();
                 $table->unsignedInteger('UserID');
                 $table->string('AmbulanceNumber', 30);
@@ -41,7 +41,7 @@ class CreateAmbulancesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('ambulances');
+        Schema::dropIfExists('Ambulances');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -10,7 +10,7 @@ class BloodGroup extends Model
     // use HasFactory;
     const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
-    protected $table = 'blood_groups';
+    protected $table = 'BloodGroups';
 
     protected $fillable = ['BloodGroupName','BloodGroupDesc','Status'];
     protected $primaryKey = 'BloodGroupID';

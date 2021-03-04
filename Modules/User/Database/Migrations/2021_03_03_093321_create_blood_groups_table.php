@@ -13,7 +13,7 @@ class CreateBloodGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('blood_groups', function (Blueprint $table) {
+        Schema::create('BloodGroups', function (Blueprint $table) {
             $table->integerIncrements('BloodGroupID')->unsigned();
             $table->string('BloodGroupName',30);
             $table->string('BloodGroupDesc',100);
@@ -30,6 +30,6 @@ class CreateBloodGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blood_groups');
+        Schema::dropIfExists('BloodGroups');
     }
 }

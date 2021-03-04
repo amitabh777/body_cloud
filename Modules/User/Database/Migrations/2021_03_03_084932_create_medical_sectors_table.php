@@ -13,8 +13,8 @@ class CreateMedicalSectorsTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('medical_sectors')) {
-            Schema::create('medical_sectors', function (Blueprint $table) {
+        if (!Schema::hasTable('MedicalSectors')) {
+            Schema::create('MedicalSectors', function (Blueprint $table) {
                 $table->integerIncrements('MedicalSectorID')->unsigned();
                 $table->string('MedicalSectorName', 100);
                 $table->string('MedicalSectorDesc', 200)->nullable();
@@ -32,6 +32,6 @@ class CreateMedicalSectorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('medical_sectors');
+        Schema::dropIfExists('MedicalSectors');
     }
 }

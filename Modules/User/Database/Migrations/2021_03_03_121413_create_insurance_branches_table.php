@@ -14,7 +14,7 @@ class CreateInsuranceBranchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('insurance_branches', function (Blueprint $table) {
+        Schema::create('InsuranceBranches', function (Blueprint $table) {
             $table->integerIncrements('InsuranceBranchID')->unsigned();
             $table->unsignedInteger('InsuranceCompanyID')->nullable();
             $table->string('InsuranceBranchName', 120);
@@ -23,7 +23,7 @@ class CreateInsuranceBranchesTable extends Migration
             $table->enum('Status', ['Active', 'Inactive'])->default('Active');
             $table->foreign('InsuranceCompanyID')
                 ->references('InsuranceCompanyID')
-                ->on('insurance_companies')->OnDelete('cascade');
+                ->on('InsuranceCompanies')->OnDelete('cascade');
                 $table->timestamp('CreatedAt')->nullable();
                 $table->timestamp('UpdatedAt')->nullable(); 
         });
@@ -37,7 +37,7 @@ class CreateInsuranceBranchesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('insurance_branches');
+        Schema::dropIfExists('InsuranceBranches');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

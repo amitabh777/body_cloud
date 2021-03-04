@@ -13,7 +13,7 @@ class CreateInsuranceCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('insurance_categories', function (Blueprint $table) {
+        Schema::create('InsuranceCategories', function (Blueprint $table) {
             $table->integerIncrements('InsuranceCategoryID')->unsigned();
             $table->string('InsuranceCategoryName',100);
             $table->string('InsuranceCategoryDesc',150)->nullable();
@@ -30,6 +30,6 @@ class CreateInsuranceCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('insurance_categories');
+        Schema::dropIfExists('InsuranceCategories');
     }
 }

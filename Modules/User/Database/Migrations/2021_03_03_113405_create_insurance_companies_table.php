@@ -14,8 +14,8 @@ class CreateInsuranceCompaniesTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('insurance_companies')){
-        Schema::create('insurance_companies', function (Blueprint $table) {
+        if(!Schema::hasTable('InsuranceCompanies')){
+        Schema::create('InsuranceCompanies', function (Blueprint $table) {
             $table->integerIncrements('InsuranceCompanyID')->unsigned();
             $table->integer('UserID')->unsigned();
             $table->string('InsuranceCompanyName',100);
@@ -43,7 +43,7 @@ class CreateInsuranceCompaniesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('insurance_companies');
+        Schema::dropIfExists('InsuranceCompanies');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

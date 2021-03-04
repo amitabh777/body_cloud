@@ -14,8 +14,8 @@ class CreateDoctorsTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('doctors')) {
-            Schema::create('doctors', function (Blueprint $table) {
+        if (!Schema::hasTable('Doctors')) {
+            Schema::create('Doctors', function (Blueprint $table) {
                 $table->integerIncrements('DoctorID')->unsigned();
                 $table->unsignedInteger('UserID');
                 $table->string('DoctorName', 100);
@@ -45,7 +45,7 @@ class CreateDoctorsTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('Doctors');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

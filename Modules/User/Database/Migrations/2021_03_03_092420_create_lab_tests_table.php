@@ -13,7 +13,7 @@ class CreateLabTestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('lab_tests', function (Blueprint $table) {
+        Schema::create('LabTests', function (Blueprint $table) {
             $table->integerIncrements('LabTestID')->unsigned();
             $table->string('LabTestName',100);
             $table->string('LabTestDesc',200)->nullable();
@@ -30,6 +30,6 @@ class CreateLabTestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lab_tests');
+        Schema::dropIfExists('LabTests');
     }
 }

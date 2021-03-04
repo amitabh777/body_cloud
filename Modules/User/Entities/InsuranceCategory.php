@@ -10,7 +10,7 @@ class InsuranceCategory extends Model
     //use HasFactory;
     const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
-    protected $table = 'insurance_categories';
+    protected $table = 'InsuranceCategories';
 
     protected $fillable = ['InsuranceCategoryName','InsuranceCategoryDesc','Status'];
     protected $primaryKey = 'InsuranceCategoryID';

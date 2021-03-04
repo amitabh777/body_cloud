@@ -10,7 +10,7 @@ class MedicalSector extends Model
   //  use HasFactory;
   const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
-    protected $table = 'medical_sectors';
+    protected $table = 'MedicalSectors';
 
     protected $fillable = ['MedicalSectorName','MedicalSectorDesc','Status'];
 

@@ -14,8 +14,8 @@ class CreateUserRolesTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('user_roles')) {
-            Schema::create('user_roles', function (Blueprint $table) {
+        if (!Schema::hasTable('UserRoles')) {
+            Schema::create('UserRoles', function (Blueprint $table) {
                 $table->integerIncrements('UserRoleID')->unsigned();
                 $table->unsignedInteger('RoleID');
                 $table->unsignedInteger('UserID');
@@ -37,7 +37,7 @@ class CreateUserRolesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('UserRoles');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

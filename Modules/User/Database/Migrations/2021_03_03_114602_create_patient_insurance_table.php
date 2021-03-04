@@ -14,7 +14,7 @@ class CreatePatientInsuranceTable extends Migration
      */
     public function up()
     {
-        Schema::create('patient_insurance', function (Blueprint $table) {
+        Schema::create('PatientInsurance', function (Blueprint $table) {
             $table->integerIncrements('PatientInsuranceID')->unsigned();
             $table->string('InsuranceNo', 100);
             $table->unsignedInteger('InsuranceCompanyID')->nullable();
@@ -25,10 +25,10 @@ class CreatePatientInsuranceTable extends Migration
             $table->timestamp('UpdatedAt')->nullable(); 
             $table->foreign('InsuranceCompanyID')
             ->references('InsuranceCompanyID')
-            ->on('insurance_companies');
+            ->on('InsuranceCompanies');
             $table->foreign('InsuranceCategoryID')
             ->references('InsuranceCategoryID')
-            ->on('insurance_categories');
+            ->on('InsuranceCategories');
         });
     }
 
@@ -40,7 +40,7 @@ class CreatePatientInsuranceTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('patient_insurance');
+        Schema::dropIfExists('PatientInsurance');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

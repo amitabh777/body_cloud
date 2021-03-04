@@ -11,7 +11,7 @@ class LabServiceCategory extends Model
     const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
 
-    protected $table = 'lab_service_categories';
+    protected $table = 'LabServiceCategories';
     protected $fillable = [];
     
     // protected static function newFactory()
