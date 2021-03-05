@@ -18,8 +18,14 @@ class Patient extends Model
         'CreatedAt', 'UpdatedAt'
     ];
 
+    protected $with = ['documents'];
+
     public function user()
     {
         return $this->belongsTo(Patient::class,'PatientID','UserID');
+    }
+    
+    public function documents(){
+        return $this->hasMany(Document::class,'PatientID','UserID')->select(['PatientID','DocumentFile']);
     }
 }

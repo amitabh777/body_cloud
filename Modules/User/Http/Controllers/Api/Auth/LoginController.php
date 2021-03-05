@@ -54,8 +54,9 @@ class LoginController extends Controller
         $user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole()->role; //User Role
         $profile = $user->profile($role->RoleSlug); //User profile
-        $user['UserType'] = $role->RoleSlug; //merge in user object
-        $user['Profile'] = $profile;  //merge in user object
+        //merge in user response
+        $user['UserType'] = $role->RoleSlug; 
+        $user['Profile'] = $profile;   
         return response()->json(['data' => $user, 'message' => 'Success Login', 'status' => 200]);
     }
 

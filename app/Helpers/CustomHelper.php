@@ -17,7 +17,7 @@ class CustomHelper
     public static function sendOtp($phone)
     {
         //Todo: code for sending sms 
-        $otp = rand(11111, 99999);
+        $otp = rand(1111, 9999);
         $res = User::where('Phone', $phone)->update(['Otp' => $otp]);
         if ($res) {
             return $otp;

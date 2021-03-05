@@ -33,7 +33,6 @@ class RegistrationController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
-
         $uniqueId = $this->getNewUniqueId();
         $request->merge(['UniqueID' => $uniqueId]);
 
@@ -46,7 +45,7 @@ class RegistrationController extends Controller
                 }
                 $result = $this->patientRegister($request);
                 if (!$result) {
-                    return response()->json([ 'message' => 'unable to register', 'status' => 400]);
+                    return response()->json(['message' => 'unable to register', 'status' => 400]);
                 }
                 //patient registered
                 $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
@@ -151,11 +150,12 @@ class RegistrationController extends Controller
             'PatientPermanentMedicines' => $request->input('PatientPermanentMedicines', null),
             'EmergencyContactNo' => $request->input('EmergencyContactNo'),
         ];
-        $user = null;
+        global $user;
         $success = false;
         try {
             DB::transaction(function () use ($userData, $profileData, $user) {
-                //create user
+                //create user  
+                global $user;
                 $user = User::create($userData);
                 if ($user) {
                     $patientRole = Role::patient()->first();
@@ -167,20 +167,20 @@ class RegistrationController extends Controller
             });
             $success = true;
         } catch (Exception $e) {
+            $success = false;
             Log::error('Unable to create user');
             Log::error($e->getMessage());
         }
         if ($success) {
             //upload file
-           // $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.image'))->first();
+            $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.image'))->first();
             if ($request->hasFile('DocumentFile')) {
-                // $filename = $this->uploadDocument($request->file('DocumentFile'));
-                // if ($filename) {
-                //     Log::info('filename: '.$filename);
-                //     //saving in documents table
-                //     $res = Document::create(['DocumentTypeID' => $docType->DocumentTypeID, 'PatientID' => $profileData['UserID'], 'DocumentFile' => $filename]);
-                //     Log::info('document created');
-                // }
+                $filename = $this->uploadDocument($request->file('DocumentFile'));
+                if ($filename) {
+                    //saving in documents table
+                    $res = Document::create(['DocumentTypeID' => $docType->DocumentTypeID, 'PatientID' => $user->UserID, 'DocumentFile' => $filename]);
+                    Log::info('document created');
+                }
             }
             //t $otp = $this->sendOtp($userData['Phone']);
             $otp = CustomHelper::sendOtp($userData['Phone']);
@@ -212,7 +212,9 @@ class RegistrationController extends Controller
         //  $path = Storage::disk('public')->put('documents/profile_images',$file);
 
         $file_name = $file->hashName();
+        // $path = Storage::disk('public')->put('documents/profile_images',$file);
         $path = $file->storeAs('public/documents/profile_images', $file_name);
+        // $path = $file->storeAs('public/documents/profile_images', $file_name);
         if ($path) {
             return $file_name;
         }
