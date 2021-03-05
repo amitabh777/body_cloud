@@ -11,6 +11,7 @@ class CustomHelper
     {
         return strtoupper($string);
     }
+    
     /**
      * Send OTP and reset in users table
      */
