@@ -29,8 +29,8 @@ class Authenticate extends Middleware
             return response('Unauthorized.', 401);
         } else {
             $response = [
-                'status' => 'error',
-                'message' => 'This is error message'
+                'status' => 401,
+                'message' => 'Unauthorized'
             ];
             return Response::json($response);
         }

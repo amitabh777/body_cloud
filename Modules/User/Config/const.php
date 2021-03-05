@@ -13,5 +13,10 @@ return [
         'insurance_company' => 'insurance_company',
         'lab' => 'lab',
         'doctor' => 'doctor'
+    ],
+    'device_types'=>['android','ios'],
+    'account_status'=>[
+        'active'=>'Active',
+        'inactive'=>'Inactive'
     ]
 ];

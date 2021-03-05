@@ -15,22 +15,21 @@ use Illuminate\Support\Facades\Route;
 */
 date_default_timezone_set('Asia/Kolkata');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    
-    return 'success';
-    //return $request->user();
-});
-Route::middleware('auth:api')->post('/user1', function (Request $request) {
+Route::middleware('auth:api')->post('/user', function (Request $request) {
     
     return 'success';
     //return $request->user();
 });
 
-Route::namespace('Api')->group(function () {
-    Route::post('register', 'RegistrationController@register');
+Route::namespace('Api\Auth')->group(function () {
+    Route::post('register', 'RegistrationController@userRegistration');
     Route::post('login', 'LoginController@login');
+    Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');
+    Route::post('reset_password', 'ResetPasswordController@resetPassword');
+  
 });
 
-Route::namespace('Api')->middleware('auth:api')->group(function(){
-    
+Route::namespace('Api\Auth')->middleware('auth:api')->group(function(){
+    Route::post('logout', 'LoginController@logout');
 });
+

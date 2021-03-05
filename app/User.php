@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Modules\User\Entities\Patient;
+use Modules\User\Entities\Role;
 use Modules\User\Entities\UserRole;
 
 class User extends Authenticatable
@@ -47,7 +49,7 @@ class User extends Authenticatable
 
     protected $primaryKey = 'UserID'; //custom primary key 
 
-    //protected $with = ['profile'];
+    // protected $with = ['profile'];
 
     public function getAuthPassword()
     {
@@ -56,6 +58,7 @@ class User extends Authenticatable
 
     public function patientProfile()
     {
+
         
         //if($role->roleInfo->RoleSlug==config('const.role_slug.patient')){
             return $this->hasOne(Patient::class,'UserID','UserID');
@@ -66,4 +69,25 @@ class User extends Authenticatable
         // }
         
     }
+
+    public function profile($type){
+        if($type=='patient'){
+return $this->hasOne(Patient::class,'UserID','UserID')->first();
+        }
+        return '';
+        
+    }
+
+    //get Role
+    public function userRole(){
+        return $this->hasOne(UserRole::class,'UserID','UserID')->first();
+    }
+
+    /**
+     * Delete device token
+     */
+
+     public function scopeDeleteDeviceToken($query){
+        return $query->where('UserID',$this->UserID)->update(['DeviceToken'=>'']);
+     }
 }

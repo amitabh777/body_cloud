@@ -16,10 +16,10 @@ class UserRole extends Model
     ];
 
     protected $primaryKey = 'UserRoleID';
-    protected $with = ['roleInfo'];
+    protected $with = ['role'];
 
-    public function roleInfo(){
-        return $this->hasOne(Role::class,'RoleID','RoleID');
+    public function role(){
+        return $this->hasOne(Role::class,'RoleID','RoleID')->select(['RoleID','RoleName','RoleSlug']);
     }
   
 }
