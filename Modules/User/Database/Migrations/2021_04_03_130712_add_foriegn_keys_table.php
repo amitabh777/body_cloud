@@ -21,6 +21,7 @@ class AddForiegnKeysTable extends Migration
                     ->onDelete('SET NULL');
             });
         }
+
     }
 
     /**
@@ -33,5 +34,6 @@ class AddForiegnKeysTable extends Migration
         Schema::table('patients', function (Blueprint $table) {
             $table->dropForeign(['BloodGroupID']);
         });
+        
     }
 }

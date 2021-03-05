@@ -11,7 +11,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Modules\User\Entities\Document;
+use Modules\User\Entities\DocumentType;
 use Modules\User\Entities\Patient;
 use Modules\User\Entities\Role;
 use Modules\User\Entities\UserRole;
@@ -28,7 +31,7 @@ class RegistrationController extends Controller
         //Check user data validation
         $validator = $this->validateUserData($data);
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400], 400);
+            return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
 
         $uniqueId = $this->getNewUniqueId();
@@ -39,23 +42,27 @@ class RegistrationController extends Controller
                 //validate profile data
                 $validator = $this->validatePatientProfile($request);
                 if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400], 400);
+                    return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400]);
                 }
                 $result = $this->patientRegister($request);
                 if (!$result) {
-                    return response()->json(['data' => [], 'message' => 'unable to register', 'status' => 500], 500);
+                    return response()->json([ 'message' => 'unable to register', 'status' => 400]);
                 }
                 //patient registered
                 $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
                 $message = ($otp != '') ? 'Patient Registered' : "Patient Registered, Otp didn't sent";
-                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message], 200);
+                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message]);
+
+                break;
+
+            case 'doctor':
 
                 break;
 
             default:
                 break;
         }
-        return response()->json(['status' => 'success'], 200);
+        return response()->json(['status' => 'success']);
     }
     public function validateUserData($data)
     {
@@ -144,10 +151,10 @@ class RegistrationController extends Controller
             'PatientPermanentMedicines' => $request->input('PatientPermanentMedicines', null),
             'EmergencyContactNo' => $request->input('EmergencyContactNo'),
         ];
-
+        $user = null;
         $success = false;
         try {
-            DB::transaction(function () use ($userData, $profileData) {
+            DB::transaction(function () use ($userData, $profileData, $user) {
                 //create user
                 $user = User::create($userData);
                 if ($user) {
@@ -164,6 +171,17 @@ class RegistrationController extends Controller
             Log::error($e->getMessage());
         }
         if ($success) {
+            //upload file
+           // $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.image'))->first();
+            if ($request->hasFile('DocumentFile')) {
+                // $filename = $this->uploadDocument($request->file('DocumentFile'));
+                // if ($filename) {
+                //     Log::info('filename: '.$filename);
+                //     //saving in documents table
+                //     $res = Document::create(['DocumentTypeID' => $docType->DocumentTypeID, 'PatientID' => $profileData['UserID'], 'DocumentFile' => $filename]);
+                //     Log::info('document created');
+                // }
+            }
             //t $otp = $this->sendOtp($userData['Phone']);
             $otp = CustomHelper::sendOtp($userData['Phone']);
             return $otp ? $otp : 'otp_failed';
@@ -176,5 +194,28 @@ class RegistrationController extends Controller
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+    }
+
+    /**
+     * Upload documents
+     */
+    public function uploadDocument($file)
+    {
+        // $filename= $file->getClientOriginalName();
+        // $fileExt = $file->getClientOriginalExtension();
+        // $filenameArr = explode('.',$filename);
+        // $newfile = $filenameArr[0];
+        // $path = $file->storeAs(
+        //     'documents/profile_images', $id
+        // );
+        // $path = Storage::disk('public')->put('documents/profile_images/'.$newfile.'_'.$id.'.'.$fileExt,$file);
+        //  $path = Storage::disk('public')->put('documents/profile_images',$file);
+
+        $file_name = $file->hashName();
+        $path = $file->storeAs('public/documents/profile_images', $file_name);
+        if ($path) {
+            return $file_name;
+        }
+        return false;
     }
 }

@@ -26,6 +26,7 @@ Route::namespace('Api\Auth')->group(function () {
     Route::post('login', 'LoginController@login');
     Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');
     Route::post('reset_password', 'ResetPasswordController@resetPassword');
+    Route::post('verify_phone', 'VerificationController@verifyPhoneWithOtp');
   
 });
 

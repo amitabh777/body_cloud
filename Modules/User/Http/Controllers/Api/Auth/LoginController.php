@@ -40,15 +40,16 @@ class LoginController extends Controller
        
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400], 400);
+            return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
         $auth = Auth::attempt(['Phone' => $data['Phone'], 'password' => $data['Password']]);
         if (!$auth) {
-            return response()->json(['data' => [], 'message' => 'Invalid Credentials', 'status' => 400],400);
+            return response()->json(['message' => 'Invalid Credentials', 'status' => 400]);
         }
+       // Auth::login(Auth::user());
         if(Auth::user()->Status != config('user.const.account_status.active')){
             Auth::logout();
-            return response()->json(['data' => [], 'message' => 'Phone number not verified.', 'status' => 400],400);
+            return response()->json(['message' => 'Phone number not verified.', 'status' => 400]);
         }
         $user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole()->role; //User Role
@@ -75,18 +76,18 @@ class LoginController extends Controller
     /**
      * Logout user
      */
-    // public function logout(Request $request)
-    // {
+    public function logout(Request $request)
+    {
         
-    //     Auth::loginUsingId(1);
-    //     $user = Auth::loginUsingId(4);//Auth::user();
-    //     var_dump(Auth::check());
-    //     print_r($user);
-    //     exit;
-    //     User::where('UserID',$user->UserID)->deleteDeviceToken();
-    //     Auth::logout();
-    //     return response()->json(['status'=>200,'message'=>'logout','data'=>[]]);
-    // }
+       // Auth::loginUsingId(1);
+        $user =  Auth:: user();//Auth::loginUsingId(4);//Auth::user();
+        var_dump(Auth::check());
+        print_r($user);
+        exit;
+        User::where('UserID',$user->UserID)->deleteDeviceToken();
+        Auth::logout();
+        return response()->json(['status'=>200,'message'=>'logout']);
+    }
 
 
 

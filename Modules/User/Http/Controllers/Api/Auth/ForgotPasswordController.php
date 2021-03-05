@@ -19,12 +19,12 @@ class ForgotPasswordController extends Controller
         //validate and check phone exists or not
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400], 400);
+            return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
         //send otp
         $otp = CustomHelper::sendOtp($data['Phone']);
         if(!$otp){
-            return response()->json(['data' => [], 'message' => 'Could not send otp', 'status' => 500],500);
+            return response()->json([ 'message' => 'Could not send otp', 'status' => 500]);
         }
         return response()->json(['data' => ['Otp'=>$otp,'Phone'=>$data['Phone']], 'message' => 'Otp Sent', 'status' => 200]);
     }

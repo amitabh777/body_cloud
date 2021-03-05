@@ -24,8 +24,8 @@ class CreateInsuranceBranchesTable extends Migration
             $table->foreign('InsuranceCompanyID')
                 ->references('InsuranceCompanyID')
                 ->on('insurance_companies')->OnDelete('cascade');
-                $table->timestamp('CreatedAt')->nullable();
-                $table->timestamp('UpdatedAt')->nullable(); 
+            $table->timestamp('CreatedAt')->nullable();
+            $table->timestamp('UpdatedAt')->nullable();
         });
     }
 

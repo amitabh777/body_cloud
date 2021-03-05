@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class Authenticate extends Middleware
@@ -35,6 +37,9 @@ class Authenticate extends Middleware
             return Response::json($response);
         }
     }
+    // $user = User::where('api_token',$request->api_token)->first();
+    // Auth::loginUsingId($user->UserID);
+    // Log::info($request->api_token);
 
     return $next($request);
    }

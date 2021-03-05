@@ -18,5 +18,9 @@ return [
     'account_status'=>[
         'active'=>'Active',
         'inactive'=>'Inactive'
-    ]
+    ],
+    'document_types'=>[
+        'image'=>'image'
+    ],
+
 ];

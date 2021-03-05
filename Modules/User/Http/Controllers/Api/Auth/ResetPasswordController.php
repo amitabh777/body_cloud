@@ -19,15 +19,15 @@ class ResetPasswordController extends Controller
         //validate and check phone exists or not
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400], 400);
+            return response()->json(['message' => $validator->errors()->first(), 'status' => 400], 400);
         }
         $password = Hash::make($data['NewPassword']);
       
         $res = User::where(['UserID'=>$data['UserID'],'Otp'=>$data['Otp']])->update(['Password'=>$password]);
         if(!$res){
-            return response()->json(['data' => [], 'message' => 'Could not reset password', 'status' => 500],500);
+            return response()->json([ 'message' => 'Could not reset password', 'status' => 500]);
         }
-        return response()->json(['data' => [], 'message' => 'Password Reset', 'status' => 200]);
+        return response()->json(['message' => 'Password Reset', 'status' => 200]);
     }
 
     /**
