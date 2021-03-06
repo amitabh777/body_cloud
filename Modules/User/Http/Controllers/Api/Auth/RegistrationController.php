@@ -18,6 +18,7 @@ use Modules\User\Entities\Doctor;
 use Modules\User\Entities\DoctorSector;
 use Modules\User\Entities\Document;
 use Modules\User\Entities\DocumentType;
+use Modules\User\Entities\Hospital;
 use Modules\User\Entities\Patient;
 use Modules\User\Entities\Role;
 use Modules\User\Entities\UserRole;
@@ -60,7 +61,7 @@ class RegistrationController extends Controller
             case 'doctor':
                 $validator = $this->validateDoctorProfile($request);
                 if ($validator->fails()) {
-                    return response()->json(['message' => $validator->errors()->first(), 'data' => [], 'status' => 400]);
+                    return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
                 }
                 $result = $this->doctorRegister($request);
                 if (!$result) {
@@ -68,46 +69,23 @@ class RegistrationController extends Controller
                 }
                 break;
 
+                case 'hospital':
+                    $validator = $this->validateHospitalProfile($request);
+                    if ($validator->fails()) {
+                        return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
+                    }
+                    $result = $this->hospitalRegister($request);
+                    if (!$result) {
+                        return response()->json(['message' => 'unable to register', 'status' => 400]);
+                    }
+                    break;
+
             default:
+            return response()->json(['message' => 'Role not found', 'status' => 400]);
                 break;
         }
         return response()->json(['status' => 'success']);
-    }
-    public function validateUserData($data)
-    {
-        $userRules = [
-            'Email' => 'required|email|max:150|unique:users,Email',
-            'Phone' => 'required|min:10|max:10|unique:users,Phone',
-            'Password' => ['required', 'string', 'min:8'],
-            'RoleSlug' => 'required'
-        ];
-        $message = [
-            // 'Phone.min' => 'Phone must be 10 digits',
-            // 'Phone.max' => 'Phone must be 10 digits',
-            'RoleSlug.required' => 'Role is required'
-        ];
-        return Validator::make($data, $userRules, $message, []);
-    }
-    public function validatePatientProfile($request)
-    {
-        $userRules = [
-            'PatientName' => 'required',
-            'PatientGender' => 'required',
-            'PatientDOB' => 'required',
-            'PatientHeight' => 'required',
-            'PatientWeight' => 'required',
-            'EmergencyContactNo' => 'required|max:10|min:10',
-        ];
-        return Validator::make($request->all(), $userRules);
-    }
-    public function validateDoctorProfile($request)
-    {
-        $userRules = [
-            'DoctorName' => 'required',           
-            'DoctorGender' => 'required'
-        ];
-        return Validator::make($request->all(), $userRules);
-    }
+    }    
 
     /**
      * get New UniqueID for registration
@@ -227,21 +205,108 @@ class RegistrationController extends Controller
                     Log::error('User registration: unable to upload profile image');
                 }
             }
-            /* fd $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.image'))->first();
-
-            if ($request->file('PatientProfileImage')) {
-                $filename = $this->uploadDocument($request->file('PatientProfileImage'));
-                if ($filename) {
-                    //saving in documents table
-                    Document::create(['DocumentTypeID' => $docType->DocumentTypeID, 'PatientID' => $patient->PatientID, 'DocumentFile' => $filename]);
-                    Log::info('document created');
-                }
-            }*/
             $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
             return $otp ? $otp : 'otp_failed';
         }
         return $success;
     }
+
+    /**
+     * Hospital register
+     */
+    public function hospitalRegister($request)
+    {
+        $now = Carbon::now();
+        $userData = $this->getUserData($request);
+        $profileData = $this->getHospitalProfileData($request);
+        $success = false;
+
+        DB::beginTransaction();
+        try {
+            //create user with role and profile
+            $user = User::create($userData);
+            if ($user) {
+                $hospitalRole = Role::hospital()->first();
+            }
+            UserRole::create(['RoleID' => $hospitalRole->RoleID, 'UserID' => $user->UserID]);
+            $profileData['UserID'] = $user->UserID;
+            $profileData['Otp'] = $user->Otp;
+            $hospital = Hospital::create($profileData);           
+            //set Visiting hours 
+            $this->setVisitingHours($request->VisitingHours, $hospital->HospitalID, config('user.const.role_slugs.hospital'));
+            //Upload registered papers
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.hospital'), $hospital->HospitalID);
+            DB::commit(); //success
+            $success = true;
+        } catch (Exception $e) {
+            DB::rollBack(); //failed rollback
+            Log::error('Unable to create user');
+            Log::error($e->getMessage());
+        }
+        if ($success) {
+            //upload files
+            if ($request->file('HospitalProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('HospitalProfileImage'));
+                if ($filename) {
+                    $hospital->HospitalProfileImage = $filename;
+                    $hospital->save();
+                } else {
+                    Log::error('User registration: unable to upload profile image');
+                }
+            }
+            $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
+            return $otp ? $otp : 'otp_failed';
+        }
+        return $success;
+    }
+
+    public function validateUserData($data)
+    {
+        $userRules = [
+            'Email' => 'required|email|max:150|unique:users,Email',
+            'Phone' => 'required|min:10|max:10|unique:users,Phone',
+            'Password' => ['required', 'string', 'min:8'],
+            'RoleSlug' => 'required'
+        ];
+        $message = [
+            // 'Phone.min' => 'Phone must be 10 digits',
+            // 'Phone.max' => 'Phone must be 10 digits',
+            'RoleSlug.required' => 'Role is required'
+        ];
+        return Validator::make($data, $userRules, $message, []);
+    }
+    
+    public function validatePatientProfile($request)
+    {
+        $userRules = [
+            'PatientName' => 'required',
+            'PatientGender' => 'required',
+            'PatientDOB' => 'required',
+            'PatientHeight' => 'required',
+            'PatientWeight' => 'required',
+            'EmergencyContactNo' => 'required|max:10|min:10',
+        ];
+        return Validator::make($request->all(), $userRules);
+    }
+
+    public function validateDoctorProfile($request)
+    {
+        $userRules = [
+            'DoctorName' => 'required',           
+            'DoctorGender' => 'required'
+        ];
+        return Validator::make($request->all(), $userRules);
+    }
+    //Validate fields
+    public function validateHospitalProfile($request)
+    {
+        $userRules = [
+            'HospitalName' => 'required',           
+            'HospitalContactName' => 'required'
+        ];
+        return Validator::make($request->all(), $userRules);
+    }
+
     public function setMedicalSectors($sectorIDs, $doctorID)
     {
         $now = Carbon::now();
@@ -335,7 +400,6 @@ class RegistrationController extends Controller
             'DoctorName' => $request->input('DoctorName'),
             'DoctorInfo' => $request->input('DoctorInfo'),
             'DoctorGender' => $request->input('DoctorGender'),
-            'DoctorProfileImage' => '',
             'HospitalID' => $request->input('HospitalID', null),
             'DoctorWebsite' => $request->input('DoctorWebsite', null),
             'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
@@ -345,7 +409,19 @@ class RegistrationController extends Controller
             'VisitingHours' => $request->input('VisitingHours', null),
         ];
     }
-
+    //Hospital fields
+    public function getHospitalProfileData($request)
+    {
+        return [
+            'UserID' => '',
+            'HospitalName' => $request->input('HospitalName'),
+            'HospitalInfo' => $request->input('HospitalInfo'),
+            'HospitalWebsite' => $request->input('HospitalWebsite'),
+            'HospitalContactName' => $request->input('HospitalContactName'),
+            'VisitingHours' => $request->input('VisitingHours', null),
+        ];
+    }
+    
     public function createToken($length = 80)
     {
         return hash('sha256', time() . '0123456789ab');
