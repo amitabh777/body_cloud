@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $paths = array_merge([$mainPath], $directories);
 
         $this->loadMigrationsFrom($paths);
+
+        Schema::defaultStringLength(191);
     }
 }
