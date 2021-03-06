@@ -18,7 +18,7 @@ class CreateInsuranceBranchesTable extends Migration
             $table->integerIncrements('InsuranceBranchID')->unsigned();
             $table->unsignedInteger('InsuranceCompanyID')->nullable();
             $table->string('InsuranceBranchName', 120);
-            $table->string('InsuranceBranchInfo', 200);
+            $table->string('InsuranceBranchInfo', 200)->nullable();
             $table->string('InsuranceBranchAddress', 200);
             $table->enum('Status', ['Active', 'Inactive'])->default('Active');
             $table->foreign('InsuranceCompanyID')

@@ -17,7 +17,7 @@ class CreateLaboratoriesTable extends Migration
         Schema::create('laboratories', function (Blueprint $table) {
             $table->integerIncrements('LaboratoryID')->unsigned();
             $table->integer('UserID')->unsigned();
-            $table->string('LaboratoryInfo');
+            $table->string('LaboratoryInfo')->nullable();
             $table->string('LaboratoryProfileImage',200)->nullable();
             $table->string('LaboratoryContactName',100);
             $table->string('LaboratoryWebsite',150)->nullable();
