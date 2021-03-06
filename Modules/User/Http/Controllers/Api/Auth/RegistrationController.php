@@ -186,7 +186,7 @@ class RegistrationController extends Controller
      */
     public function doctorRegister($request)
     {
-        //  print_r($request->file('Documents'));
+        // print_r($request->file('Documents'));
         // $uploadedFiles = [];
         // foreach ($request->file('Documents') as $file) {
         //     print_r('tes11111111');
@@ -224,7 +224,7 @@ class RegistrationController extends Controller
             //set Visiting hours 
             $this->setVisitingHours($request->VisitingHours, $doctor->DoctorID, 'doctor');
             //Upload registered papers
-           // $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.doctor'), $doctor->DoctorID);
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.doctor'), $doctor->DoctorID);
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {

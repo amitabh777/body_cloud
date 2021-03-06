@@ -58,7 +58,7 @@ class LoginController extends Controller
         //merge in user response
         $user['UserType'] = $role->RoleSlug; 
         $user['Profile'] = $profile;   
-        return response()->json(['message' => 'Success Login', 'status' => 200]);
+        return response()->json(['data'=>$user,'message' => 'Success Login', 'status' => 200]);
     }
 
     public function validateCredentials($data)
