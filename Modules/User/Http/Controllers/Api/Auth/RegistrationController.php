@@ -202,6 +202,7 @@ class RegistrationController extends Controller
             $profileData['UserID'] = $user->UserID;
             $profileData['Otp'] = $user->Otp;
             $doctor = Doctor::create($profileData);
+            //secotor update
             $sectors = [];
             if ($profileData['SectorID'] && is_array($profileData['SectorID'])) {
                 foreach ($profileData['SectorID'] as $sectorID) {
@@ -211,6 +212,7 @@ class RegistrationController extends Controller
             }else{
                 DoctorSector::create( ['SectorID'=>$profileData['SectorID'],'DoctorID'=>$doctor->DoctorID]);
             }
+            //set Visiting hours 
 
             DB::commit(); //success
             $success = true;

@@ -24,7 +24,7 @@ class ResetPasswordController extends Controller
         $password = Hash::make($data['NewPassword']);
       
        // $res = User::where(['UserID'=>$data['UserID'],'Otp'=>$data['Otp']])->update(['Password'=>$password]);
-        $res = User::where(['UserID'=>$data['UserID_Phone']])->orWhere(['Phone'=>$data['UserID_Phone']])->update(['Password'=>$password]);
+        $res = User::where(['Email'=>$data['Email_Phone']])->orWhere(['Phone'=>$data['Email_Phone']])->update(['Password'=>$password]);
         if(!$res){
             return response()->json([ 'message' => 'Could not reset password', 'status' => 500]);
         }
@@ -37,12 +37,12 @@ class ResetPasswordController extends Controller
     public function validateCredentials($data)
     {
         $userRules = [
-            'UserID_Phone' => 'required', 
+            'Email_Phone' => 'required', 
             'NewPassword'=>'required|min:8',
             'Otp'=>'required|exists:users,Otp'
         ];
         $message = [
-            'UserID_Phone.required'=>'User id or Phone required',
+            'Email_Phone.required'=>'Email or Phone required',
             'Otp.exists'=>'Otp not matched',
         ];
         return Validator::make($data, $userRules, $message, []);

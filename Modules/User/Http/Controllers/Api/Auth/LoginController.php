@@ -50,7 +50,7 @@ class LoginController extends Controller
        // Auth::login(Auth::user());
         if(Auth::user()->Status != config('user.const.account_status.active')){
             Auth::logout();
-            return response()->json(['message' => 'Phone number not verified.', 'status' => 400]);
+            return response()->json(['data' =>['is_active'=>'Inactive'],'message' => 'Phone number not verified.', 'status' => 400]);
         }
         $user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole()->role; //User Role
@@ -58,7 +58,7 @@ class LoginController extends Controller
         //merge in user response
         $user['UserType'] = $role->RoleSlug; 
         $user['Profile'] = $profile;   
-        return response()->json(['data' => $user, 'message' => 'Success Login', 'status' => 200]);
+        return response()->json(['message' => 'Success Login', 'status' => 200]);
     }
 
     public function validateCredentials($data)
