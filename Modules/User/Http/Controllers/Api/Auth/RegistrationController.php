@@ -81,10 +81,10 @@ class RegistrationController extends Controller
                     break;
 
             default:
-            return response()->json(['message' => 'Role not found', 'status' => 400]);
+                return response()->json(['message' => 'Role not found', 'status' => 400]);
                 break;
-        }
-        return response()->json(['status' => 'success']);
+        }    
+        return response()->json(['message' => 'success', 'status' => 200]);    
     }    
 
     /**
