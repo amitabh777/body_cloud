@@ -4,8 +4,11 @@ namespace Modules\User\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Faker\Generator as Faker;
+use Modules\User\Entities\MedicalSector;
 
-class UserDatabaseSeeder extends Seeder
+
+class MedicalSectorsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,10 +18,7 @@ class UserDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-         $this->call(RoleTableSeeder::class);
-         $this->call(DocumentTypesTableSeeder::class);
-         $this->call(BloodGroupsTableSeeder::class);
-         $this->call(MedicalSectorsTableSeeder::class);
+        factory(MedicalSector::class, 3)->create();
+        // $this->call("OthersTableSeeder");
     }
 }

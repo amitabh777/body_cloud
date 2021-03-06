@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddForeignKeysDocumentsTable extends Migration
 {
@@ -55,8 +56,10 @@ class AddForeignKeysDocumentsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::table('documents', function (Blueprint $table) {
-            $table->dropForeign(['DocumentTypeID','HospitalID','DoctorID','LaboratoryID','PatientID','InsuranceCompanyID']);
+            $table->dropForeign(['DocumentTypeID', 'HospitalID', 'DoctorID', 'LaboratoryID', 'PatientID', 'InsuranceCompanyID']);
         });
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

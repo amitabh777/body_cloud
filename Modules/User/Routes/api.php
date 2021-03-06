@@ -22,7 +22,7 @@ Route::middleware('auth:api')->post('/user', function (Request $request) {
 });
 
 Route::namespace('Api\Auth')->group(function () {
-    Route::post('register', 'RegistrationController@userRegistration');
+    Route::post('register', 'RegistrationController@registration');
     Route::post('login', 'LoginController@login');
     Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');
     Route::post('reset_password', 'ResetPasswordController@resetPassword');

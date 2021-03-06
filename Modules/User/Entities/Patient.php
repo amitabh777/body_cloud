@@ -2,6 +2,7 @@
 
 namespace Modules\User\Entities;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
@@ -10,7 +11,7 @@ class Patient extends Model
     const UPDATED_AT = 'UpdatedAt';
    
     protected $table = 'patients';
-    protected $fillable = ['UserID','PatientName','PatientGender','PatientDOB','BloodGroupID','PatientHeight','PatientWeight','PatientChronicDisease','PatientPermanentMedicines','EmergencyContactNo','Status'];
+    protected $fillable = ['UserID','PatientName','PatientGender','PatientProfileImage','PatientDOB','BloodGroupID','PatientHeight','PatientWeight','PatientChronicDisease','PatientPermanentMedicines','EmergencyContactNo','Status'];
    
     protected $primaryKey = 'PatientID';
 
@@ -22,10 +23,10 @@ class Patient extends Model
 
     public function user()
     {
-        return $this->belongsTo(Patient::class,'PatientID','UserID');
+        return $this->belongsTo(User::class,'UserID','UserID');
     }
     
     public function documents(){
-        return $this->hasMany(Document::class,'PatientID','UserID')->select(['PatientID','DocumentFile']);
+        return $this->hasMany(Document::class,'PatientID','PatientID')->select(['PatientID','DocumentFile','DocumentTypeID']);
     }
 }

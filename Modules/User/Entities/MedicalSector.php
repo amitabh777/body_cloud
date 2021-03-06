@@ -7,17 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MedicalSector extends Model
 {
-  //  use HasFactory;
   const CREATED_AT = 'CreatedAt';
-    const UPDATED_AT = 'UpdatedAt';
-    protected $table = 'medical_sectors';
+  const UPDATED_AT = 'UpdatedAt';
+  protected $table = 'medical_sectors';
 
-    protected $fillable = ['MedicalSectorName','MedicalSectorDesc','Status'];
+  protected $fillable = ['MedicalSectorName', 'MedicalSectorDesc', 'Status'];
 
-    protected $primaryKey = 'MedicalSectorID';
-    
-    // protected static function newFactory()
-    // {
-    //     return \Modules\User\Database\factories\MedicalSectorFactory::new();
-    // }
+  protected $primaryKey = 'MedicalSectorID';
 }

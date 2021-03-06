@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
                 $table->string('DeviceType',30)->nullable();
                 $table->string('DeviceToken',50)->nullable();
                 $table->mediumInteger('Otp')->unsigned()->nullable();
-                $table->string('api_token', 80)
+                $table->string('api_token', 250)
                         ->unique()
                         ->nullable()
                         ->default(null);

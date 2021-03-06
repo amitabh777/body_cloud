@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 use phpDocumentor\Reflection\Types\Nullable;
 
 class CreateDocumentsTable extends Migration
@@ -15,7 +16,7 @@ class CreateDocumentsTable extends Migration
     public function up()
     {
         Schema::create('documents', function (Blueprint $table) {
-            $table->integerIncrements('DocumentID');
+            $table->integerIncrements('DocumentID')->unsigned();
             $table->unsignedInteger('DocumentTypeID');
             $table->unsignedInteger('HospitalID')->nullable();
             $table->unsignedInteger('DoctorID')->nullable();
@@ -37,6 +38,8 @@ class CreateDocumentsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::dropIfExists('documents');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -21,5 +21,11 @@ class Role extends Model
     public function scopePatient($query){
         return $query->where('RoleSlug', 'patient');
     }    
+    public function scopeDoctor($query){
+        return $query->where('RoleSlug', 'doctor');
+    }    
+    public function scopeHospital($query){
+        return $query->where('RoleSlug', 'hospital');
+    }    
 
 }

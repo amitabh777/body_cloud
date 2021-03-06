@@ -10,8 +10,14 @@ class Document extends Model
     const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
     protected $table = 'documents';
+
     protected $fillable = ['DocumentTypeID','HospitalID','DoctorID','LaboratoryID','PatientID','InsuranceCompanyID','DocumentFile','Status'];
 
-    protected $primaryKey = 'DocumentTypeID';
+    protected $primaryKey = 'DocumentID';
+    protected $with=['documentType'];
+
+    public function documentType(){
+        return $this->hasOne(DocumentType::class,'DocumentTypeID','DocumentTypeID')->select(['DocumentTypeID','DocumentTypeName']);
+    }
     
 }

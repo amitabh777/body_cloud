@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Modules\User\Entities\BloodGroup;
 use Modules\User\Entities\UserRole;
 
 class LoginController extends Controller
@@ -37,7 +38,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $data = $request->all();
-       
+
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);

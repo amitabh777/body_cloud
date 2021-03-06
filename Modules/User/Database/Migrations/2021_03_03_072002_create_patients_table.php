@@ -27,6 +27,7 @@ class CreatePatientsTable extends Migration
                 $table->string('PatientChronicDisease', 200)->nullable();
                 $table->string('PatientPermanentMedicines', 500)->nullable();
                 $table->string('EmergencyContactNo', 15);
+                $table->string('PatientProfileImage', 100)->nullable();
                 $table->enum('Status', ['Active', 'Inactive']);
                 $table->timestamp('CreatedAt')->nullable();
                 $table->timestamp('UpdatedAt')->nullable();                      

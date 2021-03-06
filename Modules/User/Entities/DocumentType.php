@@ -13,5 +13,7 @@ class DocumentType extends Model
     protected $fillable = ['DocumentTypeName','DocumentTypeDesc','Status'];
 
     protected $primaryKey = 'DocumentTypeID';
+
+   
   
 }
