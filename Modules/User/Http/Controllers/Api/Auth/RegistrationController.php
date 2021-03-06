@@ -103,8 +103,7 @@ class RegistrationController extends Controller
     public function validateDoctorProfile($request)
     {
         $userRules = [
-            'DoctorName' => 'required',
-            'DoctorInfo' => 'required',
+            'DoctorName' => 'required',           
             'DoctorGender' => 'required'
         ];
         return Validator::make($request->all(), $userRules);
@@ -186,21 +185,6 @@ class RegistrationController extends Controller
      */
     public function doctorRegister($request)
     {
-        // print_r($request->file('Documents'));
-        // $uploadedFiles = [];
-        // foreach ($request->file('Documents') as $file) {
-        //     print_r('tes11111111');
-        //     exit;
-        //     $fileName = $file->hashName();
-        //     $path = $file->storeAs('public/documents/doctors' . $fileName);
-        //     if ($path) {
-        //         $uploadedFiles[] = $fileName; //array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
-        //     }
-        // }
-        // echo 'tefdsf';
-        // print_r($uploadedFiles);
-        // exit;
-        //---test
         $now = Carbon::now();
         $userData = $this->getUserData($request);
         $profileData = $this->getDoctorProfileData($request);
@@ -374,13 +358,13 @@ class RegistrationController extends Controller
     {
         $now = Carbon::now();
         //multiple uploads
-        if ($files) {
-                $docType = DocumentType::registeredDocType();
+        if ($files) {                
+                $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.registered_paper'))->first();
                 $profileKey = $this->getProfileIdKey($role);
                 $uploadedFiles = [];
                 foreach ($files as $file) {
                     $fileName = $file->hashName();
-                    $path = $file->storeAs('public/documents/doctors' . $fileName);
+                    $path = $file->storeAs('public/documents/doctors', $fileName);
                     if ($path) {
                         $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
                     }

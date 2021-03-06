@@ -14,8 +14,8 @@ class DocumentType extends Model
 
     protected $primaryKey = 'DocumentTypeID';
 
-    public function scopeRegisteredDocType()
+    public function scopeRegisteredDocType($query)
     {
-        return $this->where('DocumentTypeName', config('user.const.document_types.registered_paper'))->first();
+        return $query->where('DocumentTypeName', config('user.const.document_types.registered_paper'));
     }
 }

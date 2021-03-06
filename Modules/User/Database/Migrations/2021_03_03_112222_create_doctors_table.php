@@ -19,7 +19,7 @@ class CreateDoctorsTable extends Migration
                 $table->integerIncrements('DoctorID')->unsigned();
                 $table->unsignedInteger('UserID');
                 $table->string('DoctorName', 100);
-                $table->string('DoctorInfo', 200);
+                $table->string('DoctorInfo', 200)->nullable();
                 $table->enum('DoctorGender', ['Male', 'Female']);
                 $table->string('DoctorProfileImage', 150)->nullable();
                 $table->unsignedInteger('HospitalID')->nullable();
