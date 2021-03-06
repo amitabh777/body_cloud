@@ -17,7 +17,7 @@ class BloodGroupController extends Controller
     {
        $bloodgroups = BloodGroup::select(['BloodGroupID','BloodGroupName','BloodGroupDesc','Status'])->get();
        if($bloodgroups){
-        return response()->json(['data'=>$bloodgroups,'message'=>'success','status'=>'200']);
+        return response()->json(['data'=>$bloodgroups,'message'=>'success','status'=>200]);
        } 
        return response()->json(['message'=>'failed','status'=>'400']);
     }
