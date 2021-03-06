@@ -31,7 +31,6 @@ class RegistrationController extends Controller
     public function registration(Request $request)
     {
         $data = $request->all();
-
         //Check user data validation
         $validator = $this->validateUserData($data);
         if ($validator->fails()) {
@@ -106,6 +105,7 @@ class RegistrationController extends Controller
         $userRules = [
             'DoctorName' => 'required',
             'DoctorInfo' => 'required',
+            'DoctorGender' => 'required'
         ];
         return Validator::make($request->all(), $userRules);
     }
@@ -186,6 +186,21 @@ class RegistrationController extends Controller
      */
     public function doctorRegister($request)
     {
+        //  print_r($request->file('Documents'));
+        // $uploadedFiles = [];
+        // foreach ($request->file('Documents') as $file) {
+        //     print_r('tes11111111');
+        //     exit;
+        //     $fileName = $file->hashName();
+        //     $path = $file->storeAs('public/documents/doctors' . $fileName);
+        //     if ($path) {
+        //         $uploadedFiles[] = $fileName; //array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
+        //     }
+        // }
+        // echo 'tefdsf';
+        // print_r($uploadedFiles);
+        // exit;
+        //---test
         $now = Carbon::now();
         $userData = $this->getUserData($request);
         $profileData = $this->getDoctorProfileData($request);
@@ -202,23 +217,18 @@ class RegistrationController extends Controller
             $profileData['UserID'] = $user->UserID;
             $profileData['Otp'] = $user->Otp;
             $doctor = Doctor::create($profileData);
-            //secotor update
-            $sectors = [];
-            if ($profileData['SectorID'] && is_array($profileData['SectorID'])) {
-                foreach ($profileData['SectorID'] as $sectorID) {
-                    $sectors[] = ['SectorID'=>$sectorID,'DoctorID'=>$doctor->DoctorID];
-                }
-                DB::table('doctor_sectors')->insert($sectors);
-            }else{
-                DoctorSector::create( ['SectorID'=>$profileData['SectorID'],'DoctorID'=>$doctor->DoctorID]);
+            //set medical sectors
+            if ($profileData['SectorID']) {
+                $this->setMedicalSectors($profileData['SectorID'], $doctor->DoctorID);
             }
             //set Visiting hours 
-
+            $this->setVisitingHours($request->VisitingHours, $doctor->DoctorID, 'doctor');
+            //Upload registered papers
+           // $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.doctor'), $doctor->DoctorID);
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
-            DB::rollBack(); //failed
-            $success = false;
+            DB::rollBack(); //failed rollback
             Log::error('Unable to create user');
             Log::error($e->getMessage());
         }
@@ -247,6 +257,60 @@ class RegistrationController extends Controller
             return $otp ? $otp : 'otp_failed';
         }
         return $success;
+    }
+    public function setMedicalSectors($sectorIDs, $doctorID)
+    {
+        $now = Carbon::now();
+        $sectors = [];
+        if ($sectorIDs && is_array($sectorIDs)) {
+            foreach ($sectorIDs as $sectorID) {
+                $sectors[] = ['SectorID' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
+            }
+            DB::table('doctor_sectors')->insert($sectors);
+        } else {
+            DoctorSector::create(['SectorID' => $sectorIDs, 'DoctorID' => $doctorID]);
+        }
+    }
+    //Set doctor's visiting hours
+    public function setVisitingHours($visitingHours, $profileID, $roleSlug)
+    {
+        if (!$visitingHours) {
+            Log::error('Visiting hours not defined');
+            return false;
+        }
+        $now = Carbon::now();
+        $rows = [];
+        if ($roleSlug == config('user.const.role_slugs.doctor')) {
+            $profileIDKey = 'DoctorID';
+        } elseif ($roleSlug == config('user.const.role_slugs.hospital')) {
+            $profileIDKey = 'DoctorID';
+        } elseif ($roleSlug == config('user.const.role_slugs.lab')) {
+            $profileIDKey = 'LaboratoryID';
+        } else {
+            Log::error('Role slug not defined');
+            return false;
+        }
+        $days = json_decode($visitingHours);
+        foreach ($days as $day => $details) {
+            $rows[] = array(
+                $profileIDKey => $profileID,
+                'VisitingDay' => $day,
+                'VisitingStartTime' => $details['start_time'],
+                'VisitingEndTime' => $details['end_time'],
+                'VisitingSlot' => $details['visiting_slot'],
+                'IsAvailable' => $details['is_available'],
+                'CreatedAt' => $now->toDateTimeString()
+            );
+        }
+        try {
+            //Insert into visitng hours
+            DB::table('visiting_hours')->insert($rows);
+        } catch (Exception $e) {
+            Log::error('unable to insert visiting hours');
+            Log::error($e->getMessage());
+            return false;
+        }
+        return true;
     }
 
     public function getUserData($request)
@@ -286,6 +350,7 @@ class RegistrationController extends Controller
             'UserID' => '',
             'DoctorName' => $request->input('DoctorName'),
             'DoctorInfo' => $request->input('DoctorInfo'),
+            'DoctorGender' => $request->input('DoctorGender'),
             'DoctorProfileImage' => '',
             'HospitalID' => $request->input('HospitalID', null),
             'DoctorWebsite' => $request->input('DoctorWebsite', null),
@@ -305,9 +370,27 @@ class RegistrationController extends Controller
     /**
      * Upload documents
      */
-    public function uploadDocument($files)
+    public function uploadDocuments($files, $role, $profileId)
     {
+        $now = Carbon::now();
         //multiple uploads
+        if ($files) {
+                $docType = DocumentType::registeredDocType();
+                $profileKey = $this->getProfileIdKey($role);
+                $uploadedFiles = [];
+                foreach ($files as $file) {
+                    $fileName = $file->hashName();
+                    $path = $file->storeAs('public/documents/doctors' . $fileName);
+                    if ($path) {
+                        $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
+                    }
+                }
+                if (!empty($uploadedFiles)) {
+                    Document::insert($uploadedFiles);
+                }
+                return true;
+        }
+        return false;
     }
 
     public function uploadProfileImage($file)
@@ -318,5 +401,20 @@ class RegistrationController extends Controller
             return $file_name;
         }
         return false;
+    }
+
+    //get profile id field key
+    public function getProfileIdKey($role)
+    {
+        if ($role == config('user.const.role_slugs.doctor')) {
+            $profileIDKey = 'DoctorID';
+        } elseif ($role == config('user.const.role_slugs.hospital')) {
+            $profileIDKey = 'DoctorID';
+        } elseif ($role == config('user.const.role_slugs.lab')) {
+            $profileIDKey = 'LaboratoryID';
+        } else {
+            return false;
+        }
+        return $profileIDKey;
     }
 }

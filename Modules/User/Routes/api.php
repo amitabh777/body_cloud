@@ -20,14 +20,17 @@ Route::middleware('auth:api')->post('/user', function (Request $request) {
     return 'success';
     //return $request->user();
 });
-
+//Authentications
 Route::namespace('Api\Auth')->group(function () {
     Route::post('register', 'RegistrationController@registration');
     Route::post('login', 'LoginController@login');
     Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');
     Route::post('reset_password', 'ResetPasswordController@resetPassword');
-    Route::post('verify_phone', 'VerificationController@verifyPhoneWithOtp');
-  
+    Route::post('verify_phone', 'VerificationController@verifyPhoneWithOtp');  
+});
+
+Route::namespace('Api')->group(function(){
+    Route::get('blood_groups','BloodGroupController@index');
 });
 
 Route::namespace('Api\Auth')->middleware('auth:api')->group(function(){

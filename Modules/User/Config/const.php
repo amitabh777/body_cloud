@@ -20,7 +20,8 @@ return [
         'inactive'=>'Inactive'
     ],
     'document_types'=>[
-        'image'=>'image'
+        'image'=>'image',
+        'registered_paper'=>'registered_paper'
     ],
 
 ];

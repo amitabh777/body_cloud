@@ -12,7 +12,7 @@ class Doctor extends Model
     const UPDATED_AT = 'UpdatedAt';
    
     protected $table = 'doctors';
-    protected $fillable = ['UserID','DoctorName','DoctorInfo','DoctorProfileImage','HospitalID','DoctorWebsite','DoctorBankAccountNo','DoctorBankName','DoctorMinReservationCharge','Status'];
+    protected $fillable = ['UserID','DoctorName','DoctorInfo','DoctorGender','DoctorProfileImage','HospitalID','DoctorWebsite','DoctorBankAccountNo','DoctorBankName','DoctorMinReservationCharge','Status'];
    
     protected $primaryKey = 'DoctorID';
 
