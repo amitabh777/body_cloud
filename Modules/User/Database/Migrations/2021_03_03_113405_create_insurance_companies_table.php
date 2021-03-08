@@ -19,7 +19,7 @@ class CreateInsuranceCompaniesTable extends Migration
             $table->integerIncrements('InsuranceCompanyID')->unsigned();
             $table->integer('UserID')->unsigned();
             $table->string('InsuranceCompanyName',100);
-            $table->string('InsuranceCompanyInfo',100);
+            $table->string('InsuranceCompanyInfo',100)->nullable();
             $table->string('InsuranceCompanyProfileImage',150)->nullable();
             $table->string('InsuranceCompanyWebsite',100)->nullable();
             $table->string('InsuranceCompanyBankAccountNo',100)->nullable();

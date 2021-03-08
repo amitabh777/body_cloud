@@ -624,7 +624,7 @@ class RegistrationController extends Controller
     {
         return [
             'LaboratoryCompanyName' => $request->input('CompanyName'),
-            'LaboratoryInfo' => $request->input('LaboratoryInfo'),
+            'LaboratoryInfo' => $request->input('LaboratoryInfo',''),
             'LaboratoryWebsite' => $request->input('Website',''),
             'VisitingHours' => $request->input('VisitingHours'),
         ];
@@ -634,7 +634,7 @@ class RegistrationController extends Controller
     {
         return [
             'InsuranceCompanyName' => $request->input('CompanyName'),
-            'InsuranceCompanyInfo' => $request->input('CompanyInfo'),
+            'InsuranceCompanyInfo' => $request->input('CompanyInfo',''),
             'InsuranceCompanyWebsite' => $request->input('Website'),
             'VisitingHours' => $request->input('VisitingHours'),
         ];

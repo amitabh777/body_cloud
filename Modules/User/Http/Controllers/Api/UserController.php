@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -77,9 +78,26 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        print_r($id);
-        print_r($request->all());
+        $data = $request->all();
+        $validateUser = $this->validateUserData($data,$id);
+        if ($validateUser->fails()) {
+            return response()->json(['message' => $validateUser->errors()->first(), 'status' => 400]);
+        }
+
         return 'sdfdsfds';
+    }
+
+    public function validateUserData($data,$id)
+    {
+        $userRules = [
+            'Email' => 'required|email|max:150|unique:users,Email,'.$id.',UserID',
+            'Phone' => 'required|min:10|max:10|unique:users,Phone',$id,           
+            'RoleSlug' => ['required','in:'=>['patient','doctor']] ,         
+        ];
+        $message = [
+            'RoleSlug.required' => 'Role is required'
+        ];
+        return Validator::make($data, $userRules, $message, []);
     }
 
     /**
