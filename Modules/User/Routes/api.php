@@ -38,4 +38,4 @@ Route::namespace('Api')->middleware(['auth:api'])->group(function(){
     Route::get('user/me', 'UserController@myProfile');  
     
 });
-Route::put('profile/update/{id}', 'UserController@update'); 
+Route::patch('profile/update/{id}', 'Api\UserController@update');

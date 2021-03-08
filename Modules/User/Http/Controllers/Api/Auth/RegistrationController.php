@@ -498,6 +498,7 @@ class RegistrationController extends Controller
     {
         $userRules = [
             'CompanyName' => 'required',
+            'VisitingHours' => 'required',
         ];
         return Validator::make($request->all(), $userRules,[],[]);
     }
@@ -505,7 +506,6 @@ class RegistrationController extends Controller
     {
         $userRules = [
             'CompanyName' => 'required',
-            'Website' => 'required',
             'VisitingHours' => 'required',
         ];
         return Validator::make($request->all(), $userRules);
@@ -625,7 +625,7 @@ class RegistrationController extends Controller
         return [
             'LaboratoryCompanyName' => $request->input('CompanyName'),
             'LaboratoryInfo' => $request->input('LaboratoryInfo'),
-            'LaboratoryWebsite' => $request->input('LaboratoryWebsite'),
+            'LaboratoryWebsite' => $request->input('Website',''),
             'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
