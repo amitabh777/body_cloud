@@ -24,24 +24,22 @@ class Authenticate extends Middleware
         }
     }
 
-   public function handle($request, Closure $next, ...$guards)
-   {
-    if (Auth::guard('api')->guest()) {             
-        if ($request->ajax() || $request->wantsJson()) {
-            return response('Unauthorized.', 401);
-        } else {
-            $response = [
-                'status' => 401,
-                'message' => 'Unauthorized'
-            ];
-            return Response::json($response);
+    public function handle($request, Closure $next, ...$guards)
+    {
+        if (Auth::guard('api')->guest()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response('Unauthorized.', 401);
+            } else {
+                $response = [
+                    'status' => 401,
+                    'message' => 'Unauthorized: api_token required'
+                ];
+                return Response::json($response);
+            }
         }
-    }
-     $user = User::where('api_token',$request->api_token)->first();
-    // Auth::loginUsingId($user->UserID);
-    // Log::info($request->api_token);
-    Auth::login($user);
+        $user = User::where('api_token', $request->api_token)->first();
+        Auth::login($user);
 
-    return $next($request);
-   }
+        return $next($request);
+    }
 }

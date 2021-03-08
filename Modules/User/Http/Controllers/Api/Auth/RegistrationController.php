@@ -603,7 +603,7 @@ class RegistrationController extends Controller
         return [
             'UserID' => '',
             'HospitalName' => $request->input('HospitalName'),
-            'HospitalInfo' => $request->input('HospitalInfo'),
+            'HospitalInfo' => $request->input('HospitalInfo',''),
             'HospitalWebsite' => $request->input('HospitalWebsite'),
             'HospitalContactName' => $request->input('HospitalContactName'),
             'VisitingHours' => $request->input('VisitingHours'),
@@ -656,9 +656,9 @@ class RegistrationController extends Controller
             $uploadedFiles = [];
             foreach ($files as $file) {
                 $fileName = $file->hashName();
-                $path = $file->storeAs('public/documents/doctors', $fileName);
+                $path = $file->storeAs('documents/registered_papers', $fileName);
                 if ($path) {
-                    $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
+                    $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $path, 'CreatedAt' => $now->toDateTimeString());
                 }
             }
             if (!empty($uploadedFiles)) {
@@ -672,9 +672,9 @@ class RegistrationController extends Controller
     public function uploadProfileImage($file)
     {
         $file_name = $file->hashName();
-        $path = $file->storeAs('public/documents/profile_images', $file_name);
+        $path = $file->storeAs('documents/profile_images', $file_name,'public');
         if ($path) {
-            return $file_name;
+            return $path;
         }
         return false;
     }
