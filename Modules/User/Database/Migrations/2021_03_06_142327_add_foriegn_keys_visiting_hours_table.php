@@ -39,7 +39,9 @@ class AddForiegnKeysVisitingHoursTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::table('visiting_hours', function (Blueprint $table) {
-            $table->dropForeign(['HospitalID', 'DoctorID', 'LaboratoryID']);
+            $table->dropForeign(['HospitalID']);
+            $table->dropForeign(['DoctorID']);
+            $table->dropForeign(['LaboratoryID']);
         });
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

@@ -11,7 +11,7 @@ class Document extends Model
     const UPDATED_AT = 'UpdatedAt';
     protected $table = 'documents';
 
-    protected $fillable = ['DocumentTypeID','HospitalID','DoctorID','LaboratoryID','PatientID','InsuranceCompanyID','DocumentFile','Status'];
+    protected $fillable = ['DocumentTypeID','HospitalID','DoctorID','LaboratoryID','AmbulanceID','PatientID','InsuranceCompanyID','DocumentFile','Status'];
 
     protected $primaryKey = 'DocumentID';
     protected $with=['documentType'];

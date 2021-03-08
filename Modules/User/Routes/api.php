@@ -15,13 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 date_default_timezone_set('Asia/Kolkata');
 
-Route::middleware('auth:api')->post('/user', function (Request $request) {
-    
+Route::middleware('auth:api')->post('/user', function (Request $request) {    
     return 'success';
     //return $request->user();
 });
 //Authentications
-Route::namespace('Api\Auth')->group(function () {
+Route::namespace('Api\Auth')->middleware('device_check')->group(function () {
     Route::post('register', 'RegistrationController@registration');
     Route::post('login', 'LoginController@login');
     Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');
@@ -33,7 +32,11 @@ Route::namespace('Api')->group(function(){
     Route::get('blood_groups','BloodGroupController@index');
 });
 
-Route::namespace('Api\Auth')->middleware('auth:api')->group(function(){
-    Route::post('logout', 'LoginController@logout');
+Route::namespace('Api')->middleware(['auth:api'])->group(function(){
+
+    Route::get('users/{id}', 'UserController@show');    
+   
 });
+
+Route::post('logout','LoginController@logout')->middleware('api:auth');
 

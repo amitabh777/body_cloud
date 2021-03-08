@@ -27,11 +27,6 @@ class LoginController extends Controller
         return 'Phone';
     }
 
-    // public function getCredentials(Request $request)
-    // {
-    //     return $request->only('Phone', 'Password');
-    // }
-
     /**
      * Login User
      */
@@ -55,6 +50,8 @@ class LoginController extends Controller
         $user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole()->role; //User Role
         $profile = $user->profile($role->RoleSlug); //User profile
+        $user->api_token = $user->generateToken();
+        $user->save();
         //merge in user response
         $user['UserType'] = $role->RoleSlug; 
         $user['Profile'] = $profile;   
@@ -66,8 +63,6 @@ class LoginController extends Controller
         $userRules = [
             'Phone' => 'required|min:10|max:10',
             'Password' => ['required', 'string', 'min:8'],
-            'DeviceToken' => 'required',
-            'DeviceType' => 'required'
         ];
         $message = [];
         return Validator::make($data, $userRules, $message, []);
@@ -83,11 +78,11 @@ class LoginController extends Controller
         
        // Auth::loginUsingId(1);
         $user =  Auth:: user();//Auth::loginUsingId(4);//Auth::user();
-        var_dump(Auth::check());
-        print_r($user);
-        exit;
-        User::where('UserID',$user->UserID)->deleteDeviceToken();
-        Auth::logout();
+        // var_dump(Auth::check());
+        // print_r($user);
+        // exit;
+        // User::where('UserID',$user->UserID)->deleteDeviceToken();
+        // Auth::logout();
         return response()->json(['status'=>200,'message'=>'logout']);
     }
 

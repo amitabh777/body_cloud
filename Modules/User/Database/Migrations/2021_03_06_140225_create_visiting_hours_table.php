@@ -23,7 +23,7 @@ class CreateVisitingHoursTable extends Migration
             $table->time('VisitingEndTime');
             $table->enum('VisitingSlot', ['Morning', 'Noon', 'Evening']);
             $table->boolean('IsAvailable');
-            $table->enum('Status', ['Active', 'Inactive'])->nullable('Active');
+            $table->enum('Status', ['Active', 'Inactive'])->default('Active');
             $table->timestamp('CreatedAt')->nullable();
             $table->timestamp('UpdatedAt')->nullable();
         });

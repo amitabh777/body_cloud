@@ -16,11 +16,11 @@ class DocumentTypesTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+        DocumentType::where('DocumentTypeDesc','!=','nothing')->delete(); //deleting old entries
         $docTypes = config('user.const.document_types');       
         foreach($docTypes as $type){
             $row = array('DocumentTypeName'=>$type,'DocumentTypeDesc'=>'test');
              DocumentType::create($row);
         }
-        // $this->call("OthersTableSeeder");
     }
 }

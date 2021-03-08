@@ -19,13 +19,22 @@ class Role extends Model
     protected $primaryKey = 'RoleID';
 
     public function scopePatient($query){
-        return $query->where('RoleSlug', 'patient');
+        return $query->where('RoleSlug', config('user.const.role_slugs.patient'));
     }    
     public function scopeDoctor($query){
-        return $query->where('RoleSlug', 'doctor');
+        return $query->where('RoleSlug', config('user.const.role_slugs.doctor'));
     }    
     public function scopeHospital($query){
-        return $query->where('RoleSlug', 'hospital');
+        return $query->where('RoleSlug', config('user.const.role_slugs.hospital'));
+    }    
+    public function scopeAmbulance($query){
+        return $query->where('RoleSlug', config('user.const.role_slugs.ambulance'));
+    }    
+    public function scopeInsuranceCompany($query){
+        return $query->where('RoleSlug', config('user.const.role_slugs.insurance_company'));
+    }    
+    public function scopeLaboratory($query){
+        return $query->where('RoleSlug', config('user.const.role_slugs.lab'));
     }    
 
 }

@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Modules\User\Entities\Ambulance;
 use Modules\User\Entities\Doctor;
 use Modules\User\Entities\DoctorSector;
 use Modules\User\Entities\Document;
 use Modules\User\Entities\DocumentType;
 use Modules\User\Entities\Hospital;
+use Modules\User\Entities\InsuranceCompany;
+use Modules\User\Entities\Laboratory;
 use Modules\User\Entities\Patient;
 use Modules\User\Entities\Role;
 use Modules\User\Entities\UserRole;
@@ -41,7 +44,7 @@ class RegistrationController extends Controller
         $request->merge(['UniqueID' => $uniqueId]);
 
         switch ($request->input('RoleSlug')) {
-            case 'patient':
+            case config('user.const.role_slugs.patient'):
                 //validate profile data
                 $validator = $this->validatePatientProfile($request);
                 if ($validator->fails()) {
@@ -58,7 +61,7 @@ class RegistrationController extends Controller
 
                 break;
 
-            case 'doctor':
+            case config('user.const.role_slugs.doctor'):
                 $validator = $this->validateDoctorProfile($request);
                 if ($validator->fails()) {
                     return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
@@ -69,23 +72,53 @@ class RegistrationController extends Controller
                 }
                 break;
 
-                case 'hospital':
-                    $validator = $this->validateHospitalProfile($request);
-                    if ($validator->fails()) {
-                        return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
-                    }
-                    $result = $this->hospitalRegister($request);
-                    if (!$result) {
-                        return response()->json(['message' => 'unable to register', 'status' => 400]);
-                    }
-                    break;
+            case config('user.const.role_slugs.hospital'):
+                $validator = $this->validateHospitalProfile($request);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
+                }
+                $result = $this->hospitalRegister($request);
+                if (!$result) {
+                    return response()->json(['message' => 'unable to register', 'status' => 400]);
+                }
+                break;
+            case config('user.const.role_slugs.ambulance'):
+                $validator = $this->validateAmbulanceProfile($request);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
+                }
+                $result = $this->ambulanceRegister($request);
+                if (!$result) {
+                    return response()->json(['message' => 'unable to register', 'status' => 400]);
+                }
+                break;
+            case config('user.const.role_slugs.lab'):
+                $validator = $this->validateLabProfile($request);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
+                }
+                $result = $this->laboratoryRegister($request);
+                if (!$result) {
+                    return response()->json(['message' => 'unable to register', 'status' => 400]);
+                }
+                break;
+            case config('user.const.role_slugs.insurance_company'):
+                $validator = $this->validateInsuranceCompanyProfile($request);
+                if ($validator->fails()) {
+                    return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
+                }
+                $result = $this->insuranceCompanyRegister($request);
+                if (!$result) {
+                    return response()->json(['message' => 'unable to register', 'status' => 400]);
+                }
+                break;
 
             default:
                 return response()->json(['message' => 'Role not found', 'status' => 400]);
                 break;
-        }    
-        return response()->json(['message' => 'success', 'status' => 200]);    
-    }    
+        }
+        return response()->json(['message' => 'success', 'status' => 200]);
+    }
 
     /**
      * get New UniqueID for registration
@@ -128,30 +161,20 @@ class RegistrationController extends Controller
         } catch (Exception $e) {
             DB::rollBack(); //failed
             $success = false;
-            Log::error('Unable to create user');
+            Log::error('Unable to create user ');
             Log::error($e->getMessage());
         }
         if ($success) {
             //upload files
-            if ($request->file('PatientProfileImage')) {
-                $filename = $this->uploadProfileImage($request->file('PatientProfileImage'));
+            if ($request->file('ProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('ProfileImage'));
                 if ($filename) {
                     $patient->PatientProfileImage = $filename;
                     $patient->save();
                 } else {
-                    Log::error('User registration: unable to upload profile image');
+                    Log::error('User registration: unable to upload profile image.');
                 }
             }
-            /* fd $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.image'))->first();
-
-            if ($request->file('PatientProfileImage')) {
-                $filename = $this->uploadDocument($request->file('PatientProfileImage'));
-                if ($filename) {
-                    //saving in documents table
-                    Document::create(['DocumentTypeID' => $docType->DocumentTypeID, 'PatientID' => $patient->PatientID, 'DocumentFile' => $filename]);
-                    Log::info('document created');
-                }
-            }*/
             $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
             return $otp ? $otp : 'otp_failed';
         }
@@ -163,7 +186,6 @@ class RegistrationController extends Controller
      */
     public function doctorRegister($request)
     {
-        $now = Carbon::now();
         $userData = $this->getUserData($request);
         $profileData = $this->getDoctorProfileData($request);
         $success = false;
@@ -184,20 +206,20 @@ class RegistrationController extends Controller
                 $this->setMedicalSectors($profileData['SectorID'], $doctor->DoctorID);
             }
             //set Visiting hours 
-            $this->setVisitingHours($request->VisitingHours, $doctor->DoctorID, 'doctor');
+            $this->setVisitingHours($request->VisitingHours, $doctor->DoctorID, config('user.const.role_slugs.doctor'));
             //Upload registered papers
-            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.doctor'), $doctor->DoctorID);
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.doctor'), $doctor->DoctorID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
             DB::rollBack(); //failed rollback
-            Log::error('Unable to create user');
+            Log::error('Unable to create user.');
             Log::error($e->getMessage());
         }
         if ($success) {
             //upload files
-            if ($request->file('DoctorProfileImage')) {
-                $filename = $this->uploadProfileImage($request->file('DoctorProfileImage'));
+            if ($request->file('ProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('ProfileImage'));
                 if ($filename) {
                     $doctor->DoctorProfileImage = $filename;
                     $doctor->save();
@@ -216,11 +238,10 @@ class RegistrationController extends Controller
      */
     public function hospitalRegister($request)
     {
-        $now = Carbon::now();
         $userData = $this->getUserData($request);
         $profileData = $this->getHospitalProfileData($request);
-        $success = false;
 
+        $success = false;
         DB::beginTransaction();
         try {
             //create user with role and profile
@@ -231,11 +252,11 @@ class RegistrationController extends Controller
             UserRole::create(['RoleID' => $hospitalRole->RoleID, 'UserID' => $user->UserID]);
             $profileData['UserID'] = $user->UserID;
             $profileData['Otp'] = $user->Otp;
-            $hospital = Hospital::create($profileData);           
+            $hospital = Hospital::create($profileData);
             //set Visiting hours 
             $this->setVisitingHours($request->VisitingHours, $hospital->HospitalID, config('user.const.role_slugs.hospital'));
             //Upload registered papers
-            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.hospital'), $hospital->HospitalID);
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.hospital'), $hospital->HospitalID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
@@ -245,11 +266,142 @@ class RegistrationController extends Controller
         }
         if ($success) {
             //upload files
-            if ($request->file('HospitalProfileImage')) {
-                $filename = $this->uploadProfileImage($request->file('HospitalProfileImage'));
+            if ($request->file('ProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('ProfileImage'));
                 if ($filename) {
                     $hospital->HospitalProfileImage = $filename;
                     $hospital->save();
+                } else {
+                    Log::error('User registration: unable to upload profile image');
+                }
+            }
+            $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
+            return $otp ? $otp : 'otp_failed';
+        }
+        return $success;
+    }
+
+    public function ambulanceRegister($request)
+    {
+        $userData = $this->getUserData($request);
+        $profileData = $this->getAmbulanceProfileData($request);
+
+        $success = false;
+        DB::beginTransaction();
+        try {
+            //create user with role and profile
+            $user = User::create($userData);
+            if ($user) {
+                $ambulanceRole = Role::ambulance()->first();
+            }
+            UserRole::create(['RoleID' => $ambulanceRole->RoleID, 'UserID' => $user->UserID]);
+            $profileData['UserID'] = $user->UserID;
+            $profileData['Otp'] = $user->Otp;
+            $ambulance = Ambulance::create($profileData);
+            //Upload registered papers
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.ambulance'), $ambulance->AmbulanceID, config('user.const.document_types.driving_license'));
+            DB::commit(); //success
+            $success = true;
+        } catch (Exception $e) {
+            DB::rollBack(); //failed rollback
+            Log::error('Unable to create user' . $e->getMessage());
+        }
+        if ($success) {
+            //upload files
+            if ($request->file('ProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('ProfileImage'));
+                if ($filename) {
+                    $ambulance->AmbulanceProfileImage = $filename;
+                    $ambulance->save();
+                } else {
+                    Log::error('User registration: unable to upload profile image');
+                }
+            }
+            $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
+            return $otp ? $otp : 'otp_failed';
+        }
+        return $success;
+    }
+
+    //Laboratory Registration
+    public function laboratoryRegister($request)
+    {
+        $userData = $this->getUserData($request);
+        $profileData = $this->getLabProfileData($request);
+
+        $success = false;
+        DB::beginTransaction();
+        try {
+            //create user with role and profile
+            $user = User::create($userData);
+            if ($user) {
+                $laboratoryRole = Role::laboratory()->first();
+            }
+            UserRole::create(['RoleID' => $laboratoryRole->RoleID, 'UserID' => $user->UserID]);
+            $profileData['UserID'] = $user->UserID;
+            $profileData['Otp'] = $user->Otp;
+            $laboratory = Laboratory::create($profileData);
+             //set Visiting hours 
+             $this->setVisitingHours($request->VisitingHours, $laboratory->LaboratoryID, config('user.const.role_slugs.lab'));
+            //Upload registered papers
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.lab'), $laboratory->LaboratoryID, config('user.const.document_types.registered_paper'));
+            DB::commit(); //success
+            $success = true;
+        } catch (Exception $e) {
+            DB::rollBack(); //failed rollback
+            Log::error('Unable to create user' . $e->getMessage());
+        }
+        if ($success) {
+            //upload files
+            if ($request->file('ProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('ProfileImage'));
+                if ($filename) {
+                    $laboratory->LaboratoryProfileImage = $filename;
+                    $laboratory->save();
+                } else {
+                    Log::error('User registration: unable to upload profile image');
+                }
+            }
+            $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
+            return $otp ? $otp : 'otp_failed';
+        }
+        return $success;
+    }
+    //Insurance Company
+    public function insuranceCompanyRegister($request)
+    {
+        $userData = $this->getUserData($request);
+        $profileData = $this->getInsuranceCompanyProfileData($request);
+
+        $success = false;
+        DB::beginTransaction();
+        try {
+            //create user with role and profile
+            $user = User::create($userData);
+            if ($user) {
+                $insuranceCompanyRole = Role::insuranceCompany()->first();
+            }
+            UserRole::create(['RoleID' => $insuranceCompanyRole->RoleID, 'UserID' => $user->UserID]);
+            $profileData['UserID'] = $user->UserID;
+            $profileData['Otp'] = $user->Otp;
+            $insuranceCompany = InsuranceCompany::create($profileData);
+             //set Visiting hours 
+             $this->setVisitingHours($request->VisitingHours, $insuranceCompany->InsuranceCompanyID, config('user.const.role_slugs.insurance_company'));
+            //Upload registered papers
+            $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.insurance_company'), $insuranceCompany->InsuranceCompanyID, config('user.const.document_types.registered_paper'));
+            DB::commit(); //success
+            $success = true;
+        } catch (Exception $e) {
+            DB::rollBack(); //failed rollback
+            Log::error('Unable to create user' . $e->getMessage());
+        }
+        if ($success) {
+            //upload files
+            if ($request->file('ProfileImage')) {
+                $filename = $this->uploadProfileImage($request->file('ProfileImage'));
+                if ($filename) {
+                    $insuranceCompany->InsuranceCompanyProfileImage = $filename;
+                    $insuranceCompany->save();
                 } else {
                     Log::error('User registration: unable to upload profile image');
                 }
@@ -269,13 +421,11 @@ class RegistrationController extends Controller
             'RoleSlug' => 'required'
         ];
         $message = [
-            // 'Phone.min' => 'Phone must be 10 digits',
-            // 'Phone.max' => 'Phone must be 10 digits',
             'RoleSlug.required' => 'Role is required'
         ];
         return Validator::make($data, $userRules, $message, []);
     }
-    
+
     public function validatePatientProfile($request)
     {
         $userRules = [
@@ -292,8 +442,9 @@ class RegistrationController extends Controller
     public function validateDoctorProfile($request)
     {
         $userRules = [
-            'DoctorName' => 'required',           
-            'DoctorGender' => 'required'
+            'DoctorName' => 'required',
+            'DoctorGender' => 'required',
+            'VisitingHours' => 'required'
         ];
         return Validator::make($request->all(), $userRules);
     }
@@ -301,8 +452,34 @@ class RegistrationController extends Controller
     public function validateHospitalProfile($request)
     {
         $userRules = [
-            'HospitalName' => 'required',           
-            'HospitalContactName' => 'required'
+            'HospitalName' => 'required',
+            'HospitalContactName' => 'required',
+            'VisitingHours' => 'required'
+        ];
+        return Validator::make($request->all(), $userRules);
+    }
+
+    public function validateAmbulanceProfile($request)
+    {
+        $userRules = [
+            'ContactName' => 'required',
+            'AmbulanceNumber' => 'required',
+        ];
+        return Validator::make($request->all(), $userRules);
+    }
+    public function validateLabProfile($request)
+    {
+        $userRules = [
+            'ContactName' => 'required',
+        ];
+        return Validator::make($request->all(), $userRules);
+    }
+    public function validateInsuranceCompanyProfile($request)
+    {
+        $userRules = [
+            'CompanyName' => 'required',
+            'Website' => 'required',
+            'VisitingHours' => 'required',
         ];
         return Validator::make($request->all(), $userRules);
     }
@@ -329,37 +506,23 @@ class RegistrationController extends Controller
         }
         $now = Carbon::now();
         $rows = [];
-        if ($roleSlug == config('user.const.role_slugs.doctor')) {
-            $profileIDKey = 'DoctorID';
-        } elseif ($roleSlug == config('user.const.role_slugs.hospital')) {
-            $profileIDKey = 'DoctorID';
-        } elseif ($roleSlug == config('user.const.role_slugs.lab')) {
-            $profileIDKey = 'LaboratoryID';
-        } else {
-            Log::error('Role slug not defined');
-            return false;
+        $profileIDKey = CustomHelper::getProfileIdKey($roleSlug); //get profile id column name
+        $days = is_array($visitingHours) ? $visitingHours : json_decode($visitingHours, true);
+        if ($days['days']) {
+            foreach ($days['days'] as $day => $details) {
+                $rows[] = array(
+                    $profileIDKey => $profileID,
+                    'VisitingDay' => $day,
+                    'VisitingStartTime' => CustomHelper::convertTimeTo24($details['start_time']),
+                    'VisitingEndTime' => CustomHelper::convertTimeTo24($details['end_time']),
+                    'VisitingSlot' => $details['visiting_slot'],
+                    'IsAvailable' => $details['is_available'],
+                    'CreatedAt' => $now->toDateTimeString()
+                );
+            }
         }
-        $days = json_decode($visitingHours);
-        foreach ($days as $day => $details) {
-            $rows[] = array(
-                $profileIDKey => $profileID,
-                'VisitingDay' => $day,
-                'VisitingStartTime' => $details['start_time'],
-                'VisitingEndTime' => $details['end_time'],
-                'VisitingSlot' => $details['visiting_slot'],
-                'IsAvailable' => $details['is_available'],
-                'CreatedAt' => $now->toDateTimeString()
-            );
-        }
-        try {
-            //Insert into visitng hours
-            DB::table('visiting_hours')->insert($rows);
-        } catch (Exception $e) {
-            Log::error('unable to insert visiting hours');
-            Log::error($e->getMessage());
-            return false;
-        }
-        return true;
+        //Insert into visitng hours
+        DB::table('visiting_hours')->insert($rows);
     }
 
     public function getUserData($request)
@@ -371,8 +534,8 @@ class RegistrationController extends Controller
             'UniqueID' => $request->input('UniqueID'),
             'Password' => Hash::make($request->input('Password')),
             'Address' => $request->input('Address', ''),
-            'DeviceType' => $request->input('DeviceType', 'android'),
-            'DeviceToken' => $request->input('DeviceToken', null),
+            'DeviceType' => $request->input('DeviceType', ''),
+            'DeviceToken' => $request->input('DeviceToken', ''),
             'api_token' => $this->createToken()
         );
     }
@@ -406,7 +569,7 @@ class RegistrationController extends Controller
             'DoctorBankName' => $request->input('DoctorBankName', null),
             'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
             'SectorID' => $request->input('SectorID', []),
-            'VisitingHours' => $request->input('VisitingHours', null),
+            'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
     //Hospital fields
@@ -418,37 +581,65 @@ class RegistrationController extends Controller
             'HospitalInfo' => $request->input('HospitalInfo'),
             'HospitalWebsite' => $request->input('HospitalWebsite'),
             'HospitalContactName' => $request->input('HospitalContactName'),
-            'VisitingHours' => $request->input('VisitingHours', null),
+            'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
-    
-    public function createToken($length = 80)
+    //Ambulance profile
+    public function getAmbulanceProfileData($request)
     {
-        return hash('sha256', time() . '0123456789ab');
+        return [
+            'AmbulanceContactName' => $request->input('ContactName'),
+            'AmbulanceNumber' => $request->input('AmbulanceNumber'),
+        ];
+    }
+    //Lab profile
+    public function getLabProfileData($request)
+    {
+        return [
+            'LaboratoryContactName' => $request->input('ContactName'),
+            'LaboratoryInfo' => $request->input('LaboratoryInfo'),
+            'LaboratoryWebsite' => $request->input('LaboratoryWebsite'),
+            'VisitingHours' => $request->input('VisitingHours'),
+        ];
+    }
+    //Lab profile
+    public function getInsuranceCompanyProfileData($request)
+    {
+        return [
+            'InsuranceCompanyName' => $request->input('CompanyName'),
+            'InsuranceCompanyInfo' => $request->input('ContactInfo'),
+            'InsuranceCompanyWebsite' => $request->input('Website'),
+            'VisitingHours' => $request->input('VisitingHours'),
+        ];
+    }
+
+    public function createToken()
+    {
+        return hash('sha256', time() . '0123456789ab25');
     }
 
     /**
      * Upload documents
      */
-    public function uploadDocuments($files, $role, $profileId)
+    public function uploadDocuments($files, $role, $profileId, $doctype)
     {
         $now = Carbon::now();
         //multiple uploads
-        if ($files) {                
-                $docType = DocumentType::where('DocumentTypeName', config('user.const.document_types.registered_paper'))->first();
-                $profileKey = $this->getProfileIdKey($role);
-                $uploadedFiles = [];
-                foreach ($files as $file) {
-                    $fileName = $file->hashName();
-                    $path = $file->storeAs('public/documents/doctors', $fileName);
-                    if ($path) {
-                        $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
-                    }
+        if ($files) {
+            $docType = DocumentType::where('DocumentTypeName', $doctype)->first();
+            $profileKey = CustomHelper::getProfileIdKey($role);
+            $uploadedFiles = [];
+            foreach ($files as $file) {
+                $fileName = $file->hashName();
+                $path = $file->storeAs('documents/doctors', $fileName);
+                if ($path) {
+                    $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $path, 'CreatedAt' => $now->toDateTimeString());
                 }
-                if (!empty($uploadedFiles)) {
-                    Document::insert($uploadedFiles);
-                }
-                return true;
+            }
+            if (!empty($uploadedFiles)) {
+                Document::insert($uploadedFiles);
+            }
+            return true;
         }
         return false;
     }
@@ -456,25 +647,10 @@ class RegistrationController extends Controller
     public function uploadProfileImage($file)
     {
         $file_name = $file->hashName();
-        $path = $file->storeAs('public/documents/profile_images', $file_name);
+        $path = $file->storeAs('documents/profile_images', $file_name);
         if ($path) {
-            return $file_name;
+            return $path;
         }
         return false;
-    }
-
-    //get profile id field key
-    public function getProfileIdKey($role)
-    {
-        if ($role == config('user.const.role_slugs.doctor')) {
-            $profileIDKey = 'DoctorID';
-        } elseif ($role == config('user.const.role_slugs.hospital')) {
-            $profileIDKey = 'DoctorID';
-        } elseif ($role == config('user.const.role_slugs.lab')) {
-            $profileIDKey = 'LaboratoryID';
-        } else {
-            return false;
-        }
-        return $profileIDKey;
     }
 }

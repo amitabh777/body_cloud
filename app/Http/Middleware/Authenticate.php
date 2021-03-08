@@ -26,7 +26,7 @@ class Authenticate extends Middleware
 
    public function handle($request, Closure $next, ...$guards)
    {
-    if (Auth::guard('api')->guest()) {
+    if (Auth::guard('api')->guest()) {             
         if ($request->ajax() || $request->wantsJson()) {
             return response('Unauthorized.', 401);
         } else {
@@ -37,9 +37,10 @@ class Authenticate extends Middleware
             return Response::json($response);
         }
     }
-    // $user = User::where('api_token',$request->api_token)->first();
+     $user = User::where('api_token',$request->api_token)->first();
     // Auth::loginUsingId($user->UserID);
     // Log::info($request->api_token);
+    Auth::login($user);
 
     return $next($request);
    }

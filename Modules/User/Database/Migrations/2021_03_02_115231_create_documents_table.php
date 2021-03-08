@@ -22,6 +22,7 @@ class CreateDocumentsTable extends Migration
             $table->unsignedInteger('DoctorID')->nullable();
             $table->unsignedInteger('LaboratoryID')->nullable();
             $table->unsignedInteger('PatientID')->nullable();
+            $table->unsignedInteger('AmbulanceID')->nullable();
             $table->unsignedInteger('InsuranceCompanyID')->nullable();
             $table->string('DocumentFile',250);
             $table->enum('Status',['Active','Inactive'])->default('Active');

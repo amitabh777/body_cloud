@@ -1,26 +1,23 @@
 <?php
 
-namespace Modules\User\Http\Controllers;
+namespace Modules\User\Http\Controllers\Api;
 
+use App\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    use AuthenticatesUsers;
     /**
-     * Display a listing of the resource.
-     * @return Renderable
+     * 
+     * return user data
      */
     public function index()
     {
-        $roles = config('user.const.roles');
-        $roleData = [];
-        foreach($roles as $slug=>$role){
-            $roleData[] = array('RoleName'=>$role,'RoleSlug'=>$slug);
-        }
-        print_r($roleData);
-        return view('user::index');
     }
 
     /**
@@ -45,11 +42,17 @@ class UserController extends Controller
     /**
      * Show the specified resource.
      * @param int $id
-     * @return Renderable
      */
     public function show($id)
     {
-        return view('user::show');
+        $user = User::find(Auth::user()->UserID); //get user
+        $role = $user->userRole()->role; //User Role
+        $profile = $user->profile($role->RoleSlug); //User profile
+        
+        //merge in user response
+        $user['UserType'] = $role->RoleSlug; 
+        $user['Profile'] = $profile;   
+        return response()->json(['data'=>$user,'message' => 'Success', 'status' => 200]);
     }
 
     /**

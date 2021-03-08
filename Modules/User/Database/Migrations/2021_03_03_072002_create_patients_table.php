@@ -18,7 +18,7 @@ class CreatePatientsTable extends Migration
             Schema::create('patients', function (Blueprint $table) {
                 $table->integerIncrements('PatientID')->unsigned();
                 $table->unsignedInteger('UserID');
-                $table->string('PatientName', 100);
+                $table->string('PatientName', 100); 
                 $table->enum('PatientGender', ['Male', 'Female']);
                 $table->date('PatientDOB');
                 $table->integer('BloodGroupID')->unsigned()->nullable();
@@ -34,11 +34,8 @@ class CreatePatientsTable extends Migration
                 $table->foreign('UserID')
                     ->references('UserID')
                     ->on('users')
-                    ->onDelete('cascade');    
-                    // $table->foreign('BloodGroupID')
-                    // ->references('BloodGroupID')
-                    // ->on('blood_groups')
-                    // ->onDelete('SET NULL');                   
+                    ->onDelete('cascade');   
+                                
             });
         }
     }

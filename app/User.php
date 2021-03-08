@@ -10,6 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Modules\User\Entities\Doctor;
+use Modules\User\Entities\Hospital;
+use Modules\User\Entities\InsuranceCompany;
+use Modules\User\Entities\Laboratory;
 use Modules\User\Entities\Patient;
 use Modules\User\Entities\Role;
 use Modules\User\Entities\UserRole;
@@ -57,29 +60,23 @@ class User extends Authenticatable
         return $this->Password; // case sensitive
     }
 
-    public function patientProfile()
-    {
-
-
-        //if($role->roleInfo->RoleSlug==config('const.role_slug.patient')){
-        return $this->hasOne(Patient::class, 'UserID', 'UserID');
-        // }
-
-        // if($role == config('const.role_slug.patient')){
-        //     return $this->hasOne(Patient::class,'UserID','UserID');
-        // }
-
-    }
-
     public function profile($type)
     {
-        if ($type == 'patient') {
-            return $this->hasOne(Patient::class, 'UserID', 'UserID')->first();
+        $relation = '';
+        if ($type == config('user.const.role_slugs.patient')) {
+            $relation = $this->hasOne(Patient::class, 'UserID', 'UserID')->first();
+        }elseif ($type ==  config('user.const.role_slugs.doctor')) {
+            $relation = $this->hasOne(Doctor::class, 'UserID', 'UserID')->first();
+        }elseif ($type ==  config('user.const.role_slugs.hospital')) {
+            $relation =  $this->hasOne(Hospital::class, 'UserID', 'UserID')->first();
+        }elseif ($type == config('user.const.role_slugs.ambulance')) {
+            $relation = $this->hasOne(Ambulance::class, 'UserID', 'UserID')->first();
+        }elseif ($type == config('user.const.role_slugs.lab')) {
+            $relation = $this->hasOne(Laboratory::class, 'UserID', 'UserID')->first();
+        }elseif ($type == config('user.const.role_slugs.insurance_company')) {
+            $relation= $this->hasOne(InsuranceCompany::class, 'UserID', 'UserID')->first();
         }
-        if ($type == 'doctor') {
-            return $this->hasOne(Doctor::class, 'UserID', 'UserID')->first();
-        }
-        return '';
+        return $relation;
     }
 
     //get Role
@@ -88,12 +85,8 @@ class User extends Authenticatable
         return $this->hasOne(UserRole::class, 'UserID', 'UserID')->first();
     }
 
-    /**
-     * Delete device token
-     */
-
-    public function scopeDeleteDeviceToken($query)
-    {
-        return $query->where('UserID', $this->UserID)->update(['DeviceToken' => '']);
+    public function scopeGenerateToken(){   
+        return hash('sha256', time() . '0123456789ab25');  
     }
+
 }

@@ -18,14 +18,11 @@ class RoleTableSeeder extends Seeder
         Model::unguard();
 
         $roles = config('user.const.roles');
+        Role::where('RoleSlug','!=','nothing')->delete(); //deleting old entries
         $roleData = array();
         foreach($roles as $slug=>$role){
             $roleData = array('RoleName'=>$role,'RoleSlug'=>$slug);
              Role::create($roleData);
-        }
-      //  $role = Role::create($roleData);
-       // $role->save();
-
-        // $this->call("OthersTableSeeder");
+        }     
     }
 }

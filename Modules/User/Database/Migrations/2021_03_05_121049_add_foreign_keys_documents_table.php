@@ -45,6 +45,10 @@ class AddForeignKeysDocumentsTable extends Migration
                     ->references('InsuranceCompanyID')
                     ->on('insurance_companies')
                     ->onDelete('cascade');
+                $table->foreign('AmbulanceID')
+                    ->references('AmbulanceID')
+                    ->on('ambulances')
+                    ->onDelete('cascade');
             });
         }
     }
@@ -58,8 +62,14 @@ class AddForeignKeysDocumentsTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::table('documents', function (Blueprint $table) {
-            $table->dropForeign(['DocumentTypeID', 'HospitalID', 'DoctorID', 'LaboratoryID', 'PatientID', 'InsuranceCompanyID']);
-        });
+            $table->dropForeign(['DocumentTypeID']);
+            $table->dropForeign(['HospitalID']);
+            $table->dropForeign(['DoctorID']);
+            $table->dropForeign(['LaboratoryID']);
+            $table->dropForeign(['PatientID']);
+            $table->dropForeign(['InsuranceCompanyID']);
+            $table->dropForeign(['AmbulanceID']);
+            });
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
