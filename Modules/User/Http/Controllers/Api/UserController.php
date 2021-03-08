@@ -77,7 +77,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        print_r($id);
+        print_r($request->all());
+        return 'sdfdsfds';
     }
 
     /**

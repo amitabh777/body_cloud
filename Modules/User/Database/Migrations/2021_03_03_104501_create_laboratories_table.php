@@ -19,7 +19,7 @@ class CreateLaboratoriesTable extends Migration
             $table->integer('UserID')->unsigned();
             $table->string('LaboratoryInfo')->nullable();
             $table->string('LaboratoryProfileImage',200)->nullable();
-            $table->string('LaboratoryContactName',100);
+            $table->string('LaboratoryCompanyName',100);
             $table->string('LaboratoryWebsite',150)->nullable();
             $table->string('LaboratoryBankAccountNo',100)->nullable();
             $table->string('LaboratoryBankName',100)->nullable();

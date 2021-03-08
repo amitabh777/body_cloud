@@ -11,7 +11,7 @@ class Laboratory extends Model
     const UPDATED_AT = 'UpdatedAt';
    
     protected $table = 'laboratories';
-    protected $fillable = ['UserID','LaboratoryInfo','LaboratoryProfileImage','LaboratoryContactName','LaboratoryWebsite','LaboratoryBankAccountNo','LaboratoryBankName','LaboratoryMinReservationCharge','Status'];
+    protected $fillable = ['UserID','LaboratoryInfo','LaboratoryProfileImage','LaboratoryCompanyName','LaboratoryWebsite','LaboratoryBankAccountNo','LaboratoryBankName','LaboratoryMinReservationCharge','Status'];
    
     protected $primaryKey = 'LaboratoryID';
 

@@ -497,9 +497,9 @@ class RegistrationController extends Controller
     public function validateLabProfile($request)
     {
         $userRules = [
-            'ContactName' => 'required',
+            'CompanyName' => 'required',
         ];
-        return Validator::make($request->all(), $userRules);
+        return Validator::make($request->all(), $userRules,[],[]);
     }
     public function validateInsuranceCompanyProfile($request)
     {
@@ -623,7 +623,7 @@ class RegistrationController extends Controller
     public function getLabProfileData($request)
     {
         return [
-            'LaboratoryContactName' => $request->input('ContactName'),
+            'LaboratoryCompanyName' => $request->input('CompanyName'),
             'LaboratoryInfo' => $request->input('LaboratoryInfo'),
             'LaboratoryWebsite' => $request->input('LaboratoryWebsite'),
             'VisitingHours' => $request->input('VisitingHours'),
