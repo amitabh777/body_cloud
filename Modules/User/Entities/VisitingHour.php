@@ -12,7 +12,7 @@ class VisitingHour extends Model
     protected $table = 'visiting_hours';
 
     protected $fillable = [
-        'HospitalID', 'DoctorID','LaboratoryID','VisitingDay','VisitingStartTime','VisitingEndTime','VisitingSlot','IsAvailable','Status'
+        'HospitalID', 'DoctorID','LaboratoryID','InsuranceCompanyID','VisitingDay','VisitingStartTime','VisitingEndTime','VisitingSlot','IsAvailable','Status'
     ];
 
     protected $primaryKey = 'VisitingHourID';

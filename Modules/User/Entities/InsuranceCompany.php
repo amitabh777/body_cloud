@@ -10,7 +10,7 @@ class InsuranceCompany extends Model
     const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
    
-    protected $table = 'laboratories';
+    protected $table = 'insurance_companies';
     protected $fillable = ['UserID','InsuranceCompanyName','InsuranceCompanyInfo','InsuranceCompanyProfileImage','InsuranceCompanyWebsite','InsuranceCompanyBankAccountNo','InsuranceCompanyBankName','Status'];
    
     protected $primaryKey = 'InsuranceCompanyID';

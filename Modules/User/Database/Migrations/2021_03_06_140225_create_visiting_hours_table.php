@@ -18,6 +18,7 @@ class CreateVisitingHoursTable extends Migration
             $table->integer('HospitalID')->unsigned()->nullable();
             $table->integer('DoctorID')->unsigned()->nullable();
             $table->integer('LaboratoryID')->unsigned()->nullable();
+            $table->integer('InsuranceCompanyID')->unsigned()->nullable();
             $table->string('VisitingDay', 20);
             $table->time('VisitingStartTime');
             $table->time('VisitingEndTime');

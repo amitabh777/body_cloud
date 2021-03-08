@@ -27,6 +27,10 @@ class AddForiegnKeysVisitingHoursTable extends Migration
             ->references('LaboratoryID')
             ->on('laboratories')
             ->onDelete('cascade');
+            $table->foreign('InsuranceCompanyID')
+            ->references('InsuranceCompanyID')
+            ->on('insurance_companies')
+            ->onDelete('cascade');
         });
     }
 
@@ -42,6 +46,7 @@ class AddForiegnKeysVisitingHoursTable extends Migration
             $table->dropForeign(['HospitalID']);
             $table->dropForeign(['DoctorID']);
             $table->dropForeign(['LaboratoryID']);
+            $table->dropForeign(['InsuranceCompanyID']);
         });
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

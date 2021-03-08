@@ -370,6 +370,8 @@ class RegistrationController extends Controller
     //Insurance Company
     public function insuranceCompanyRegister($request)
     {
+        // print_r($request->all());
+        // exit;
         $userData = $this->getUserData($request);
         $profileData = $this->getInsuranceCompanyProfileData($request);
 
@@ -607,7 +609,7 @@ class RegistrationController extends Controller
     {
         return [
             'InsuranceCompanyName' => $request->input('CompanyName'),
-            'InsuranceCompanyInfo' => $request->input('ContactInfo'),
+            'InsuranceCompanyInfo' => $request->input('CompanyInfo'),
             'InsuranceCompanyWebsite' => $request->input('Website'),
             'VisitingHours' => $request->input('VisitingHours'),
         ];
@@ -631,9 +633,9 @@ class RegistrationController extends Controller
             $uploadedFiles = [];
             foreach ($files as $file) {
                 $fileName = $file->hashName();
-                $path = $file->storeAs('documents/doctors', $fileName);
+                $path = $file->storeAs('public/documents/doctors', $fileName);
                 if ($path) {
-                    $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $path, 'CreatedAt' => $now->toDateTimeString());
+                    $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $fileName, 'CreatedAt' => $now->toDateTimeString());
                 }
             }
             if (!empty($uploadedFiles)) {
@@ -647,9 +649,9 @@ class RegistrationController extends Controller
     public function uploadProfileImage($file)
     {
         $file_name = $file->hashName();
-        $path = $file->storeAs('documents/profile_images', $file_name);
+        $path = $file->storeAs('public/documents/profile_images', $file_name);
         if ($path) {
-            return $path;
+            return $file_name;
         }
         return false;
     }
