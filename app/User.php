@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Modules\User\Entities\Ambulance;
 use Modules\User\Entities\Doctor;
 use Modules\User\Entities\Hospital;
 use Modules\User\Entities\InsuranceCompany;
