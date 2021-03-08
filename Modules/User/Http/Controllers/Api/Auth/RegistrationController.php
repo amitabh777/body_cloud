@@ -70,6 +70,11 @@ class RegistrationController extends Controller
                 if (!$result) {
                     return response()->json(['message' => 'unable to register', 'status' => 400]);
                 }
+                //Doctor registered
+                $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
+                $message = ($otp != '') ? 'Doctor Registered' : "Doctor Registered, Otp didn't sent";
+                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message]);
+
                 break;
 
             case config('user.const.role_slugs.hospital'):
@@ -81,6 +86,11 @@ class RegistrationController extends Controller
                 if (!$result) {
                     return response()->json(['message' => 'unable to register', 'status' => 400]);
                 }
+                //Hospital registered
+                $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
+                $message = ($otp != '') ? 'Hospital Registered' : "Hospital Registered, Otp didn't sent";
+                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message]);
+
                 break;
             case config('user.const.role_slugs.ambulance'):
                 $validator = $this->validateAmbulanceProfile($request);
@@ -91,6 +101,11 @@ class RegistrationController extends Controller
                 if (!$result) {
                     return response()->json(['message' => 'unable to register', 'status' => 400]);
                 }
+                //Ambulance registered
+                $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
+                $message = ($otp != '') ? 'Ambulance Registered' : "Ambulance Registered, Otp didn't sent";
+                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message]);
+
                 break;
             case config('user.const.role_slugs.lab'):
                 $validator = $this->validateLabProfile($request);
@@ -101,6 +116,11 @@ class RegistrationController extends Controller
                 if (!$result) {
                     return response()->json(['message' => 'unable to register', 'status' => 400]);
                 }
+                //Laboratory registered
+                $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
+                $message = ($otp != '') ? 'Laboratory Registered' : "Laboratory Registered, Otp didn't sent";
+                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message]);
+
                 break;
             case config('user.const.role_slugs.insurance_company'):
                 $validator = $this->validateInsuranceCompanyProfile($request);
@@ -111,6 +131,11 @@ class RegistrationController extends Controller
                 if (!$result) {
                     return response()->json(['message' => 'unable to register', 'status' => 400]);
                 }
+                //patient registered
+                $otp = ($result != 'otp_failed') ? $result : ''; //check if otp failed
+                $message = ($otp != '') ? 'Insurance company Registered' : "Insurance company Registered, Otp didn't sent";
+                return response()->json(['status' => 200, 'data' => ['Otp' => $otp], 'message' => $message]);
+
                 break;
 
             default:
@@ -341,8 +366,8 @@ class RegistrationController extends Controller
             $profileData['UserID'] = $user->UserID;
             $profileData['Otp'] = $user->Otp;
             $laboratory = Laboratory::create($profileData);
-             //set Visiting hours 
-             $this->setVisitingHours($request->VisitingHours, $laboratory->LaboratoryID, config('user.const.role_slugs.lab'));
+            //set Visiting hours 
+            $this->setVisitingHours($request->VisitingHours, $laboratory->LaboratoryID, config('user.const.role_slugs.lab'));
             //Upload registered papers
             $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.lab'), $laboratory->LaboratoryID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
@@ -370,8 +395,6 @@ class RegistrationController extends Controller
     //Insurance Company
     public function insuranceCompanyRegister($request)
     {
-        // print_r($request->all());
-        // exit;
         $userData = $this->getUserData($request);
         $profileData = $this->getInsuranceCompanyProfileData($request);
 
@@ -387,8 +410,8 @@ class RegistrationController extends Controller
             $profileData['UserID'] = $user->UserID;
             $profileData['Otp'] = $user->Otp;
             $insuranceCompany = InsuranceCompany::create($profileData);
-             //set Visiting hours 
-             $this->setVisitingHours($request->VisitingHours, $insuranceCompany->InsuranceCompanyID, config('user.const.role_slugs.insurance_company'));
+            //set Visiting hours 
+            $this->setVisitingHours($request->VisitingHours, $insuranceCompany->InsuranceCompanyID, config('user.const.role_slugs.insurance_company'));
             //Upload registered papers
             $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.insurance_company'), $insuranceCompany->InsuranceCompanyID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success

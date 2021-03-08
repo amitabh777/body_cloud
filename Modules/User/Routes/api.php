@@ -26,6 +26,7 @@ Route::namespace('Api\Auth')->middleware('device_check')->group(function () {
     Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');
     Route::post('reset_password', 'ResetPasswordController@resetPassword');
     Route::post('verify_phone', 'VerificationController@verifyPhoneWithOtp');  
+    Route::post('logout', 'LoginController@logout')->middleware(['auth:api']);
 });
 
 Route::namespace('Api')->group(function(){
@@ -34,8 +35,5 @@ Route::namespace('Api')->group(function(){
 });
 
 Route::namespace('Api')->middleware(['auth:api'])->group(function(){
-    Route::get('user/me', 'UserController@myProfile');
+    Route::get('user/me', 'UserController@myProfile');  
 });
-
-Route::post('logout','LoginController@logout')->middleware('api:auth');
-

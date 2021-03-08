@@ -90,4 +90,8 @@ class User extends Authenticatable
         return hash('sha256', time() . '0123456789ab25');  
     }
 
+    // public function scopeDeleteDeviceToken(){
+
+    // }
+
 }

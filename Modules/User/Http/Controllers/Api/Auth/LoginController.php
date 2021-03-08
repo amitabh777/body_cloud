@@ -42,10 +42,10 @@ class LoginController extends Controller
         if (!$auth) {
             return response()->json(['message' => 'Invalid Credentials', 'status' => 400]);
         }
-       // Auth::login(Auth::user());
-        if(Auth::user()->Status != config('user.const.account_status.active')){
+        // Auth::login(Auth::user());
+        if (Auth::user()->Status != config('user.const.account_status.active')) {
             Auth::logout();
-            return response()->json(['data' =>['is_active'=>'Inactive'],'message' => 'Phone number not verified.', 'status' => 400]);
+            return response()->json(['data' => ['is_active' => 'Inactive'], 'message' => 'Phone number not verified.', 'status' => 400]);
         }
         $user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole()->role; //User Role
@@ -53,9 +53,9 @@ class LoginController extends Controller
         $user->api_token = $user->generateToken();
         $user->save();
         //merge in user response
-        $user['UserType'] = $role->RoleSlug; 
-        $user['Profile'] = $profile;   
-        return response()->json(['data'=>$user,'message' => 'Success Login', 'status' => 200]);
+        $user['UserType'] = $role->RoleSlug;
+        $user['Profile'] = $profile;
+        return response()->json(['data' => $user, 'message' => 'Success Login', 'status' => 200]);
     }
 
     public function validateCredentials($data)
@@ -67,25 +67,16 @@ class LoginController extends Controller
         $message = [];
         return Validator::make($data, $userRules, $message, []);
     }
-   // deleteDeviceToken
-
 
     /**
      * Logout user
      */
     public function logout(Request $request)
     {
-        
-       // Auth::loginUsingId(1);
-        $user =  Auth:: user();//Auth::loginUsingId(4);//Auth::user();
-        // var_dump(Auth::check());
-        // print_r($user);
-        // exit;
-        // User::where('UserID',$user->UserID)->deleteDeviceToken();
-        // Auth::logout();
-        return response()->json(['status'=>200,'message'=>'logout']);
+        $user =  Auth::user(); //Auth::loginUsingId(4);//Auth::user();
+        User::where('UserID', $user->UserID)->update(['api_token' => '']);
+        Auth::logout();
+        return response()->json(['status' => 200, 'message' => 'logout']);
     }
-
-
-
+    
 }
