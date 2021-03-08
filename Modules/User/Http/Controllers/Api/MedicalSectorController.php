@@ -2,22 +2,24 @@
 
 namespace Modules\User\Http\Controllers\Api;
 
-use App\User;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
+use Modules\User\Entities\MedicalSector;
 
-class UserController extends Controller
+class MedicalSectorController extends Controller
 {
-    use AuthenticatesUsers;
     /**
-     * 
-     * return user data
+     * Display a listing of the resource.
+     * @return Renderable
      */
     public function index()
     {
+        $bloodgroups = MedicalSector::select(['MedicalSectorID','MedicalSectorName','MedicalSectorDesc','Status'])->get();
+        if($bloodgroups){
+         return response()->json(['data'=>$bloodgroups,'message'=>'success','status'=>200]);
+        } 
+        return response()->json(['message'=>'failed','status'=>'400']);
     }
 
     /**
@@ -42,21 +44,11 @@ class UserController extends Controller
     /**
      * Show the specified resource.
      * @param int $id
+     * @return Renderable
      */
     public function show($id)
     {
-    }
-
-    public function myProfile()
-    {
-        $user = User::find(Auth::user()->UserID); //get user
-        $role = $user->userRole()->role; //User Role
-        $profile = $user->profile($role->RoleSlug); //User profile
-        
-        //merge in user response
-        $user['UserType'] = $role->RoleSlug; 
-        $user['Profile'] = $profile;   
-        return response()->json(['data'=>$user,'message' => 'Success', 'status' => 200]);
+        return view('user::show');
     }
 
     /**

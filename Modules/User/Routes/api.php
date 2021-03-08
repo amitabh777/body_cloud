@@ -30,12 +30,11 @@ Route::namespace('Api\Auth')->middleware('device_check')->group(function () {
 
 Route::namespace('Api')->group(function(){
     Route::get('blood_groups','BloodGroupController@index');
+    Route::get('medical_sectors','MedicalSectorController@index');
 });
 
 Route::namespace('Api')->middleware(['auth:api'])->group(function(){
-
-    Route::get('users/{id}', 'UserController@show');    
-   
+    Route::get('user/me', 'UserController@myProfile');
 });
 
 Route::post('logout','LoginController@logout')->middleware('api:auth');
