@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Nullable;
 
 class CreateDoctorsTable extends Migration
 {
@@ -21,6 +22,7 @@ class CreateDoctorsTable extends Migration
                 $table->string('DoctorName', 100);
                 $table->string('DoctorInfo', 200)->nullable();
                 $table->enum('DoctorGender', ['Male', 'Female']);
+                $table->date('DoctorDOB')->nullable();
                 $table->string('DoctorProfileImage', 150)->nullable();
                 $table->unsignedInteger('HospitalID')->nullable();
                 $table->string('DoctorWebsite', 100)->nullable();

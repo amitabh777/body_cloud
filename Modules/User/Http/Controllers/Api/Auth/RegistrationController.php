@@ -510,7 +510,7 @@ class RegistrationController extends Controller
         ];
         return Validator::make($request->all(), $userRules);
     }
-
+    //set doctor medical sector
     public function setMedicalSectors($sectorIDs, $doctorID)
     {
         $now = Carbon::now();
