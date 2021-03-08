@@ -443,7 +443,9 @@ class RegistrationController extends Controller
             'Email' => 'required|email|max:150|unique:users,Email',
             'Phone' => 'required|min:10|max:10|unique:users,Phone',
             'Password' => ['required', 'string', 'min:8'],
-            'RoleSlug' => 'required'
+            'RoleSlug' => 'required',
+            'DeviceToken'=>'required',
+            'DeviceType'=>'required|in:android,ios',
         ];
         $message = [
             'RoleSlug.required' => 'Role is required'

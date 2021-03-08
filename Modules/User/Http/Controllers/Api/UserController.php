@@ -47,7 +47,7 @@ class UserController extends Controller
     {
     }
 
-    public function myProfile()
+    public function showMyProfile()
     {
         $user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole()->role; //User Role

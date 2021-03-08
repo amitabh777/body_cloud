@@ -20,7 +20,7 @@ Route::middleware('auth:api')->post('/user', function (Request $request) {
     //return $request->user();
 });
 //Authentications
-Route::namespace('Api\Auth')->middleware('device_check')->group(function () {
+Route::namespace('Api\Auth')->group(function () {
     Route::post('register', 'RegistrationController@registration');
     Route::post('login', 'LoginController@login');
     Route::post('forgot_password_send_otp', 'ForgotPasswordController@forgotPasswordSendOtp');

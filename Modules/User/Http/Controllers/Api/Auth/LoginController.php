@@ -63,6 +63,8 @@ class LoginController extends Controller
         $userRules = [
             'Phone' => 'required|min:10|max:10',
             'Password' => ['required', 'string', 'min:8'],
+            'DeviceToken'=>'required',
+            'DeviceType'=>'required|in:android,ios',
         ];
         $message = [];
         return Validator::make($data, $userRules, $message, []);
