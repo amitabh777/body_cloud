@@ -34,10 +34,12 @@ Route::namespace('Api')->group(function(){
     Route::get('medical_sectors','MedicalSectorController@index');
 });
 
-Route::namespace('Api')->middleware(['auth:api'])->group(function(){
-    Route::get('user/me', 'UserController@myProfile');  
-
+//Profile endpoints with authentication
+Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check'])->group(function(){
+    Route::get('user/me', 'UserController@myProfile'); //view profile 
+    Route::post('update', 'ProfileController@update');
+    Route::post('image/upload', 'ProfileController@uploadProfileImage');
     
 });
-Route::patch('profile/update/{id}', 'Api\ProfileController@update');
-Route::post('profile/image/upload', 'Api\ProfileController@uploadProfileImage');
+
+

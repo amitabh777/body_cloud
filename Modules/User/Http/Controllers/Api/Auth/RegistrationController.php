@@ -441,14 +441,16 @@ class RegistrationController extends Controller
     {
         $userRules = [
             'Email' => 'required|email|max:150|unique:users,Email',
-            'Phone' => 'required|min:10|max:10|unique:users,Phone',
+            'Phone' => 'required|min:11|max:11|unique:users,Phone',
             'Password' => ['required', 'string', 'min:8'],
             'RoleSlug' => 'required',
             'DeviceToken'=>'required',
             'DeviceType'=>'required|in:android,ios',
         ];
         $message = [
-            'RoleSlug.required' => 'Role is required'
+            'RoleSlug.required' => 'Role is required',
+            'Phone.min'=>'Phone must be 11 digits',
+            'Phone.max'=>'Phone must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message, []);
     }
@@ -459,23 +461,27 @@ class RegistrationController extends Controller
             'PatientName' => 'required',
             'PatientGender' => 'required',
             'PatientDOB' => 'required',
-            'PatientHeight' => 'required',
+            'PatientHeight' => 'required|numeric|min:100|max:270',
             'PatientWeight' => 'required',
             'EmergencyContactNo' => 'required|max:10|min:10',
         ];
-        return Validator::make($request->all(), $userRules);
+        $message=[
+            'PatientHeight.min' => 'Height should be more than 100 cm'
+        ];
+        return Validator::make($request->all(), $userRules,$message);
     }
 
     public function validateDoctorProfile($request)
     {
         $userRules = [
-            'DoctorName' => 'required',
-            'DoctorGender' => 'required',
-            'VisitingHours' => 'required'
+            'DoctorName' => 'required|string',
+            'DoctorGender' => 'required|in:Male,Female',
+            'VisitingHours' => 'required',
+            // 'DoctorWebsite'=>'regex:/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i',
         ];
         return Validator::make($request->all(), $userRules);
     }
-    //Validate fields
+    //Validate Hospital fields
     public function validateHospitalProfile($request)
     {
         $userRules = [
@@ -485,7 +491,7 @@ class RegistrationController extends Controller
         ];
         return Validator::make($request->all(), $userRules);
     }
-
+    //validate Ambulance profile data
     public function validateAmbulanceProfile($request)
     {
         $userRules = [
@@ -510,18 +516,19 @@ class RegistrationController extends Controller
         ];
         return Validator::make($request->all(), $userRules);
     }
-    //set doctor medical sector
+
+    /**
+     * set doctor medical sector
+     */
     public function setMedicalSectors($sectorIDs, $doctorID)
     {
         $now = Carbon::now();
         $sectors = [];
-        if ($sectorIDs && is_array($sectorIDs)) {
+        if ($sectorIDs!=null && is_array($sectorIDs)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['SectorID' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
             }
             DB::table('doctor_sectors')->insert($sectors);
-        } else {
-            DoctorSector::create(['SectorID' => $sectorIDs, 'DoctorID' => $doctorID]);
         }
     }
     //Set visiting hours
@@ -592,10 +599,10 @@ class RegistrationController extends Controller
             'DoctorGender' => $request->input('DoctorGender'),
             'HospitalID' => $request->input('HospitalID', null),
             'DoctorWebsite' => $request->input('DoctorWebsite', null),
-            'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
-            'DoctorBankName' => $request->input('DoctorBankName', null),
-            'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
-            'SectorID' => $request->input('SectorID', []),
+            // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
+            // 'DoctorBankName' => $request->input('DoctorBankName', null),
+            // 'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
+            'SectorID' => $request->input('SectorID', null),
             'VisitingHours' => $request->input('VisitingHours'),
         ];
     }

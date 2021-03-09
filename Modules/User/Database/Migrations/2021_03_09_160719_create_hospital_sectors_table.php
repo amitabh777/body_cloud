@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDoctorSpecializationsTable extends Migration
+class CreateHospitalSectorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateDoctorSpecializationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('doctor_specializations', function (Blueprint $table) {
-            $table->increments('DoctorSpecializationID')->unsigned();
-            $table->unsignedInteger('DoctorID');
-            $table->unsignedInteger('SpecializeIn');
-            $table->enum('Status', ['Active', 'Inactive']);
+        Schema::create('hospital_sectors', function (Blueprint $table) {
+            $table->increments('HospitalSectorID')->unsigned();
+            $table->unsignedInteger('MedicalSectorID'); 
+            $table->unsignedInteger('HospitalID'); 
             $table->timestamp('CreatedAt')->nullable();
             $table->timestamp('UpdatedAt')->nullable();
         });
@@ -30,6 +29,6 @@ class CreateDoctorSpecializationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('doctor_specializations');
+        Schema::dropIfExists('hospital_sectors');
     }
 }

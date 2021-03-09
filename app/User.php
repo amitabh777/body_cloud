@@ -66,16 +66,16 @@ class User extends Authenticatable
         $relation = '';
         if ($type == config('user.const.role_slugs.patient')) {
             $relation = $this->hasOne(Patient::class, 'UserID', 'UserID')->first();
-        }elseif ($type ==  config('user.const.role_slugs.doctor')) {
+        } elseif ($type ==  config('user.const.role_slugs.doctor')) {
             $relation = $this->hasOne(Doctor::class, 'UserID', 'UserID')->first();
-        }elseif ($type ==  config('user.const.role_slugs.hospital')) {
+        } elseif ($type ==  config('user.const.role_slugs.hospital')) {
             $relation =  $this->hasOne(Hospital::class, 'UserID', 'UserID')->first();
-        }elseif ($type == config('user.const.role_slugs.ambulance')) {
+        } elseif ($type == config('user.const.role_slugs.ambulance')) {
             $relation = $this->hasOne(Ambulance::class, 'UserID', 'UserID')->first();
-        }elseif ($type == config('user.const.role_slugs.lab')) {
+        } elseif ($type == config('user.const.role_slugs.lab')) {
             $relation = $this->hasOne(Laboratory::class, 'UserID', 'UserID')->first();
-        }elseif ($type == config('user.const.role_slugs.insurance_company')) {
-            $relation= $this->hasOne(InsuranceCompany::class, 'UserID', 'UserID')->first();
+        } elseif ($type == config('user.const.role_slugs.insurance_company')) {
+            $relation = $this->hasOne(InsuranceCompany::class, 'UserID', 'UserID')->first();
         }
         return $relation;
     }
@@ -86,12 +86,57 @@ class User extends Authenticatable
         return $this->hasOne(UserRole::class, 'UserID', 'UserID')->first();
     }
 
-    public function scopeGenerateToken(){   
-        return hash('sha256', time() . '0123456789ab25');  
+    public function scopeGenerateToken()
+    {
+        return hash('sha256', time() . '0123456789ab25');
     }
-
-    // public function scopeDeleteDeviceToken(){
-
-    // }
-
+    
+    public function scopeIsPatient()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.patient')) {
+            return true;
+        }
+        return false;
+    }
+    public function scopeIsDoctor()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.doctor')) {
+            return true;
+        }
+        return false;
+    }
+    public function scopeIsHospital()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.hospital')) {
+            return true;
+        }
+        return false;
+    }
+    public function scopeIsAmbulance()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.ambulance')) {
+            return true;
+        }
+        return false;
+    }
+    public function scopeIsLaboratory()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.lab')) {
+            return true;
+        }
+        return false;
+    }
+    public function scopeIsInsuranceCompany()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.insurance_company')) {
+            return true;
+        }
+        return false;
+    }
 }

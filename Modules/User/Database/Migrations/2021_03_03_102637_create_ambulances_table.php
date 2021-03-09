@@ -19,7 +19,7 @@ class CreateAmbulancesTable extends Migration
                 $table->integerIncrements('AmbulanceID')->unsigned();
                 $table->unsignedInteger('UserID');
                 $table->string('AmbulanceNumber', 30);
-                $table->string('AmbulanceContactName', 15);
+                $table->string('AmbulanceContactName', 50);
                 $table->string('AmbulanceProfileImage',150)->nullable();
                 $table->integer('HospitalID')->nullable();
                 $table->float('AmbulanceMinReservationCharge')->nullable();

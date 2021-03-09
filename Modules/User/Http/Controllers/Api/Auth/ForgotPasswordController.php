@@ -35,10 +35,12 @@ class ForgotPasswordController extends Controller
     public function validateCredentials($data)
     {
         $userRules = [
-            'Phone' => 'required|min:10|max:10|exists:users,Phone', 
+            'Phone' => 'required|min:11|max:11|exists:users,Phone', 
         ];
         $message = [
-            'Phone.exists'=>'Phone number not exists'
+            'Phone.exists'=>'Phone number not exists',
+            'Phone.min'=>'Phone must be 11 digits',
+            'Phone.max'=>'Phone must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message, []);
     }

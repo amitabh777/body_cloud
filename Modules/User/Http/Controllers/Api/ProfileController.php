@@ -20,24 +20,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
-    {
-        return view('user::index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('user::create');
-    }
-
-    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return Renderable
@@ -50,7 +32,7 @@ class ProfileController extends Controller
     /**
      * Show the specified resource.
      * @param int $id
-     * @return Renderable
+     * @return response
      */
     public function show($id)
     {
@@ -58,30 +40,25 @@ class ProfileController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('user::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update profile data
      * @param Request $request
-     * @param int $id
+     * @param int $userid
      * @return Response
      */
-    public function update(Request $request, $userid)
+    public function update(Request $request)
     {
         $data = $request->all();
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'user not loggedin/authenticated', 'status' => 400]);
+        }
+        $userid = $user->UserID; //get user id 
         // Validate user data
         $validateUser = $this->validateUserData($data, $userid);
         if ($validateUser->fails()) {
             return response()->json(['message' => $validateUser->errors()->first(), 'status' => 400]);
         }
-        $userData = $this->userData($data);
+        $userData = $this->userData($data); //get fillable fields
         //update user
         $user = User::where('UserID', $userid)->update($userData);
         if (!$user) {
@@ -89,7 +66,7 @@ class ProfileController extends Controller
         }
         $success = 0;
         $roleSlug = $data['RoleSlug'];
-        //check user type
+        //Check user type
         if ($roleSlug == config('user.const.role_slugs.patient')) {
             $validate = $this->validatePatientProfile($data);
             if ($validate->fails()) {
@@ -108,8 +85,11 @@ class ProfileController extends Controller
                 return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
             }
             $profileData = $this->doctorProfileData($request);
+            $allData['ProfileData'] = $profileData;
+            $allData['SpecializeIn'] = $request->input('SpecializeIn', null);
+            $allData['VisitingHours'] = $request->input('VisitingHours', null);
 
-            $res = $this->profileRepository->doctorProfileUpdate($profileData, $userid);
+            $res = $this->profileRepository->doctorProfileUpdate($allData, $userid);
             if ($res !== true) {
                 return response()->json(['message' => 'Could not update', 'data' => ['errror_message' => $res], 'status' => 400]);
             }
@@ -120,18 +100,63 @@ class ProfileController extends Controller
                 return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
             }
             $profileData = $this->hospitalProfileData($request);
+            $allData['ProfileData'] = $profileData;
+            $allData['SpecializeIn'] = $request->input('SpecializeIn', null);
+            $allData['VisitingHours'] = $request->input('VisitingHours', null);
 
-            $res = $this->profileRepository->hospitalProfileUpdate($profileData, $userid);
+            $res = $this->profileRepository->hospitalProfileUpdate($allData, $userid);
             if ($res !== true) {
                 return response()->json(['message' => 'Could not update', 'data' => ['errror_message' => $res], 'status' => 400]);
             }
             $success = 1;
         } elseif ($roleSlug == config('user.const.role_slugs.ambulance')) {
-            //fjdslkj
+            //Ambulance update
+            $validate = $this->validateAmbulanceProfile($data);
+            if ($validate->fails()) {
+                return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
+            }
+            $profileData = $this->ambulanceProfileData($request);
+            $allData['ProfileData'] = $profileData;
+
+            $res = $this->profileRepository->ambulanceProfileUpdate($allData, $userid);
+            if ($res !== true) {
+                return response()->json(['message' => 'Could not update', 'data' => ['errror_message' => $res], 'status' => 400]);
+            }
+            $success = 1;
         } elseif ($roleSlug == config('user.const.role_slugs.lab')) {
-            //dslkjfkds
-        } elseif ($roleSlug == config('user.const.role_slugs.insurance_companies')) {
-            //fsdjlfkjd
+            //laboratory update
+            $validate = $this->validateLabProfile($data);
+            if ($validate->fails()) {
+                return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
+            }
+            $profileData = $this->labProfileData($request);
+            $allData['ProfileData'] = $profileData;
+            $allData['VisitingHours'] = $request->input('VisitingHours', null);
+
+            $res = $this->profileRepository->laboratoryProfileUpdate($allData, $userid);
+            if ($res !== true) {
+                return response()->json(['message' => 'Could not update', 'data' => ['errror_message' => $res], 'status' => 400]);
+            }
+            $success = 1;
+        } elseif ($roleSlug == config('user.const.role_slugs.insurance_company')) {
+            //insurance update
+            $validate = $this->validateInsuranceCompanyProfile($data);
+            if ($validate->fails()) {
+                return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
+            }
+            $profileData = $this->insuranceCompanyProfileData($request);
+            // print_r($profileData);
+            // exit;          
+            $allData['ProfileData'] = $profileData;
+            $allData['VisitingHours'] = $request->input('VisitingHours', null);
+
+            $res = $this->profileRepository->insuranceCompanyProfileUpdate($allData, $userid);
+            if ($res !== true) {
+                return response()->json(['message' => 'Could not update', 'data' => ['errror_message' => $res], 'status' => 400]);
+            }
+            $success = 1;
+        } else {
+            return response()->json(['message' => 'Invalid role', 'status' => 400]);
         }
 
         if ($success) {
@@ -146,11 +171,13 @@ class ProfileController extends Controller
     {
         $userRules = [
             'Email' => 'required|email|max:150|unique:users,Email,' . $id . ',UserID',
-            'Phone' => 'required|min:10|max:10|unique:users,Phone,' . $id . ',UserID',
+            'Phone' => 'required|min:11|max:11|unique:users,Phone,' . $id . ',UserID',
             'RoleSlug' => ['required', 'in:' . implode(',', array_keys(config('user.const.role_slugs')))],
         ];
         $message = [
-            'RoleSlug.required' => 'Role is required'
+            'RoleSlug.required' => 'Role is required',
+            'Phone.min'=>'Phone must be 11 digits',
+            'Phone.max'=>'Phone must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message, []);
     }
@@ -161,68 +188,80 @@ class ProfileController extends Controller
             'PatientName' => 'required',
             'Gender' => 'required',
             'DOB' => 'required',
-            'PatientHeight' => 'required',
+            'PatientHeight' => 'required|numeric|min:100|max:270',
             'PatientWeight' => 'required',
             'EmergencyContactNo' => 'required|max:10|min:10',
+        ];
+        $message = [
+            'PatientHeight.min' => 'Height should be more than 100 cm'
+        ];
+        return Validator::make($data, $userRules, $message);
+    }
+
+    public function validateDoctorProfile($data)
+    {
+        $userRules = [
+            'DoctorName' => 'required',
+            'Gender' => 'required',
+            // 'VisitingHours' => 'required'
         ];
         return Validator::make($data, $userRules);
     }
 
-    public function validateDoctorProfile($request)
-    {
-        $userRules = [
-            'DoctorName' => 'required',
-            // 'DoctorGender' => 'required',
-            // 'VisitingHours' => 'required'
-        ];
-        return Validator::make($request->all(), $userRules);
-    }
-
-    public function validateHospitalProfile($request)
+    public function validateHospitalProfile($data)
     {
         $userRules = [
             'HospitalName' => 'required',
-            'HospitalContactName' => 'required',
+            'ContactName' => 'required',
             'VisitingHours' => 'required'
         ];
-        return Validator::make($request->all(), $userRules);
+        return Validator::make($data, $userRules);
     }
 
-    public function validateAmbulanceProfile($request)
+    public function validateAmbulanceProfile($data)
     {
         $userRules = [
             'ContactName' => 'required',
             'AmbulanceNumber' => 'required',
         ];
-        return Validator::make($request->all(), $userRules);
+        return Validator::make($data, $userRules);
     }
-    public function validateLabProfile($request)
+    public function validateLabProfile($data)
     {
         $userRules = [
             'CompanyName' => 'required',
             'VisitingHours' => 'required',
         ];
-        return Validator::make($request->all(), $userRules, [], []);
+        return Validator::make($data, $userRules, [], []);
     }
-    public function validateInsuranceCompanyProfile($request)
+    public function validateInsuranceCompanyProfile($data)
     {
         $userRules = [
             'CompanyName' => 'required',
             'VisitingHours' => 'required',
         ];
-        return Validator::make($request->all(), $userRules);
+        return Validator::make($data, $userRules);
     }
 
-    //Prepare data
+
+    /**
+     * Process user data
+     * @param Array $data
+     * @return Array db fields
+     */
     public function userData($data)
     {
         return array(
             'Email' => $data['Email'],
             'Phone' => $data['Phone'],
-            'Address' => $data['Address'] ? $data['Address'] : '',
+            'Address' => isset($data['Address']) ? $data['Address'] : '',
         );
     }
-    //Patient fields
+    /**
+     * Process patient profile data
+     * @param Array $data
+     * @return Array db fields
+     */
     public function patientProfileData($request)
     {
         return [
@@ -232,64 +271,79 @@ class ProfileController extends Controller
             'BloodGroupID' => $request->input('BloodGroupID', null),
             'PatientHeight' => (float)$request->input('PatientHeight'),
             'PatientWeight' => (float)$request->input('PatientWeight'),
-            /// 'PatientChronicDisease' => $data['PatientChronicDisease', null),
+            // 'PatientChronicDisease' => $request('PatientChronicDisease', null),
             'PatientPermanentMedicines' => $request->input('PatientPermanentMedicines', ''),
             'EmergencyContactNo' => $request->input('EmergencyContactNo'),
         ];
     }
-    //Doctor fields
-    public function prepareDoctorProfileData($request)
+    /**
+     * Process doctor profile data
+     * @param Array $data
+     * @return Array db fields
+     */
+    public function doctorProfileData($request)
     {
         return [
             'DoctorName' => $request->input('DoctorName'),
             'DoctorInfo' => $request->input('DoctorInfo', ''),
-            'DoctorGender' => $request->input('DoctorGender'),
+            'DoctorGender' => $request->input('Gender'),
             'HospitalID' => $request->input('HospitalID', null),
             // 'DoctorWebsite' => $request->input('DoctorWebsite', null),
             // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
             // 'DoctorBankName' => $request->input('DoctorBankName', null),
             // 'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
-            'SectorID' => $request->input('SectorID', []),
-            'VisitingHours' => $request->input('VisitingHours', null),
         ];
     }
-    //Hospital fields
-    public function getHospitalProfileData($request)
+    /**
+     * Process hospital profile data
+     * @param Array $data
+     * @return Array db fields
+     */
+    public function hospitalProfileData($request)
     {
         return [
             'HospitalName' => $request->input('HospitalName'),
             'HospitalInfo' => $request->input('HospitalInfo', ''),
-            'HospitalWebsite' => $request->input('HospitalWebsite'),
-            'HospitalContactName' => $request->input('HospitalContactName'),
-            'VisitingHours' => $request->input('VisitingHours'),
+            'HospitalWebsite' => $request->input('HospitalWebsite', ''),
+            'HospitalContactName' => $request->input('ContactName'),
         ];
     }
-    // //Ambulance profile
-    // public function getAmbulanceProfileData($data)
-    // {
-    //     return [
-    //         'AmbulanceContactName' => $data'ContactName'),
-    //         'AmbulanceNumber' => $data'AmbulanceNumber'),
-    //     ];
-    // }
-    // //Lab profile
-    // public function getLabProfileData($request)
-    // {
-    //     return [
-    //         'LaboratoryCompanyName' => $data['CompanyName'],
-    //         'LaboratoryInfo' => $data'LaboratoryInfo',''),
-    //         'LaboratoryWebsite' => $data'Website',''),
-    //         'VisitingHours' => $request->input('VisitingHours'),
-    //     ];
-    // }
-    //Lab profile
-    public function getInsuranceCompanyProfileData($request)
+    /**
+     * Process ambulance profile data
+     * @param Array $data
+     * @return Array db fields
+     */
+    public function ambulanceProfileData($request)
+    {
+        return [
+            'AmbulanceContactName' => $request->input('ContactName'),
+            'AmbulanceNumber' => $request->input('AmbulanceNumber'),
+        ];
+    }
+    /**
+     * Process lab profile data
+     * @param Array $data
+     * @return Array db fields
+     */
+    public function labProfileData($request)
+    {
+        return [
+            'LaboratoryCompanyName' => $request->input('CompanyName'),
+            'LaboratoryInfo' => $request->input('LaboratoryInfo', ''),
+            'LaboratoryWebsite' => $request->input('Website', ''),
+        ];
+    }
+    /**
+     * Process insurance company profile data
+     * @param Array $data
+     * @return Array db fields
+     */
+    public function insuranceCompanyProfileData($request)
     {
         return [
             'InsuranceCompanyName' => $request->input('CompanyName'),
             'InsuranceCompanyInfo' => $request->input('CompanyInfo', ''),
             'InsuranceCompanyWebsite' => $request->input('Website'),
-            'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
 
@@ -298,7 +352,7 @@ class ProfileController extends Controller
      */
     public function uploadProfileImage(Request $request)
     {
-        $rule = ['Role' => 'required', 'ProfileImage' => 'required', 'UserID' => 'required'];
+        $rule = ['RoleSlug' => 'required', 'ProfileImage' => 'required', 'UserID' => 'required'];
         $validate = Validator::make($request->all(), $rule);
         if ($validate->fails()) {
             return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
@@ -311,9 +365,10 @@ class ProfileController extends Controller
             if (!$path) {
                 return response()->json(['message' => 'could not upload', 'status' => 400]);
             }
-            $model = CustomHelper::getModelUserRole($role);
-            $profileImageKey = CustomHelper::getProfileImageKey($role);
-            $model::where('UserID', $request->UserID)->update([$profileImageKey => $path]);
+            $model = CustomHelper::getModelUserRole($role); //get model dynamically according to role
+            $profileImageKey = CustomHelper::getProfileImageKey($role); //dynamically get profile id field 
+            $res = $model::where('UserID', $request->UserID)->update([$profileImageKey => $path]);
+
             return response()->json(['message' => 'success', 'status' => 200]);
         } else {
             return response()->json(['message' => 'ProfileImage not found', 'status' => 400]);
