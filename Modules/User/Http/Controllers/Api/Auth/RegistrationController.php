@@ -524,7 +524,7 @@ class RegistrationController extends Controller
             DoctorSector::create(['SectorID' => $sectorIDs, 'DoctorID' => $doctorID]);
         }
     }
-    //Set doctor's visiting hours
+    //Set visiting hours
     public function setVisitingHours($visitingHours, $profileID, $roleSlug)
     {
         if (!$visitingHours) {
@@ -603,7 +603,6 @@ class RegistrationController extends Controller
     public function getHospitalProfileData($request)
     {
         return [
-            'UserID' => '',
             'HospitalName' => $request->input('HospitalName'),
             'HospitalInfo' => $request->input('HospitalInfo',''),
             'HospitalWebsite' => $request->input('HospitalWebsite'),

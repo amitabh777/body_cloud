@@ -4,6 +4,8 @@ namespace Modules\User\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\User\Repositories\Eloquent\EloquentProfileRepository;
+use Modules\User\Repositories\ProfileRepository;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,10 @@ class UserServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        // $this->app->bind(ProfileRepository::class,EloquentProfileRepository::class);
+         $this->app->bind('Modules\User\Repositories\ProfileRepository','Modules\User\Repositories\Eloquent\EloquentProfileRepository');
+
     }
 
     /**

@@ -36,6 +36,8 @@ Route::namespace('Api')->group(function(){
 
 Route::namespace('Api')->middleware(['auth:api'])->group(function(){
     Route::get('user/me', 'UserController@myProfile');  
+
     
 });
-Route::patch('profile/update/{id}', 'Api\UserController@update');
+Route::patch('profile/update/{id}', 'Api\ProfileController@update');
+Route::post('profile/image/upload', 'Api\ProfileController@uploadProfileImage');
