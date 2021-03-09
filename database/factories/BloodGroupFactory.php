@@ -7,7 +7,7 @@ use Modules\User\Entities\BloodGroup;
 
 $factory->define(BloodGroup::class, function (Faker $faker) {
     return [
-        'BloodGroupName'=>$faker->randomLetter(),
-        'BloodGroupDesc'=>$faker->name()
+        'BloodGroupName'=>$faker->randomElement(['A','O','B','A+','B+','ABO','AB']),
+        'BloodGroupDesc'=>''
     ];
 });

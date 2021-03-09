@@ -12,7 +12,7 @@ class BloodGroupsTableSeeder extends Seeder
 {
     protected $faker;
     public function __construct(Faker $faker)
-    {   
+    {
         $this->faker = $faker;
     }
     /**
@@ -23,11 +23,15 @@ class BloodGroupsTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        factory(BloodGroup::class, 3)->create();
-        // for($i=0;$i<3;$i++){
-        //     $row = array('DocumentTypeName'=>$this->faker->randomLetter(),'DocumentTypeDesc'=>$this->faker->name);
-        //     BloodGroup::create($row);
-        // }
+        BloodGroup::where('BloodGroupName', '!=', 'nothing')->delete();
+        // factory(BloodGroup::class, 3)->create();
+
+        $groups = ['A', 'O', 'B', 'A+', 'B+', 'ABO', 'AB'];      
+        $rows = [];
+        foreach ($groups as $group) {
+            $rows[] = array('BloodGroupName' => $group, 'BloodGroupDesc' => '');
+        }
+        BloodGroup::insert($rows);
         // $this->call("OthersTableSeeder");
     }
 }
