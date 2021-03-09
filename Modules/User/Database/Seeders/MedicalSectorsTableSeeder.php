@@ -18,7 +18,9 @@ class MedicalSectorsTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        factory(MedicalSector::class, 3)->create();
+        MedicalSector::where('MedicalSectorName','!=','nothing')->delete(); //delete previous records
+       factory(MedicalSector::class, 4)->create();
+
         // $this->call("OthersTableSeeder");
     }
 }
