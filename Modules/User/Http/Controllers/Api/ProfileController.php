@@ -88,6 +88,7 @@ class ProfileController extends Controller
             $allData['ProfileData'] = $profileData;
             $allData['SpecializeIn'] = $request->input('SpecializeIn', null);
             $allData['VisitingHours'] = $request->input('VisitingHours', null);
+            $allData['Experience'] = $request->input('Experience', null);
 
             $res = $this->profileRepository->doctorProfileUpdate($allData, $userid);
             if ($res !== true) {

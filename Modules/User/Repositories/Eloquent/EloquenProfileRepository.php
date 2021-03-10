@@ -66,6 +66,9 @@ class EloquentProfileRepository implements ProfileRepository
             $this->setDoctorSpecialization($data['SpecializeIn'],$doctor->DoctorID);
             //set visiting hours
             $this->setVisitingHours($data['VisitingHours'],$doctor->DoctorID,config('user.const.role_slugs.doctor'));
+            //set expirences
+           // $this->setDoctorExperience($data['Experience'],$doctor->DoctorID);
+
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
@@ -237,6 +240,29 @@ class EloquentProfileRepository implements ProfileRepository
         $sectors = [];
         $res = false;
         if ($sectorIDs!=null && is_array($sectorIDs)) {
+            foreach ($sectorIDs as $sectorID) {
+                $sectors[] = ['MedicalSectorID' => $sectorID, 'HospitalID' => $hospitalID, 'CreatedAt' => $now->toDateTimeString()];
+            }
+           $res= DB::table('hospital_sectors')->insert($sectors);
+        }
+        return $res;
+    }
+    
+    /**
+     * Method setDoctorExpirence
+     * set expirences of doctor
+     * @param $experience [array ]
+     * @param $doctorId [profile id of doctor]
+     *
+     * @return void
+     */
+    public function setDoctorExperience($experience,$doctorId){
+        $now = Carbon::now();
+        //delete previous entries
+        //::where('HospitalID',$doctorId)->delete();
+        $sectors = [];
+        $res = false;
+        if ($experience!=null && is_array($experience)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['MedicalSectorID' => $sectorID, 'HospitalID' => $hospitalID, 'CreatedAt' => $now->toDateTimeString()];
             }

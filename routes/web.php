@@ -19,11 +19,24 @@ Route::get('/', function () {
 
 Route::get('/test-path', function () {
 
+    // $visiting = array(
+    //     'days'=>array(
+    //         'monday'=>array('start_time'=>'12:15 am','end_time'=>'11:00 pm','visiting_slot'=>'morning','is_available'=>1),
+    //         'tuesday'=>array('start_time'=>'02:15 am','end_time'=>'11:00 pm','visiting_slot'=>'morning','is_available'=>1),
+    //     ),
+    // );
+
     $visiting = array(
-        'days'=>array(
-            'monday'=>array('start_time'=>'12:15 am','end_time'=>'11:00 pm','visiting_slot'=>'morning','is_available'=>1),
-            'tuesday'=>array('start_time'=>'02:15 am','end_time'=>'11:00 pm','visiting_slot'=>'morning','is_available'=>1),
-        ),
+        [
+            'Institue'=>'Institue name1',
+            'ExperienceFrom'=>'date',
+            'ExperienceTo'=>'date',            
+        ],
+        [
+            'Institue'=>'Institue name2',
+            'ExperienceFrom'=>'date',
+            'ExperienceTo'=>'date',            
+        ],
     );
 
     print_r(json_encode($visiting));
