@@ -458,15 +458,17 @@ class RegistrationController extends Controller
     public function validatePatientProfile($request)
     {
         $userRules = [
-            'PatientName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'PatientName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'PatientGender' => 'required',
             'PatientDOB' => 'required',
             'PatientHeight' => 'required|numeric|min:100|max:270',
             'PatientWeight' => 'required',
-            'EmergencyContactNo' => 'required|numeric|max:11|min:11',
+            'EmergencyContactNo' => 'required|min:11|max:11',
         ];
         $message=[
-            'PatientHeight.min' => 'Height should be more than 100 cm'
+            'PatientHeight.min' => 'Height should be more than 100 cm',
+            'EmergencyContactNo.min'=>'EmergencyContactNo must be 11 digits',
+            'EmergencyContactNo.max'=>'EmergencyContactNo must be 11 digits',
         ];
         return Validator::make($request->all(), $userRules,$message);
     }
@@ -474,7 +476,7 @@ class RegistrationController extends Controller
     public function validateDoctorProfile($request)
     {
         $userRules = [
-            'DoctorName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'DoctorGender' => 'required|in:Male,Female',
             'VisitingHours' => 'required',
             'DoctorWebsite'=>'url',
@@ -488,7 +490,7 @@ class RegistrationController extends Controller
     public function validateHospitalProfile($request)
     {
         $userRules = [
-            'HospitalName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'HospitalName' => 'required',
             'HospitalContactName' => 'required',
             'VisitingHours' => 'required',
             'HospitalWebsite'=>'url'
@@ -499,7 +501,7 @@ class RegistrationController extends Controller
     public function validateAmbulanceProfile($request)
     {
         $userRules = [
-            'ContactName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'ContactName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'AmbulanceNumber' => 'required',
         ];
         return Validator::make($request->all(), $userRules);

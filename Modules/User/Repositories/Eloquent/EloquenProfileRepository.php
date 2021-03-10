@@ -235,6 +235,7 @@ class EloquentProfileRepository implements ProfileRepository
         //delete previous entries
         HospitalSector::where('HospitalID',$hospitalID)->delete();
         $sectors = [];
+        $res = false;
         if ($sectorIDs!=null && is_array($sectorIDs)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['MedicalSectorID' => $sectorID, 'HospitalID' => $hospitalID, 'CreatedAt' => $now->toDateTimeString()];

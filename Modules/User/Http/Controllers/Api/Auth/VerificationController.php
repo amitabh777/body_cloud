@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class VerificationController extends Controller
 {
-
     /**
      * Verify phone using otp
      */

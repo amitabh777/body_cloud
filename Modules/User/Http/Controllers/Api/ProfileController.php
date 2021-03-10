@@ -183,15 +183,17 @@ class ProfileController extends Controller
     public function validatePatientProfile($data)
     {
         $userRules = [
-            'PatientName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'PatientName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
             'DOB' => 'required',
             'PatientHeight' => 'required|numeric|min:100|max:270',
             'PatientWeight' => 'required',
-            'EmergencyContactNo' => 'required|max:10|min:10',
+            'EmergencyContactNo' => 'required|max:11|min:11',
         ];
         $message = [
-            'PatientHeight.min' => 'Height should be more than 100 cm'
+            'PatientHeight.min' => 'Height should be more than 100 cm',
+            'EmergencyContactNo.min'=>'EmergencyContactNo must be 11 digits',
+            'EmergencyContactNo.max'=>'EmergencyContactNo must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message);
     }
@@ -199,8 +201,9 @@ class ProfileController extends Controller
     public function validateDoctorProfile($data)
     {
         $userRules = [
-            'DoctorName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
+            'Website'=>'url'
             // 'VisitingHours' => 'required'
         ];
         return Validator::make($data, $userRules);
@@ -210,8 +213,9 @@ class ProfileController extends Controller
     {
         $userRules = [
             'HospitalName' => 'required',
-            'ContactName' => 'required|regex:/^[a-zA-Z]+$/u',
-            'VisitingHours' => 'required'
+            'ContactName' => 'required|regex:/^[a-zA-Z ]+$/u',
+            'VisitingHours' => 'required',
+            'Website'=>'url',            
         ];
         return Validator::make($data, $userRules);
     }
@@ -219,7 +223,7 @@ class ProfileController extends Controller
     public function validateAmbulanceProfile($data)
     {
         $userRules = [
-            'ContactName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'ContactName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'AmbulanceNumber' => 'required',
         ];
         return Validator::make($data, $userRules);
@@ -229,14 +233,16 @@ class ProfileController extends Controller
         $userRules = [
             'CompanyName' => 'required',
             'VisitingHours' => 'required',
+            'Website'=>'url'
         ];
         return Validator::make($data, $userRules, [], []);
     }
     public function validateInsuranceCompanyProfile($data)
     {
         $userRules = [
-            'CompanyName' => 'required|regex:/^[a-zA-Z]+$/u',
+            'CompanyName' => 'required',
             'VisitingHours' => 'required',
+            'Website'=>'url'
         ];
         return Validator::make($data, $userRules);
     }
@@ -285,8 +291,8 @@ class ProfileController extends Controller
             'DoctorName' => $request->input('DoctorName'),
             'DoctorInfo' => $request->input('DoctorInfo', ''),
             'DoctorGender' => $request->input('Gender'),
-            'HospitalID' => $request->input('HospitalID', null),
-            // 'DoctorWebsite' => $request->input('DoctorWebsite', null),
+            'HospitalID' => $request->input('HospitalID', null),            
+            'DoctorWebsite' => $request->input('Website', null),
             // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
             // 'DoctorBankName' => $request->input('DoctorBankName', null),
             // 'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
@@ -302,7 +308,7 @@ class ProfileController extends Controller
         return [
             'HospitalName' => $request->input('HospitalName'),
             'HospitalInfo' => $request->input('HospitalInfo', ''),
-            'HospitalWebsite' => $request->input('HospitalWebsite', ''),
+            'HospitalWebsite' => $request->input('Website', ''),
             'HospitalContactName' => $request->input('ContactName'),
         ];
     }
