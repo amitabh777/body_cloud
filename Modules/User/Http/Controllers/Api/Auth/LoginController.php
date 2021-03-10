@@ -10,8 +10,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Modules\User\Entities\BloodGroup;
-use Modules\User\Entities\UserRole;
 
 class LoginController extends Controller
 {
@@ -21,19 +19,21 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
+    //change username as Phone
     public function username()
     {
         return 'Phone';
     }
 
     /**
-     * Login User
+     * Login user
+     *
+     * @param Request $request
+     * @return json response
      */
     public function login(Request $request)
     {
         $data = $request->all();
-
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
@@ -41,8 +41,7 @@ class LoginController extends Controller
         $auth = Auth::attempt(['Phone' => $data['Phone'], 'password' => $data['Password']]);
         if (!$auth) {
             return response()->json(['message' => 'Invalid Credentials', 'status' => 400]);
-        }
-        // Auth::login(Auth::user());
+        }        
         if (Auth::user()->Status != config('user.const.account_status.active')) {
             Auth::logout();
             return response()->json(['data' => ['is_active' => 'Inactive'], 'message' => 'Phone number not verified.', 'status' => 400]);
@@ -57,7 +56,12 @@ class LoginController extends Controller
         $user['Profile'] = $profile;
         return response()->json(['data' => $user, 'message' => 'Success Login', 'status' => 200]);
     }
-
+    /**
+     * validate Login Credentials
+     *
+     * @param array $data
+     * @return validator
+     */
     public function validateCredentials($data)
     {
         $userRules = [

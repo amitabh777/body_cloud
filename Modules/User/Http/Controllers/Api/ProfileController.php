@@ -40,7 +40,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update profile data
+     * Update profile data according to role slug
      * @param Request $request
      * @param int $userid
      * @return Response
@@ -144,9 +144,7 @@ class ProfileController extends Controller
             if ($validate->fails()) {
                 return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
             }
-            $profileData = $this->insuranceCompanyProfileData($request);
-            // print_r($profileData);
-            // exit;          
+            $profileData = $this->insuranceCompanyProfileData($request);        
             $allData['ProfileData'] = $profileData;
             $allData['VisitingHours'] = $request->input('VisitingHours', null);
 
@@ -185,7 +183,7 @@ class ProfileController extends Controller
     public function validatePatientProfile($data)
     {
         $userRules = [
-            'PatientName' => 'required',
+            'PatientName' => 'required|regex:/^[a-zA-Z]+$/u',
             'Gender' => 'required',
             'DOB' => 'required',
             'PatientHeight' => 'required|numeric|min:100|max:270',
@@ -201,7 +199,7 @@ class ProfileController extends Controller
     public function validateDoctorProfile($data)
     {
         $userRules = [
-            'DoctorName' => 'required',
+            'DoctorName' => 'required|regex:/^[a-zA-Z]+$/u',
             'Gender' => 'required',
             // 'VisitingHours' => 'required'
         ];
@@ -212,7 +210,7 @@ class ProfileController extends Controller
     {
         $userRules = [
             'HospitalName' => 'required',
-            'ContactName' => 'required',
+            'ContactName' => 'required|regex:/^[a-zA-Z]+$/u',
             'VisitingHours' => 'required'
         ];
         return Validator::make($data, $userRules);
@@ -221,7 +219,7 @@ class ProfileController extends Controller
     public function validateAmbulanceProfile($data)
     {
         $userRules = [
-            'ContactName' => 'required',
+            'ContactName' => 'required|regex:/^[a-zA-Z]+$/u',
             'AmbulanceNumber' => 'required',
         ];
         return Validator::make($data, $userRules);
@@ -237,7 +235,7 @@ class ProfileController extends Controller
     public function validateInsuranceCompanyProfile($data)
     {
         $userRules = [
-            'CompanyName' => 'required',
+            'CompanyName' => 'required|regex:/^[a-zA-Z]+$/u',
             'VisitingHours' => 'required',
         ];
         return Validator::make($data, $userRules);

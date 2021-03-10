@@ -36,17 +36,18 @@ class CustomHelper
     //get profile id table key name: HospitalID/PatientID etc
     public static function getProfileIdKey($role)
     {
-        if ($role == config('user.const.role_slugs.patient')) {
+        $Roles = 'user.const.role_slugs';
+        if ($role == config($Roles.'.patient')) {
             $profileIDKey = 'PatientID';
-        } elseif ($role == config('user.const.role_slugs.doctor')) {
+        } elseif ($role == config($Roles.'.doctor')) {
             $profileIDKey = 'DoctorID';
-        } elseif ($role == config('user.const.role_slugs.hospital')) {
+        } elseif ($role == config($Roles.'.hospital')) {
             $profileIDKey = 'HospitalID';
-        } elseif ($role == config('user.const.role_slugs.lab')) {
+        } elseif ($role == config($Roles.'.lab')) {
             $profileIDKey = 'LaboratoryID';
-        } elseif ($role == config('user.const.role_slugs.ambulance')) {
+        } elseif ($role == config($Roles.'.ambulance')) {
             $profileIDKey = 'AmbulanceID';
-        } elseif ($role == config('user.const.role_slugs.insurance_company')) {
+        } elseif ($role == config($Roles.'.insurance_company')) {
             $profileIDKey = 'InsuranceCompanyID';
         } else {
             return false;
@@ -90,22 +91,28 @@ class CustomHelper
         }
         return $model;
     }
-
+    /**
+     * get profileImage column name according to roleslug from different profile table
+     *
+     * @param string $roleSlug
+     * @return void
+     */
     public static function getProfileImageKey($roleSlug){
-        $key=null;
+        $profileImageKey=null;
         if ($roleSlug == config('user.const.role_slugs_patient')) {
-            $key = 'PatientProfileImage';
+            $profileImageKey = 'PatientProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.doctor')) {
-            $key = 'DoctorProfileImage';
+            $profileImageKey = 'DoctorProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.hospital')) {
-            $model = Hospital::class;
+            $profileImageKey = 'HospitalProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.ambulance')) {
-            $model = Ambulance::class;
+            $profileImageKey = 'AmbulanceProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.lab')) {
-            $model = Laboratory::class;
+            $profileImageKey = 'LaboratoryProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.insurance_companies')) {
-            $model = InsuranceCompany::class;
+            $profileImageKey = 'InsuranceCompanyProfileImage';
         }
-        return $key;
-    }
+        return $profileImageKey;
+    }    
+
 }
