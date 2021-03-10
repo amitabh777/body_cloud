@@ -356,7 +356,7 @@ class ProfileController extends Controller
             return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
         }
 
-        $role = $request->Role;
+        $role = $request->RoleSlug;
         if ($request->hasFile('ProfileImage')) {
             $file = $request->file('ProfileImage');
             $path = CustomHelper::uploadProfileImage($file);
