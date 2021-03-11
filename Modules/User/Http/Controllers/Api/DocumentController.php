@@ -44,8 +44,8 @@ class DocumentController extends Controller
         $rules = [
             'Files'=>'required|max:15000',
             'RoleSlug'=>'required|in:'. implode(',',array_keys(config('user.const.role_slugs'))),
-            'ProfileID'=>'required|',
-            'DocType'=>'required'
+            'ProfileID'=>'required',
+            'DocType'=>'required|in:'.implode(',',array_keys(config('user.const.document_types'))),
         ];
         $validator = Validator::make($request->all(),$rules);
         if ($validator->fails()) {
