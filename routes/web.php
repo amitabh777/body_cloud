@@ -28,15 +28,31 @@ Route::get('/test-path', function () {
 
     $visiting = array(
         [
-            'Institue'=>'Institue name1',
-            'ExperienceFrom'=>'date',
-            'ExperienceTo'=>'date',            
+            'Institute'=>'Institue name1',
+            'ExperienceFrom'=>date('Y-m-d'),
+            'ExperienceTo'=>date('Y-m-d'),            
         ],
         [
-            'Institue'=>'Institue name2',
-            'ExperienceFrom'=>'date',
-            'ExperienceTo'=>'date',            
+            'Institute'=>'Institue name2',
+            'ExperienceFrom'=>date('Y-m-d'),
+            'ExperienceTo'=>date('Y-m-d'),            
         ],
+        
+    );
+
+    print_r(json_encode($visiting));
+echo '<br><br>';
+    $visiting = array(
+        [
+            'DoctorID'=>1,
+            'AwardName'=>'test award',
+            'AwardFor'=>'award for',            
+        ],
+        [
+            'DoctorID'=>2,
+            'AwardName'=>'test award2',
+            'AwardFor'=>'award for2',            
+        ],       
     );
 
     print_r(json_encode($visiting));

@@ -88,8 +88,8 @@ class ProfileController extends Controller
             $allData['ProfileData'] = $profileData;
             $allData['SpecializeIn'] = $request->input('SpecializeIn', null);
             $allData['VisitingHours'] = $request->input('VisitingHours', null);
-            $allData['Experience'] = $request->input('Experience', null);
-
+            $allData['Experiences'] = $request->input('Experiences', null);
+            $allData['Awards'] = $request->input('Awards', null);
             $res = $this->profileRepository->doctorProfileUpdate($allData, $userid);
             if ($res !== true) {
                 return response()->json(['message' => 'Could not update', 'data' => ['errror_message' => $res], 'status' => 400]);
@@ -201,10 +201,15 @@ class ProfileController extends Controller
 
     public function validateDoctorProfile($data)
     {
+        $hospitalIDRule ='';
+        if(isset($data['HospitalID']) && $data['HospitalID']!=null){
+            $hospitalIDRule = 'exists:hospitals,HospitalID';
+        }
         $userRules = [
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
-            'Website'=>'url'
+            'Website'=>'url',
+            'HospitalID'=>$hospitalIDRule
             // 'VisitingHours' => 'required'
         ];
         return Validator::make($data, $userRules);
@@ -372,7 +377,7 @@ class ProfileController extends Controller
             }
             $model = CustomHelper::getModelUserRole($role); //get model dynamically according to role
             $profileImageKey = CustomHelper::getProfileImageKey($role); //dynamically get profile id field 
-            $res = $model::where('UserID', $request->UserID)->update([$profileImageKey => $path]);
+            $model::where('UserID', $request->UserID)->update([$profileImageKey => $path]);
 
             return response()->json(['message' => 'success', 'status' => 200]);
         } else {

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Modules\User\Entities\Ambulance;
 use Modules\User\Entities\Doctor;
+use Modules\User\Entities\DoctorAward;
+use Modules\User\Entities\DoctorExperience;
 use Modules\User\Entities\DoctorSector;
 use Modules\User\Entities\DoctorSpecialization;
 use Modules\User\Entities\Hospital;
@@ -50,7 +52,7 @@ class EloquentProfileRepository implements ProfileRepository
             $success = true;
         } catch (Exception $e) {
             DB::rollBack(); //failed
-            Log::error('update failed ');
+            Log::error('patient profile update failed');
             Log::error($e->getMessage());
         }
         return $success?$success:$e->getMessage();
@@ -60,14 +62,16 @@ class EloquentProfileRepository implements ProfileRepository
         $doctor = $this->doctorModel->where('UserID',$userid)->first();
         $success = false;       
         DB::beginTransaction();
-        try { 
+        try {
             $this->doctorModel->where('UserID',$userid)->update($data['ProfileData']);
             //set specializations sectors
             $this->setDoctorSpecialization($data['SpecializeIn'],$doctor->DoctorID);
             //set visiting hours
             $this->setVisitingHours($data['VisitingHours'],$doctor->DoctorID,config('user.const.role_slugs.doctor'));
-            //set expirences
-           // $this->setDoctorExperience($data['Experience'],$doctor->DoctorID);
+            //set experience
+            $this->setDoctorExperience($data['Experiences'],$doctor->DoctorID);
+            //set awards details
+            $this->setDoctorAwards($data['Awards'],$doctor->DoctorID);
 
             DB::commit(); //success
             $success = true;
@@ -100,7 +104,7 @@ class EloquentProfileRepository implements ProfileRepository
     }
     //Ambulance profile update
     public function ambulanceProfileUpdate($data,$userid){
-        $ambulance = $this->ambulanceModel->where('UserID',$userid)->first();
+       //ambulance $ambulance = $this->ambulanceModel->where('UserID',$userid)->first();
         $success = false;
         DB::beginTransaction();
         try { 
@@ -108,7 +112,7 @@ class EloquentProfileRepository implements ProfileRepository
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
-            DB::rollBack(); //failed
+            DB::rollBack(); //failed rollback
             Log::error('ambulance update failed ');
             Log::error($e->getMessage());
         }
@@ -133,6 +137,7 @@ class EloquentProfileRepository implements ProfileRepository
         }
         return $success?$success:$e->getMessage();
     }
+    
     //Insurance profile update
     public function insuranceCompanyProfileUpdate($data, $userid)
     {
@@ -179,7 +184,7 @@ class EloquentProfileRepository implements ProfileRepository
             }
         }
         //Insert into visitng hours
-        $res =DB::table('visiting_hours')->insert($rows);
+        $res =VisitingHour::insert($rows);
         if(!$res){
             return false;
         }
@@ -199,7 +204,7 @@ class EloquentProfileRepository implements ProfileRepository
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['SectorID' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
             }
-            DB::table('doctor_sectors')->insert($sectors);
+            DoctorSector::insert($sectors);
         }
     }
 
@@ -215,11 +220,12 @@ class EloquentProfileRepository implements ProfileRepository
         //delete previous entries
         DoctorSpecialization::where('DoctorID',$doctorID)->delete();
         $sectors = [];
+        $res = false;
         if ($sectorIDs && is_array($sectorIDs)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['SpecializeIn' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
             }
-           $res= DB::table('doctor_specializations')->insert($sectors);
+           $res= DoctorSpecialization::insert($sectors);
         } else {
          //  $res= DoctorSpecialization::create(['SpecializeIn' => $sectorIDs, 'DoctorID' => $doctorID]);
         }
@@ -243,7 +249,7 @@ class EloquentProfileRepository implements ProfileRepository
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['MedicalSectorID' => $sectorID, 'HospitalID' => $hospitalID, 'CreatedAt' => $now->toDateTimeString()];
             }
-           $res= DB::table('hospital_sectors')->insert($sectors);
+           $res= HospitalSector::insert($sectors);
         }
         return $res;
     }
@@ -251,49 +257,83 @@ class EloquentProfileRepository implements ProfileRepository
     /**
      * Method setDoctorExpirence
      * set expirences of doctor
-     * @param $experience [array ]
-     * @param $doctorId [profile id of doctor]
+     * @param json $experiencesJson [experiences]
+     * @param int $doctorId [profile id of doctor]
      *
      * @return void
      */
-    public function setDoctorExperience($experience,$doctorId){
+    public function setDoctorExperience($experiencesJson,$doctorID){
         $now = Carbon::now();
         //delete previous entries
-        //::where('HospitalID',$doctorId)->delete();
-        $sectors = [];
+        DoctorExperience::where('DoctorID',$doctorID)->delete();
+        $experienceRows = [];
         $res = false;
-        if ($experience!=null && is_array($experience)) {
-            foreach ($sectorIDs as $sectorID) {
-                $sectors[] = ['MedicalSectorID' => $sectorID, 'HospitalID' => $hospitalID, 'CreatedAt' => $now->toDateTimeString()];
+        if ($experiencesJson!=null) {
+            $experiences = is_array($experiencesJson) ? $experiencesJson : json_decode($experiencesJson, true);
+            foreach ($experiences as $experience) {
+                $experienceRows[] = [
+                    'DoctorID' => $doctorID, 
+                    'Institute' => $experience['Institute'], 
+                    'ExperienceFrom' => $experience['ExperienceFrom'], 
+                    'ExperienceTo' => $experience['ExperienceTo'], 
+                    'CreatedAt' => $now->toDateTimeString()
+                ];
             }
-           $res= DB::table('hospital_sectors')->insert($sectors);
+           $res= DoctorExperience::insert($experienceRows);
+        }
+        return $res;
+    }
+    /**
+     * setDoctorAwards function
+     *
+     * @param json $awards
+     * @param int $doctorID
+     * @return void
+     */
+    public function setDoctorAwards($awardsJson,$doctorID){
+        $now = Carbon::now();
+        //delete previous entries
+        DoctorAward::where('DoctorID',$doctorID)->delete();
+        $awardRows = [];
+        $res = false;
+        if ($awardsJson!=null) {
+           $awards = is_array($awardsJson) ? $awardsJson : json_decode($awardsJson, true);
+            foreach ($awards as $award) {
+                $awardRows[] = [
+                    'DoctorID' => $doctorID, 
+                    'AwardName' => $award['AwardName'], 
+                    'AwardFor' => $award['AwardFor'], 
+                    'CreatedAt' => $now->toDateTimeString()
+                ];
+            }
+           $res= DoctorAward::insert($awardRows);
         }
         return $res;
     }
 
     //Create user with roles
-    public function createWithRoles($data, $role)
-    {
-        //Hash encrypt password
-        $data['password'] = Hash::make($data['password']);
-        $user = null;
-        try {
-            $user = DB::transaction(function () use ($data, $role, $user) {
-                $user = User::create($data);
-                $roleuser = array(
-                    'role_id' => $role,
-                    'user_id' => $user->id
-                );
-                RolesUser::create($roleuser);
-                Log::info('db trans executed: ');
-                return $user;
-            });           
-            return $user;
-        } catch (Exception $e) {
-            Log::error('Create user with role: ' . $e->getMessage());
-            return false;
-        }
-    }
+    // public function createWithRoles($data, $role)
+    // {
+    //     //Hash encrypt password
+    //     $data['password'] = Hash::make($data['password']);
+    //     $user = null;
+    //     try {
+    //         $user = DB::transaction(function () use ($data, $role, $user) {
+    //             $user = User::create($data);
+    //             $roleuser = array(
+    //                 'role_id' => $role,
+    //                 'user_id' => $user->id
+    //             );
+    //             RolesUser::create($roleuser);
+    //             Log::info('db trans executed: ');
+    //             return $user;
+    //         });           
+    //         return $user;
+    //     } catch (Exception $e) {
+    //         Log::error('Create user with role: ' . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function isAdmin($user)
     {

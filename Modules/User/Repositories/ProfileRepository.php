@@ -4,14 +4,15 @@ namespace Modules\User\Repositories;
 
 interface ProfileRepository
 {
-    // public function createWithRoles($data,$role);
+    //t public function createWithRoles($data,$role);
     // public function isAdmin($user);
-    public function patientProfileUpdate($data, $userid);
-    public function doctorProfileUpdate($data, $userid);
-    public function hospitalProfileUpdate($data, $userid);
-    public function ambulanceProfileUpdate($data, $userid);
-    public function laboratoryProfileUpdate($data, $userid);
-    public function insuranceCompanyProfileUpdate($data, $userid);
+    public function patientProfileUpdate(array $data,$userid);
+    public function doctorProfileUpdate(array $data, $userid);
+    public function hospitalProfileUpdate(array $data, $userid);
+    public function ambulanceProfileUpdate(array $data, $userid);
+    public function laboratoryProfileUpdate(array $data, $userid);
+    public function insuranceCompanyProfileUpdate(array $data, $userid);
 
     public function setVisitingHours($visitingHours, $profileID, $roleSlug);
+    public function setMedicalSectors($sectorIDs, $doctorID);
 }

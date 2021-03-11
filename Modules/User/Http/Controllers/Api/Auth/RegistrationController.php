@@ -25,12 +25,22 @@ use Modules\User\Entities\Laboratory;
 use Modules\User\Entities\Patient;
 use Modules\User\Entities\Role;
 use Modules\User\Entities\UserRole;
+use Modules\User\Repositories\ProfileRepository;
 
 class RegistrationController extends Controller
 {
+    protected $profileRepository;
+
+    public function __construct(ProfileRepository $profileRepo)
+    {
+        $this->profileRepository = $profileRepo;
+    }
+
     /**
-     * user registration
-     * 
+     * Registration of users of different type
+     *
+     * @param Request $request
+     * @return json response
      */
     public function registration(Request $request)
     {
@@ -213,8 +223,10 @@ class RegistrationController extends Controller
     {
         $userData = $this->getUserData($request);
         $profileData = $this->getDoctorProfileData($request);
+        $medicalSectors = $request->input('SectorID', null);
+        $visitingHours = $request->input('VisitingHours', null);
+        
         $success = false;
-
         DB::beginTransaction();
         try {
             //create user with role and profile
@@ -227,11 +239,9 @@ class RegistrationController extends Controller
             $profileData['Otp'] = $user->Otp;
             $doctor = Doctor::create($profileData);
             //set medical sectors
-            if ($profileData['SectorID']) {
-                $this->setMedicalSectors($profileData['SectorID'], $doctor->DoctorID);
-            }
+            $this->profileRepository->setMedicalSectors($medicalSectors, $doctor->DoctorID);
             //set Visiting hours 
-            $this->setVisitingHours($request->VisitingHours, $doctor->DoctorID, config('user.const.role_slugs.doctor'));
+            $this->profileRepository->setVisitingHours($visitingHours, $doctor->DoctorID, config('user.const.role_slugs.doctor'));
             //Upload registered papers
             $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.doctor'), $doctor->DoctorID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
@@ -242,14 +252,14 @@ class RegistrationController extends Controller
             Log::error($e->getMessage());
         }
         if ($success) {
-            //upload files
+            //upload image
             if ($request->file('ProfileImage')) {
                 $filename = $this->uploadProfileImage($request->file('ProfileImage'));
                 if ($filename) {
                     $doctor->DoctorProfileImage = $filename;
                     $doctor->save();
                 } else {
-                    Log::error('User registration: unable to upload profile image');
+                    Log::error('User registration: unable to upload profile image ');
                 }
             }
             $otp = CustomHelper::sendOtp($userData['Phone']); //send otp
@@ -265,6 +275,7 @@ class RegistrationController extends Controller
     {
         $userData = $this->getUserData($request);
         $profileData = $this->getHospitalProfileData($request);
+        $visitingHours = $request->input('VisitingHours', null);
 
         $success = false;
         DB::beginTransaction();
@@ -279,7 +290,7 @@ class RegistrationController extends Controller
             $profileData['Otp'] = $user->Otp;
             $hospital = Hospital::create($profileData);
             //set Visiting hours 
-            $this->setVisitingHours($request->VisitingHours, $hospital->HospitalID, config('user.const.role_slugs.hospital'));
+            $this->profileRepository->setVisitingHours($visitingHours, $hospital->HospitalID, config('user.const.role_slugs.hospital'));
             //Upload registered papers
             $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.hospital'), $hospital->HospitalID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
@@ -353,6 +364,7 @@ class RegistrationController extends Controller
     {
         $userData = $this->getUserData($request);
         $profileData = $this->getLabProfileData($request);
+        $visitingHours = $request->input('VisitingHours', null);
 
         $success = false;
         DB::beginTransaction();
@@ -367,7 +379,7 @@ class RegistrationController extends Controller
             $profileData['Otp'] = $user->Otp;
             $laboratory = Laboratory::create($profileData);
             //set Visiting hours 
-            $this->setVisitingHours($request->VisitingHours, $laboratory->LaboratoryID, config('user.const.role_slugs.lab'));
+            $this->profileRepository->setVisitingHours($visitingHours, $laboratory->LaboratoryID, config('user.const.role_slugs.lab'));
             //Upload registered papers
             $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.lab'), $laboratory->LaboratoryID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
@@ -397,7 +409,7 @@ class RegistrationController extends Controller
     {
         $userData = $this->getUserData($request);
         $profileData = $this->getInsuranceCompanyProfileData($request);
-
+        $visitingHours = $request->input('VisitingHours', null);
         $success = false;
         DB::beginTransaction();
         try {
@@ -411,7 +423,7 @@ class RegistrationController extends Controller
             $profileData['Otp'] = $user->Otp;
             $insuranceCompany = InsuranceCompany::create($profileData);
             //set Visiting hours 
-            $this->setVisitingHours($request->VisitingHours, $insuranceCompany->InsuranceCompanyID, config('user.const.role_slugs.insurance_company'));
+            $this->profileRepository->setVisitingHours($visitingHours, $insuranceCompany->InsuranceCompanyID, config('user.const.role_slugs.insurance_company'));
             //Upload registered papers
             $this->uploadDocuments($request->file('Documents'), config('user.const.role_slugs.insurance_company'), $insuranceCompany->InsuranceCompanyID, config('user.const.document_types.registered_paper'));
             DB::commit(); //success
@@ -444,13 +456,13 @@ class RegistrationController extends Controller
             'Phone' => 'required|min:11|max:11|unique:users,Phone',
             'Password' => ['required', 'string', 'min:8'],
             'RoleSlug' => 'required',
-            'DeviceToken'=>'required',
-            'DeviceType'=>'required|in:android,ios',
+            'DeviceToken' => 'required',
+            'DeviceType' => 'required|in:android,ios',
         ];
         $message = [
             'RoleSlug.required' => 'Role is required',
-            'Phone.min'=>'Phone must be 11 digits',
-            'Phone.max'=>'Phone must be 11 digits',
+            'Phone.min' => 'Phone must be 11 digits',
+            'Phone.max' => 'Phone must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message, []);
     }
@@ -465,12 +477,12 @@ class RegistrationController extends Controller
             'PatientWeight' => 'required',
             'EmergencyContactNo' => 'required|min:11|max:11',
         ];
-        $message=[
+        $message = [
             'PatientHeight.min' => 'Height should be more than 100 cm',
-            'EmergencyContactNo.min'=>'EmergencyContactNo must be 11 digits',
-            'EmergencyContactNo.max'=>'EmergencyContactNo must be 11 digits',
+            'EmergencyContactNo.min' => 'EmergencyContactNo must be 11 digits',
+            'EmergencyContactNo.max' => 'EmergencyContactNo must be 11 digits',
         ];
-        return Validator::make($request->all(), $userRules,$message);
+        return Validator::make($request->all(), $userRules, $message);
     }
 
     public function validateDoctorProfile($request)
@@ -479,12 +491,10 @@ class RegistrationController extends Controller
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'DoctorGender' => 'required|in:Male,Female',
             'VisitingHours' => 'required',
-            'DoctorWebsite'=>'url',
+            'DoctorWebsite' => 'url',
         ];
-        $message = [
-            
-        ];
-        return Validator::make($request->all(), $userRules,$message);
+        $message = [];
+        return Validator::make($request->all(), $userRules, $message);
     }
     //Validate Hospital fields
     public function validateHospitalProfile($request)
@@ -493,7 +503,7 @@ class RegistrationController extends Controller
             'HospitalName' => 'required',
             'HospitalContactName' => 'required',
             'VisitingHours' => 'required',
-            'HospitalWebsite'=>'url'
+            'HospitalWebsite' => 'url'
         ];
         return Validator::make($request->all(), $userRules);
     }
@@ -512,7 +522,7 @@ class RegistrationController extends Controller
             'CompanyName' => 'required',
             'VisitingHours' => 'required',
         ];
-        return Validator::make($request->all(), $userRules,[],[]);
+        return Validator::make($request->all(), $userRules, [], []);
     }
     public function validateInsuranceCompanyProfile($request)
     {
@@ -521,48 +531,6 @@ class RegistrationController extends Controller
             'VisitingHours' => 'required',
         ];
         return Validator::make($request->all(), $userRules);
-    }
-
-    /**
-     * set doctor medical sector
-     */
-    public function setMedicalSectors($sectorIDs, $doctorID)
-    {
-        $now = Carbon::now();
-        $sectors = [];
-        if ($sectorIDs!=null && is_array($sectorIDs)) {
-            foreach ($sectorIDs as $sectorID) {
-                $sectors[] = ['SectorID' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
-            }
-            DB::table('doctor_sectors')->insert($sectors);
-        }
-    }
-    //Set visiting hours
-    public function setVisitingHours($visitingHours, $profileID, $roleSlug)
-    {
-        if (!$visitingHours) {
-            Log::error('Visiting hours not defined');
-            return false;
-        }
-        $now = Carbon::now();
-        $rows = [];
-        $profileIDKey = CustomHelper::getProfileIdKey($roleSlug); //get profile id column name
-        $days = is_array($visitingHours) ? $visitingHours : json_decode($visitingHours, true);
-        if ($days['days']) {
-            foreach ($days['days'] as $day => $details) {
-                $rows[] = array(
-                    $profileIDKey => $profileID,
-                    'VisitingDay' => $day,
-                    'VisitingStartTime' => CustomHelper::convertTimeTo24($details['start_time']),
-                    'VisitingEndTime' => CustomHelper::convertTimeTo24($details['end_time']),
-                    'VisitingSlot' => $details['visiting_slot'],
-                    'IsAvailable' => $details['is_available'],
-                    'CreatedAt' => $now->toDateTimeString()
-                );
-            }
-        }
-        //Insert into visitng hours
-        DB::table('visiting_hours')->insert($rows);
     }
 
     public function getUserData($request)
@@ -608,8 +576,6 @@ class RegistrationController extends Controller
             // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
             // 'DoctorBankName' => $request->input('DoctorBankName', null),
             // 'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
-            'SectorID' => $request->input('SectorID', null),
-            'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
     //Hospital fields
@@ -617,10 +583,9 @@ class RegistrationController extends Controller
     {
         return [
             'HospitalName' => $request->input('HospitalName'),
-            'HospitalInfo' => $request->input('HospitalInfo',''),
+            'HospitalInfo' => $request->input('HospitalInfo', ''),
             'HospitalWebsite' => $request->input('HospitalWebsite'),
             'HospitalContactName' => $request->input('HospitalContactName'),
-            'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
     //Ambulance profile
@@ -636,9 +601,8 @@ class RegistrationController extends Controller
     {
         return [
             'LaboratoryCompanyName' => $request->input('CompanyName'),
-            'LaboratoryInfo' => $request->input('LaboratoryInfo',''),
-            'LaboratoryWebsite' => $request->input('Website',''),
-            'VisitingHours' => $request->input('VisitingHours'),
+            'LaboratoryInfo' => $request->input('LaboratoryInfo', ''),
+            'LaboratoryWebsite' => $request->input('Website', ''),
         ];
     }
     //Lab profile
@@ -646,9 +610,8 @@ class RegistrationController extends Controller
     {
         return [
             'InsuranceCompanyName' => $request->input('CompanyName'),
-            'InsuranceCompanyInfo' => $request->input('CompanyInfo',''),
+            'InsuranceCompanyInfo' => $request->input('CompanyInfo', ''),
             'InsuranceCompanyWebsite' => $request->input('Website'),
-            'VisitingHours' => $request->input('VisitingHours'),
         ];
     }
 
@@ -686,7 +649,7 @@ class RegistrationController extends Controller
     public function uploadProfileImage($file)
     {
         $file_name = $file->hashName();
-        $path = $file->storeAs('documents/profile_images', $file_name,'public');
+        $path = $file->storeAs('documents/profile_images', $file_name, 'public');
         if ($path) {
             return $path;
         }

@@ -39,7 +39,12 @@ Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check']
     Route::get('user/me', 'UserController@myProfile'); //view profile 
     Route::post('update', 'ProfileController@update');
     Route::post('image/upload', 'ProfileController@uploadProfileImage');
+    Route::post('documents/upload', 'DocumentController@store');
     
+});
+
+Route::prefix('hospital')->namespace('Api')->middleware(['auth:api'])->group(function () {
+    Route::get('list','HospitalController@index');
 });
 
 

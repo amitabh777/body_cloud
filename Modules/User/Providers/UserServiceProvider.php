@@ -40,9 +40,8 @@ class UserServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
-
-        // $this->app->bind(ProfileRepository::class,EloquentProfileRepository::class);
-         $this->app->bind('Modules\User\Repositories\ProfileRepository','Modules\User\Repositories\Eloquent\EloquentProfileRepository');
+        $this->app->register(RepositoryServiceProvider::class);
+        //  $this->app->bind('Modules\User\Repositories\ProfileRepository','Modules\User\Repositories\Eloquent\EloquentProfileRepository');
 
     }
 

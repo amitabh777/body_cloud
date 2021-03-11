@@ -11,7 +11,7 @@ class DoctorSector extends Model
     const CREATED_AT = 'CreatedAt';
     const UPDATED_AT = 'UpdatedAt';
    
-    protected $table = 'doctors';
+    protected $table = 'doctor_sectors';
     protected $fillable = ['DoctorID','SectorID'];
    
     protected $primaryKey = 'DoctorSectorID';
