@@ -1,5 +1,6 @@
 @extends('admin.layouts.dashboard-datatables')
 
+@section('page_title') Doctors @endsection
 @section('content')
 
 <div class="container-fluid">

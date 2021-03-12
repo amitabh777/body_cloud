@@ -15,8 +15,8 @@ class InsuranceCompanyController extends Controller
      */
     public function index()
     {
-        $insuranceCompany = InsuranceCompany::all()->load('user');
-        return view('user::admin.insurance_company',compact('insuranceCompany'));
+        $insuranceCompanies = InsuranceCompany::all()->load('user');
+        return view('user::admin.manage_profiles.insurance_companies',compact('insuranceCompanies'));
     }
 
     /**

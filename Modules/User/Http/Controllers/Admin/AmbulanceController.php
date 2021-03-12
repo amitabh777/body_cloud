@@ -15,8 +15,8 @@ class AmbulanceController extends Controller
      */
     public function index()
     {
-        $ambulances=Ambulance::all()->with(['user']);
-        return view('user::admin.manage_profiles.ambulance',compact('ambulances'));
+        $ambulances=Ambulance::with(['user','hospital'])->get();
+        return view('user::admin.manage_profiles.ambulances',compact('ambulances'));
     }
 
     /**

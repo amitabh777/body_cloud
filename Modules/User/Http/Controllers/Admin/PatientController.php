@@ -54,9 +54,10 @@ class PatientController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit($patientID)
     {
-        return view('user::edit');
+        $patient = Patient::where('PatientID',$patientID)->first();
+        return view('user::admin.manage_profiles.edit_patient',compact('patient'));
     }
 
     /**
@@ -67,7 +68,7 @@ class PatientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        print_r($request->all());
     }
 
     /**

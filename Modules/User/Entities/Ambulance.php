@@ -2,6 +2,7 @@
 
 namespace Modules\User\Entities;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -28,6 +29,10 @@ class Ambulance extends Model
     
     public function documents(){
         return $this->hasMany(Document::class,'AmbulanceID','AmbulanceID')->select(['AmbulanceID','DocumentFile','DocumentTypeID']);
+    }
+
+    public function hospital(){
+        return $this->hasOne(Hospital::class,'HospitalID','HospitalID');
     }
    
 }

@@ -1,5 +1,5 @@
 @extends('admin.layouts.dashboard-datatables')
-
+@section('page_title') Hospitals @endsection
 @section('content')
 
 <div class="container-fluid">

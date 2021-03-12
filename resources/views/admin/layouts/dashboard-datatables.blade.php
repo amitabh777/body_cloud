@@ -10,7 +10,6 @@
     <div class="wrapper">
 
         @include('admin.partials.nav')
-
         @include('admin.partials.sidebar')
 
         <!-- Content Wrapper. Contains page content -->

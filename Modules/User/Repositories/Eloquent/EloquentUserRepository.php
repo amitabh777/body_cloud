@@ -45,6 +45,29 @@ class EloquentUserRepository implements UserRepository
         return $user;
     }
 
+    //Update only user details
+    public function updateUserDetails($data, $roleSlug)
+    {
+        //Hash encrypt password
+        $data['Password'] = Hash::make($data['Password']);
+        $data['UniqueID'] = CustomHelper::getNewUniqueId();
+        $user = null;
+        DB::beginTransaction();
+        try {
+            $user = User::create($data);
+            $role = Role::where('RoleSlug', $roleSlug)->first();
+            $userRole = ['RoleID' => $role->RoleID, 'UserID' => $user->UserID];
+            UserRole::create($userRole);
+            Log::info('db trans executed: ');
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Create user with role: ' . $e->getMessage());
+            return false;
+        }
+        return $user;
+    }
+
     public function isAdmin($user)
     {
         if (isset($user->roles)) {

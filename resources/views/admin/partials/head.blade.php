@@ -16,6 +16,14 @@
 <link rel="stylesheet" href="{{asset('assets/admin/css/overlayScrollbars/OverlayScrollbars.min.css')}}">
 <!-- Theme style -->
 <link rel="stylesheet" href="{{asset('assets/admin/css/dist/css/adminlte.min.css')}}">
+ <!-- daterange picker -->
+ <link rel="stylesheet" href="{{asset('assets/admin/plugins/daterangepicker/daterangepicker.css')}}">
+
+ <!-- Tempusdominus Bootstrap 4 -->
+ <link rel="stylesheet" href="{{asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+<!-- Select2 -->
+<link rel="stylesheet" href="{{asset('assets/admin/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 
 <!-- DataTables -->
 <link rel="stylesheet" href="{{asset('assets/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">

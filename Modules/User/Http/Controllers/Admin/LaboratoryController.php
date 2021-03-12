@@ -16,7 +16,7 @@ class LaboratoryController extends Controller
     public function index()
     {
         $laboratories = Laboratory::all()->load('user');
-        return view('user::admin.laboratories',compact('laboratories'));
+        return view('user::admin.manage_profiles.laboratories',compact('laboratories'));
     }
 
     /**

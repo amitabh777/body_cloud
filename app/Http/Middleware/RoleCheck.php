@@ -21,11 +21,12 @@ class RoleCheck
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
+    {;
         if($request->input('RoleSlug','')!=null){
+           
             $inputRole = $request->input('RoleSlug');
             $user = Auth::user();            
-            $userRole = $user->userRole();            
+            $userRole = $user->userRole();                       
             $role = $userRole->role;
            if($role->RoleSlug!=$inputRole){
             return response()->json(['message'=>'Logged in user role not matched with provided role:'.$inputRole,'status'=>400]);

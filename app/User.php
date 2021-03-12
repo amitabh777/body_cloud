@@ -91,6 +91,14 @@ class User extends Authenticatable
         return hash('sha256', time() . '0123456789ab25');
     }
     
+    public function scopeIsSuperAdmin()
+    {
+        $userRole = $this->userRole();
+        if ($userRole->role->RoleSlug == config('user.const.role_slugs.super_admin')) {
+            return true;
+        }
+        return false;
+    }
     public function scopeIsPatient()
     {
         $userRole = $this->userRole();

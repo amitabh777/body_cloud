@@ -20,7 +20,7 @@ use Modules\User\Entities\UserRole;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home.welcome');
 
 Route::get('/test-path', function () {
 

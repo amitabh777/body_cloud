@@ -2,6 +2,7 @@
 
 namespace Modules\User\Http\Controllers\Admin;
 
+use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -14,18 +15,13 @@ class LoginController extends Controller
 {
 
     use AuthenticatesUsers;
+    protected $redirectTo = RouteServiceProvider::HOME;
 
-    protected $userRepo;
-public function __construct(UserRepository $userRepo){
-    $this->userRepo = $userRepo;
-}
+    public function __construct()
+    {
+    }
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    //protected $redirectTo = RouteServiceProvider::HOME;
+  
 
     // public function getUsernameType($val)
     // {
@@ -34,10 +30,28 @@ public function __construct(UserRepository $userRepo){
     //     return $type;
     // }
 
-public function index(){
-  
-   return view('user::admin.login');
-}
+    public function index()
+    {
+        return view('user::admin.login');
+    }
+
+     /* The user has been authenticated.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  mixed  $user
+    * @return mixed
+    */
+   protected function authenticated(Request $request, $user)
+   {
+    //    dd('tefsjdljflksjdlkfjl');
+    //    return response([
+    //        ''
+    //    ]);
+   }
+   public function username()
+   {
+       return 'Email';
+   }
 
     /**
      * handle login request
@@ -45,12 +59,19 @@ public function index(){
      */
     public function login(LoginRequest $request)
     {
-       $auth = Auth::attempt(['Email' => $request->Email, 'password' => $request->Password]);
-       if($auth){
-        return redirect()->route('admin.dashboard')->with('status','success');
-       } 
-       return view('user::admin.login');
+        $this->redirectTo = route('admin.dashboard.index');       
+        $auth = Auth::attempt(['Email' => $request->Email, 'password' => $request->Password]);
+        if ($auth) {
+            return $this->sendLoginResponse($request);
+           // return redirect()->route('admin.dashboard.index')->with('status', 'success');
+        }
+        return $this->sendFailedLoginResponse($request);
+      //  return redirect()->back();
     }
 
-
+    public function logout(Request $request){
+       Auth::logout();
+    
+       return redirect()->route('admin.login.index');
+    }
 }
