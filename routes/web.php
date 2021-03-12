@@ -11,7 +11,12 @@
 |
 */
 
+use App\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Modules\User\Entities\Role;
+use Modules\User\Entities\UserRole;
 
 Route::get('/', function () {
     return view('welcome');
@@ -56,6 +61,9 @@ echo '<br><br>';
     );
 
     print_r(json_encode($visiting));
+    
 
     return 'test path';
 });
+
+ 

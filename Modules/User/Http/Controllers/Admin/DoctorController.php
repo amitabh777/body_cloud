@@ -5,9 +5,9 @@ namespace Modules\User\Http\Controllers\Admin;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\User\Entities\Patient;
+use Modules\User\Entities\Doctor;
 
-class PatientController extends Controller
+class DoctorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,8 @@ class PatientController extends Controller
      */
     public function index()
     {
-        // $patients = Patient::paginate(10);
-        $patients = Patient::with(['user'])->get();
-        return view('user::admin.manage_profiles.patients',compact('patients'));
+        $doctors = Doctor::all()->load('user')->load('hospital');
+        return view('user::admin.manage_profiles.doctors',compact('doctors'));
     }
 
     /**

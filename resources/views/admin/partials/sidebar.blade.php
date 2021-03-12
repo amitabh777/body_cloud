@@ -81,12 +81,42 @@ $route = Route::currentRouteName();
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{{route('admin.manage_profiles.patient.index')}}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Patient</p>
               </a>
             </li>
             <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.doctor.index')}}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Doctor</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.hospital.index')}}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Hospital</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.ambulance.index')}}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ambulance</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.laboratory.index')}}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Laboratory</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.insurance_company.index')}}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Insurance Company</p>
+              </a>
+            </li>
+            <!-- <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-circle"></i>
                 <p>
@@ -137,7 +167,7 @@ $route = Route::currentRouteName();
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> -->
           </ul>
         </li>
 

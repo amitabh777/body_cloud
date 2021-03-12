@@ -113,6 +113,24 @@ class CustomHelper
             $profileImageKey = 'InsuranceCompanyProfileImage';
         }
         return $profileImageKey;
-    }    
+    }   
+    
+    /**
+     * get New UniqueID for registration
+     * @param void
+     * @return int $newUniqueId
+     */
+    public static function getNewUniqueId()
+    {
+        $uniqueId = User::latest()->pluck('UniqueID')->first();
+        if ($uniqueId) {
+            $uniqArr = explode('_', $uniqueId);
+            $uniqNum = $uniqArr[1] + 1;
+            $newUniqueId = 'BDY_' . $uniqNum;
+        } else {
+            $newUniqueId = 'BDY_1';
+        }
+        return $newUniqueId;
+    }
 
 }

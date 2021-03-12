@@ -1,6 +1,7 @@
 <?php
 return [
     'roles' => [
+        'super_admin' => 'super_admin',
         'patient' => 'Patient',
         'hospital' => 'Hospital',
         'insurance_company' => 'InsuranceCompany',
@@ -10,6 +11,7 @@ return [
     ],
     
     'role_slugs' => [
+        'super_admin' => 'super_admin',
         'patient' => 'patient',
         'hospital' => 'hospital',
         'insurance_company' => 'insurance_company',

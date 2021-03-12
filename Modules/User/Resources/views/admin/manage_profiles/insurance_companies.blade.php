@@ -448,16 +448,16 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <table id="patient_datatable" class="table table-bordered table-striped">
+            <table id="example1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th scope="header">Name</th>
-                        <th scope="header">Gender</th>
-                        <th scope="header">DOB</th>
-                        <th scope="header">Weight</th>
-                        <th scope="header">Height</th>
-                        <th scope="header">Status</th>
-                        <th scope="header">Action</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>DOB</th>
+                        <th>Weight</th>
+                        <th>Height</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -469,7 +469,7 @@
                         <td>{{$patient->PatientWeight}} kg</td>
                         <td>{{$patient->PatientHeight}} cm</td>
                         <td>
-                            <input type="checkbox" class="patient_status_checkbox" data-UserID="{{$patient->user->UserID}}" name="checkbox_status_{{$patient->PatientID}}" @if($patient->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            <input type="checkbox" class="patient_active_checkbox" data-UserID="{{$patient->user->UserID}}" name="checkbox_status_{{$patient->PatientID}}" @if($patient->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
                         </td>
                         <td>
                             <button class="btn btn-primary btn-sm">Edit</button>
@@ -479,13 +479,13 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                    <th scope="header">Name</th>
-                        <th scope="header">Gender</th>
-                        <th scope="header">DOB</th>
-                        <th scope="header">Weight</th>
-                        <th scope="header">Height</th>
-                        <th scope="header">Status</th>
-                        <th scope="header">Action</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>DOB</th>
+                        <th>Weight</th>
+                        <th>Height</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </tfoot>
             </table>
@@ -511,7 +511,7 @@
         // //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-        $('#patient_datatable').DataTable({
+        $('#example1').DataTable({
             "paging": true,
             "lengthChange": false,
             "searching": true,

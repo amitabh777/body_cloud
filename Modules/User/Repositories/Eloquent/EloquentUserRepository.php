@@ -2,12 +2,15 @@
 
 namespace Modules\User\Repositories\Eloquent;
 
+use App\Helpers\CustomHelper;
 use App\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Modules\User\Entities\Role;
 use Modules\User\Entities\RolesUser;
+use Modules\User\Entities\UserRole;
 use Modules\User\Repositories\UserRepository;
 
 class EloquentUserRepository implements UserRepository
@@ -20,27 +23,26 @@ class EloquentUserRepository implements UserRepository
     }
 
     //Create user with roles
-    public function createWithRoles($data, $role)
+    public function createWithRoles($data, $roleSlug)
     {
         //Hash encrypt password
-        $data['password'] = Hash::make($data['password']);
+        $data['Password'] = Hash::make($data['Password']);
+        $data['UniqueID'] = CustomHelper::getNewUniqueId();
         $user = null;
+        DB::beginTransaction();
         try {
-            $user = DB::transaction(function () use ($data, $role, $user) {
-                $user = User::create($data);
-                $roleuser = array(
-                    'role_id' => $role,
-                    'user_id' => $user->id
-                );
-                RolesUser::create($roleuser);
-                Log::info('db trans executed: ');
-                return $user;
-            });           
-            return $user;
+            $user = User::create($data);
+            $role = Role::where('RoleSlug', $roleSlug)->first();
+            $userRole = ['RoleID' => $role->RoleID, 'UserID' => $user->UserID];
+            UserRole::create($userRole);
+            Log::info('db trans executed: ');
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error('Create user with role: ' . $e->getMessage());
             return false;
         }
+        return $user;
     }
 
     public function isAdmin($user)

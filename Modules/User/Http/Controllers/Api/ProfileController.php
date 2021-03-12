@@ -187,8 +187,8 @@ class ProfileController extends Controller
             'PatientName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
             'DOB' => 'required',
-            'PatientHeight' => 'required|numeric|min:100|max:270',
-            'PatientWeight' => 'required',
+            'PatientHeight' => 'required|numeric|min:100|max:250',
+            'PatientWeight' => 'required|numeric',
             'EmergencyContactNo' => 'required|max:11|min:11',
         ];
         $message = [
@@ -210,7 +210,6 @@ class ProfileController extends Controller
             'Gender' => 'required',
             'Website'=>'url',
             'HospitalID'=>$hospitalIDRule
-            // 'VisitingHours' => 'required'
         ];
         return Validator::make($data, $userRules);
     }

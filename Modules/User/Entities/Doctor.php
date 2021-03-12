@@ -34,4 +34,8 @@ class Doctor extends Model
     public function medicalSectors(){
         return $this->hasMany(DoctorSector::class,'DoctorID','DoctorID');
     }
+
+    public function hospital(){
+        return $this->hasOne(Hospital::class,'HospitalID','HospitalID');
+    }
 }

@@ -50,7 +50,7 @@ class RegistrationController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
         }
-        $uniqueId = $this->getNewUniqueId();
+        $uniqueId = CustomHelper::getNewUniqueId();
         $request->merge(['UniqueID' => $uniqueId]);
 
         switch ($request->input('RoleSlug')) {
@@ -154,23 +154,6 @@ class RegistrationController extends Controller
         }
         return response()->json(['message' => 'success', 'status' => 200]);
     }
-
-    /**
-     * get New UniqueID for registration
-     */
-    public function getNewUniqueId()
-    {
-        $uniqueId = User::latest()->pluck('UniqueID')->first();
-        if ($uniqueId) {
-            $uniqArr = explode('_', $uniqueId);
-            $uniqNum = $uniqArr[1] + 1;
-            $newUniqueId = 'BDY_' . $uniqNum;
-        } else {
-            $newUniqueId = 'BDY_1';
-        }
-        return $newUniqueId;
-    }
-
     /**
      * patient register
      */
