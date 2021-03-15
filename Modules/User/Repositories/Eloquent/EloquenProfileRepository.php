@@ -64,7 +64,14 @@ class EloquentProfileRepository implements ProfileRepository
         }
         return $success ? $success : $e->getMessage();
     }
-    //doctor profile update
+   
+    /**
+     * doctor profile update with other data
+     *
+     * @param array $data
+     * @param int $userid
+     * @return void
+     */
     public function doctorProfileUpdate($data, $userid)
     {
         $doctor = $this->doctorModel->where('UserID', $userid)->first();
@@ -90,6 +97,25 @@ class EloquentProfileRepository implements ProfileRepository
         }
         return $success ? $success : $e->getMessage();
     }
+
+    //doctor profile only update
+    public function doctorProfileOnlyUpdate($data, $userid)
+    {
+        $doctor = $this->doctorModel->where('UserID', $userid)->first();
+        $success = false;
+        DB::beginTransaction();
+        try {
+            $this->doctorModel->where('UserID', $userid)->update($data);
+            DB::commit(); //success
+            $success = true;
+        } catch (Exception $e) {
+            DB::rollBack(); //failed
+            Log::error('doctor profile update failed: ');
+            Log::error($e->getMessage());
+        }
+        return $success ? $success : $e->getMessage();
+    }
+
     //Hospital profile update
     public function hospitalProfileUpdate($data, $userid)
     {

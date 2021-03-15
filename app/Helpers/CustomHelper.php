@@ -74,9 +74,9 @@ class CustomHelper
 
     //get model according to user role
     public static function getModelUserRole($roleSlug)
-    {
+    {        
         $model=null;
-        if ($roleSlug == config('user.const.role_slugs_patient')) {
+        if ($roleSlug == config('user.const.role_slugs.patient')) {          
             $model = Patient::class;
         } elseif ($roleSlug == config('user.const.role_slugs.doctor')) {
             $model = Doctor::class;
@@ -99,7 +99,7 @@ class CustomHelper
      */
     public static function getProfileImageKey($roleSlug){
         $profileImageKey=null;
-        if ($roleSlug == config('user.const.role_slugs_patient')) {
+        if ($roleSlug == config('user.const.role_slugs.patient')) {
             $profileImageKey = 'PatientProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.doctor')) {
             $profileImageKey = 'DoctorProfileImage';

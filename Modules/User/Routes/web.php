@@ -34,12 +34,23 @@ Route::prefix('admin/manage-profiles')->namespace('Admin')->middleware(['auth'])
     Route::patch('users/{UserID}','UserController@update')->name('admin.manage_profiles.user.update');
 
     Route::get('patients','PatientController@index')->name('admin.manage_profiles.patient.index');
-    Route::get('patients/{UserID}/edit','PatientController@edit')->name('admin.manage_profiles.patient.edit');
+    Route::get('patients/{UserID}','PatientController@show')->name('admin.manage_profiles.patient.show');
+    Route::get('patients/{UserID}/edit','PatientController@edit')->name('admin.manage_profiles.patient.edit');    
     Route::patch('patients/{UserID}','PatientController@update')->name('admin.manage_profiles.patient.update');
     
     Route::get('doctors','DoctorController@index')->name('admin.manage_profiles.doctor.index');
+    Route::get('doctors/{UserID}/edit','DoctorController@edit')->name('admin.manage_profiles.doctor.edit');
+    Route::patch('doctors/{UserID}','DoctorController@update')->name('admin.manage_profiles.doctor.update');
+    
+    
     Route::get('hospitals','HospitalController@index')->name('admin.manage_profiles.hospital.index');
     Route::get('ambulances','AmbulanceController@index')->name('admin.manage_profiles.ambulance.index');
      Route::get('laboratories','LaboratoryController@index')->name('admin.manage_profiles.laboratory.index');
     Route::get('insurance-companies','InsuranceCompanyController@index')->name('admin.manage_profiles.insurance_company.index');
+});
+
+//Documents upload
+Route::prefix('admin/manage-documents')->namespace('Admin')->middleware(['auth'])->group(function(){
+    Route::post('upload','DocumentController@store')->name('admin.manage_documents.upload');
+    
 });

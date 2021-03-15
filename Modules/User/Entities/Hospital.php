@@ -26,4 +26,8 @@ class Hospital extends Model
     public function documents(){
         return $this->hasMany(Document::class,'DoctorID','DoctorID')->select(['DoctorID','DocumentFile','DocumentTypeID']);
     }
+
+    public function scopeActive($query){
+        return $query->where('Status','Active');
+     }
 }

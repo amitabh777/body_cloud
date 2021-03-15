@@ -1,6 +1,6 @@
 @extends('admin.layouts.dashboard-datatables')
 
-@section('page_title') Patient Edit @endsection
+@section('page_title') Doctor Edit @endsection
 @section('content')
 
 <div class="container-fluid">
@@ -13,18 +13,18 @@
                     <h3 class="card-title">User Details</h3>
                 </div>
                 <!-- form start -->
-                <form id="user_form" method="post" action="{{route('admin.manage_profiles.user.update',$patient->user->UserID)}}">
+                <form id="user_form" method="post" action="{{route('admin.manage_profiles.user.update',$doctor->user->UserID)}}">
                     @csrf
                     @method('PATCH')
                     <div class="card-body">
                         <div class="form-group">
                             <label for="UniqueID">UniqueID</label>
-                            <input type="text" class="form-control" id="unique_id" value="{{$patient->user->UniqueID}}" disabled>
-                            <input type="hidden" class="form-control" id="UserID" value="{{$patient->user->UserID}}">
+                            <input type="text" class="form-control" id="unique_id" value="{{$doctor->user->UniqueID}}" disabled>
+                            <input type="hidden" class="form-control" id="UserID" value="{{$doctor->user->UserID}}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" name="Email" class="form-control" id="Email" value="{{$patient->user->Email}}" placeholder="Enter email">
+                            <input type="email" name="Email" class="form-control" id="Email" value="{{$doctor->user->Email}}" placeholder="Enter email">
                             @error('Email')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="Phone" name="Phone" value="{{$patient->user->Phone}}" placeholder="Enter phone">
+                            <input type="text" class="form-control" id="Phone" name="Phone" value="{{$doctor->user->Phone}}" placeholder="Enter phone">
                             @error('Phone')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <textarea class="form-control" id="Address" name="Address" value="{{$patient->user->Address}}" placeholder="Enter address">fsdfsd</textarea>
+                            <textarea class="form-control" id="Address" name="Address" value="{{$doctor->user->Address}}" placeholder="Enter address">fsdfsd</textarea>
                             @error('Address')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <label for="status">Status</label>
                             <div class="custom-control custom-switch custom-control custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input patient_status_checkbox" id="Status" name="Status" value="Active" data-UserID="{{$patient->user->UserID}}" @if($patient->user->Status=='Active') checked @endif >
+                                <input type="checkbox" class="custom-control-input patient_status_checkbox" id="Status" name="Status" value="Active" data-UserID="{{$doctor->user->UserID}}" @if($doctor->user->Status=='Active') checked @endif >
                                 <label class="custom-control-label" for="Status">Active/Inactive</label>
                             </div>
                             @error('Status')
@@ -114,14 +114,14 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form id="profile_form" method="post" action="{{route('admin.manage_profiles.patient.update',['UserID'=>$patient->UserID])}}" enctype="multipart/form-data">
+                <form id="profile_form" method="post" action="{{route('admin.manage_profiles.doctor.update',['UserID'=>$doctor->UserID])}}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="patient_name">Patient Name</label>
-                            <input type="text" class="form-control" id="patient_name" name="PatientName" value="{{old('PatientName',$patient->PatientName)}}" placeholder="Enter patient name">
-                            @error('PatientName')
+                            <label for="doctor_name">Doctor Name</label>
+                            <input type="text" class="form-control" id="doctor_name" name="DoctorName" value="{{old('DoctorName',$doctor->DoctorName)}}" placeholder="Enter doctor name" required>
+                            @error('DoctorName')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -131,15 +131,15 @@
                             <label for="gender" class="col-sm-2">Gender: </label>
                             <div class="col-sm-10">
                                 <div class="icheck-success d-inline">
-                                    <input type="radio" name="PatientGender" value="Male" id="gender_male" @if($patient->PatientGender=='Male') checked @endif>
+                                    <input type="radio" name="DoctorGender" value="Male" id="gender_male" @if($doctor->DoctorGender=='Male') checked @endif>
                                     <label for="gender_male">Male</label>
                                 </div>
                                 <div class="icheck-info d-inline">
-                                    <input type="radio" name="PatientGender" value="Female" id="gender_female" @if($patient->PatientGender=='Female') checked @endif>
+                                    <input type="radio" name="DoctorGender" value="Female" id="gender_female" @if($doctor->DoctorGender=='Female') checked @endif>
                                     <label for="gender_female">Female</label>
                                 </div>
                             </div>
-                            @error('PatientGender')
+                            @error('DoctorGender')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -148,77 +148,60 @@
                         <div class="form-group row">
                             <label class="col-sm-2">DOB:</label>
                             <div class="col-sm-10">
-                                <input type="date" name="PatientDOB" class="form-control" value="{{old('PatientDOB',date('Y-m-d',strtotime($patient->PatientDOB)))}}" min="1950-01-01" max="2050-12-31" />
+                                <input type="date" name="DoctorDOB" class="form-control" value="{{old('DoctorDOB',date('Y-m-d',strtotime($doctor->DoctorDOB)))}}" min="1950-01-01" max="2050-12-31" />
                             </div>
-
-                            <!-- <div class="input-group date" id="patient_dob" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" name="PatientDOB" value="1991/03/03" data-target="#patient_dob" />
-                                <div class="input-group-append" data-target="#patient_dob" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div> -->
-                            @error('PatientDOB')
+                            @error('DoctorDOB')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Blood Group</label>
-                            <select class="form-control select2bs4" id="bloodgroup_id" name="BloodGroupID" style="width: 100%;">
+                            <label>Hospital</label>
+                            <select class="form-control select2bs4" id="hospital_id" name="HospitalID" style="width: 100%;">
                                 <option value="none">-----Select-----</option>
-                                @foreach($bloodGroups as $bloodGroup)
-                                <option @if($patient->BloodGroupID==$bloodGroup->BloodGroupID) selected="selected" @endif value="{{$bloodGroup->BloodGroupID}}">{{$bloodGroup->BloodGroupName}}</option>
+                                @foreach($hospitals as $hospital)
+                                <option @if($doctor->HospitalID==$hospital->HospitalID) selected="selected" @endif value="{{$hospital->HospitalID}}">{{$hospital->HospitalName}}</option>
                                 @endforeach
                             </select>
-                            @error('BloodGroupID')
+                            @error('HospitalID')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <label for="patient_height">Height(cm)</label>
-                                <input type="text" class="form-control" id="patient_height" name="PatientHeight" value="{{old('PatientHeight',$patient->PatientHeight)}}" placeholder="Enter patient height">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="patient_weight">Weight(kg)</label>
-                                <input type="text" class="form-control" id="patient_weight" name="PatientWeight" value="{{old('PatientWeight',$patient->PatientWeight)}}" placeholder="Enter patient weight">
-                            </div>
-                            @error('PatientHeight')
-                            <span class="text-danger" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                            @error('PatientWeight')
+
+                        <div class="form-group">
+                            <label for="doctor_website">Doctor Website</label>
+                            <input type="text" class="form-control" id="doctor_website" name="DoctorWebsite" value="{{old('DoctorWebsite',$doctor->DoctorWebsite)}}" placeholder="Enter doctor website">
+                            @error('DoctorWebsite')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="chronic_disease">Patient Chronic Disease</label>
-                            <input type="text" class="form-control" id="chronic_disease" name="PatientChronicDisease" value="{{old('PatientChronicDisease',$patient->PatientChronicDisease)}}" placeholder="Enter patient chronic disease">
-                            @error('PatientChronicDisease')
+                            <label for="bank_account_no">Bank Account No</label>
+                            <input type="text" class="form-control" id="bank_account_no" name="DoctorBankAccountNo" value="{{old('DoctorBankAccountNo',$doctor->DoctorBankAccountNo)}}" placeholder="Enter doctor bank account no">
+                            @error('DoctorBankAccountNo')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="permanent_medicine">Patient Permanent Medicines</label>
-                            <textarea id="permanent_medicine" name="PatientPermanentMedicine" class="form-control" cols="3" rows="">{{$patient->PatientPermanentMedicines}}</textarea>
-                            @error('PatientPermanentMedicine')
+                            <label for="bank_name">Doctor Bank Name</label>
+                            <input type="text" class="form-control" id="bank_name" name="DoctorBankName" value="{{old('DoctorBankName',$doctor->DoctorBankName)}}" placeholder="Enter doctor bank name">
+                            @error('DoctorBankName')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-                        </div>
+                        </div>                     
                         <div class="form-group">
-                            <label for="emergency_contact_number">Emergency Contact Number</label>
-                            <input type="text" class="form-control" id="emergency_contact_number" name="EmergencyContactNo" placeholder="Emergency contact no" value="{{old('EmergencyContactNo',$patient->EmergencyContactNo)}}">
-                            @error('EmergencyContactNo')
+                            <label for="min_reservation_charge">Min reservation charge</label>
+                            <input type="text" class="form-control" id="min_reservation_charge" name="DoctorMinReservationCharge" placeholder="Minimum reservation charge" value="{{old('DoctorMinReservationCharge',$doctor->DoctorMinReservationCharge)}}">
+                            @error('DoctorMinReservationCharge')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -228,15 +211,15 @@
                             <label for="profile_image_upload">Profile Image Upload</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="profile_image_upload" name="PatientProfileImage">
+                                    <input type="file" class="custom-file-input" id="profile_image_upload" name="DoctorProfileImage">
                                     <label class="custom-file-label" for="profile_image_upload">Choose file</label>
                                 </div>
                                 <!-- <div class="input-group-append">
                                     <span class="input-group-text">Upload</span>
                                 </div> -->
                             </div>
-                            <span id="selected_profile_image">{{$patient->PatientProfileImage}}</span>
-                            @error('PatientProfileImage')
+                            <span id="selected_profile_image">{{$doctor->DoctorProfileImage}}</span>
+                            @error('DoctorProfileImage')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

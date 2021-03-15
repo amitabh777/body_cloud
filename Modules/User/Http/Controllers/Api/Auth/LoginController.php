@@ -46,15 +46,20 @@ class LoginController extends Controller
             Auth::logout();
             return response()->json(['data' => ['is_active' => 'Inactive'], 'message' => 'Phone number not verified.', 'status' => 400]);
         }
-        $user = User::find(Auth::user()->UserID); //get user
-        $role = $user->userRole->role; //User Role
-        $profile = $user->profile($role->RoleSlug); //User profile
-        $user->api_token = $user->generateToken();
-        $user->save();
+        $response = [];
+        $user = $request->user(); //User::find(Auth::user()->UserID); //get user   
+        $response= $user->toArray();  
+        // $role = $user->userRole->role; //User Role
+        $profile = $user->profile($user->role->RoleSlug); // ($role->RoleSlug); //User profile
+        // $user->api_token = $user->generateToken();
+        // $user->save();
         //merge in user response
-        $user['UserType'] = $role->RoleSlug;
-        $user['Profile'] = $profile;
-        return response()->json(['data' => $user, 'message' => 'Success Login', 'status' => 200]);
+        //  $user['UserType'] = $user->role->RoleSlug;
+        //  $user['Profile'] = $profile;
+         $response['UserType'] = $user->role->RoleSlug;
+         $response['Profile'] = $profile;
+
+        return response()->json(['data' => $response, 'message' => 'Success Login', 'status' => 200]);
     }
     /**
      * validate Login Credentials

@@ -367,7 +367,7 @@ class ProfileController extends Controller
             return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
         }
 
-        $role = $request->RoleSlug;
+        $role = $request->RoleSlug;       
         if ($request->hasFile('ProfileImage')) {
             $file = $request->file('ProfileImage');
             $path = CustomHelper::uploadProfileImage($file);
@@ -377,7 +377,6 @@ class ProfileController extends Controller
             $model = CustomHelper::getModelUserRole($role); //get model dynamically according to role
             $profileImageKey = CustomHelper::getProfileImageKey($role); //dynamically get profile id field 
             $model::where('UserID', $request->UserID)->update([$profileImageKey => $path]);
-
             return response()->json(['message' => 'success', 'status' => 200]);
         } else {
             return response()->json(['message' => 'ProfileImage not found', 'status' => 400]);

@@ -29,4 +29,8 @@ class Patient extends Model
     public function documents(){
         return $this->hasMany(Document::class,'PatientID','PatientID')->select(['PatientID','DocumentFile','DocumentTypeID']);
     }
+
+    public function bloodgroup(){
+        return $this->hasOne(BloodGroup::class,'BloodGroupID','BloodGroupID');
+    }
 }
