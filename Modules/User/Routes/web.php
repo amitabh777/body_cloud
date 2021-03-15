@@ -19,22 +19,24 @@ Route::prefix('user')->group(function() {
 
 
 Route::prefix('admin')->namespace('Admin')->group(function(){
-    Route::get('login','LoginController@index')->name('admin.login.index');
-    Route::post('login','LoginController@login')->name('admin.login');
+    // Route::get('login','LoginController@index')->name('admin.login.index');
+    // Route::post('login','LoginController@login')->name('admin.login');
     Route::post('logout','LoginController@logout')->name('admin.logout');
     Route::get('register','RegistrationController@index');   
 });
 
-Route::prefix('admin')->namespace('Admin')->middleware(['auth:web'])->group(function(){
+Route::prefix('admin')->namespace('Admin')->middleware(['auth'])->group(function(){
     Route::get('dashboard','DashboardController@index')->name('admin.dashboard.index');
 });
 
 //Manage profiles
-Route::prefix('admin/manage-profiles')->namespace('Admin')->middleware(['auth:web'])->group(function(){
-    Route::get('patients','PatientController@index')->name('admin.manage_profiles.patient.index');
-    Route::get('patients/{PatientID}/edit','PatientController@edit')->name('admin.manage_profiles.patient.edit');
+Route::prefix('admin/manage-profiles')->namespace('Admin')->middleware(['auth'])->group(function(){
     Route::patch('users/{UserID}','UserController@update')->name('admin.manage_profiles.user.update');
-    Route::patch('patients/{PatientID}','PatientController@update')->name('admin.manage_profiles.patient.update');
+
+    Route::get('patients','PatientController@index')->name('admin.manage_profiles.patient.index');
+    Route::get('patients/{UserID}/edit','PatientController@edit')->name('admin.manage_profiles.patient.edit');
+    Route::patch('patients/{UserID}','PatientController@update')->name('admin.manage_profiles.patient.update');
+    
     Route::get('doctors','DoctorController@index')->name('admin.manage_profiles.doctor.index');
     Route::get('hospitals','HospitalController@index')->name('admin.manage_profiles.hospital.index');
     Route::get('ambulances','AmbulanceController@index')->name('admin.manage_profiles.ambulance.index');

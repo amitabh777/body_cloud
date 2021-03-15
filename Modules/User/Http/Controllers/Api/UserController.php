@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    use AuthenticatesUsers;
+   // use AuthenticatesUsers;
     /**
      * 
      * return user data
@@ -48,10 +48,18 @@ class UserController extends Controller
     {
     }
 
-    public function myProfile()
+    /**
+     * Get user info with profile
+     *
+     * @param Request $request
+     * @return response json
+     */
+    public function myProfile(Request $request)
     {
-        $user = User::find(Auth::user()->UserID); //get user
-        $role = $user->userRole()->role; //User Role
+        //get authenticated user
+        $user = $request->user(); //Auth::user();
+        //$user = User::find(Auth::user()->UserID); //get user
+        $role = $user->userRole->role; //User Role
         $profile = $user->profile($role->RoleSlug); //User profile
         
         //merge in user response

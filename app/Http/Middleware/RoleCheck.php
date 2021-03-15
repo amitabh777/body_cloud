@@ -10,7 +10,8 @@ class RoleCheck
 {
 
     protected $userModel;
-    public function __construct(User $user){
+    public function __construct(User $user)
+    {
         $this->userModel = $user;
     }
     /**
@@ -21,16 +22,28 @@ class RoleCheck
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {;
-        if($request->input('RoleSlug','')!=null){
-           
+    {
+        if (Auth::guard('api')->check()) {
+            return $this->handleApiGuard($request, $next);
+        }
+        return $next($request);
+    }
+    /** 
+     * check roleslug matched with user role
+     * @param Request $request
+     * @param closure $next
+     * @return mixed response
+     */
+    public function handleApiGuard($request, $next)
+    {
+        if ($request->input('RoleSlug', '') != null) {
             $inputRole = $request->input('RoleSlug');
-            $user = Auth::user();            
-            $userRole = $user->userRole();                       
+            $user = Auth::guard('api')->user();
+            $userRole = $user->userRole;
             $role = $userRole->role;
-           if($role->RoleSlug!=$inputRole){
-            return response()->json(['message'=>'Logged in user role not matched with provided role:'.$inputRole,'status'=>400]);
-           }
+            if ($role->RoleSlug != $inputRole) {
+                return response()->json(['message' => 'Logged in user role not matched with requested role. Current role: '.$role->RoleSlug, 'status' => 400]);
+            }
         }
         return $next($request);
     }

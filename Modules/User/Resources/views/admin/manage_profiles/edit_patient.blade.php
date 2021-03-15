@@ -15,34 +15,54 @@
                 <!-- form start -->
                 <form id="user_form" method="post" action="{{route('admin.manage_profiles.user.update',$patient->user->UserID)}}">
                     @csrf
-                    @method('PATCH')                
+                    @method('PATCH')
                     <div class="card-body">
                         <div class="form-group">
                             <label for="UniqueID">UniqueID</label>
                             <input type="text" class="form-control" id="unique_id" value="{{$patient->user->UniqueID}}" disabled>
+                            <input type="hidden" class="form-control" id="UserID" value="{{$patient->user->UserID}}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
+                            <input type="email" name="Email" class="form-control" id="Email" value="{{$patient->user->Email}}" placeholder="Enter email">
+                            @error('Email')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone">
+                            <input type="text" class="form-control" id="Phone" name="Phone" value="{{$patient->user->Phone}}" placeholder="Enter phone">
+                            @error('Phone')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <textarea class="form-control" id="address" name="address" placeholder="Enter address"></textarea>
+                            <textarea class="form-control" id="Address" name="Address" value="{{$patient->user->Address}}" placeholder="Enter address">fsdfsd</textarea>
+                            @error('Address')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>
                             <div class="custom-control custom-switch custom-control custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input patient_status_checkbox" id="patient_status_checkbox" name="patient_status_checkbox" data-UserID="{{$patient->user->UserID}}" @if($patient->user->Status=='Active') checked @endif >
-                                <label class="custom-control-label" for="patient_status_checkbox">Toggle this custom switch element</label>
+                                <input type="checkbox" class="custom-control-input patient_status_checkbox" id="Status" name="Status" value="Active" data-UserID="{{$patient->user->UserID}}" @if($patient->user->Status=='Active') checked @endif >
+                                <label class="custom-control-label" for="Status">Active/Inactive</label>
                             </div>
+                            @error('Status')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                     <!-- /.card-body -->
-
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
@@ -97,81 +117,133 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form id="profile_form">
+                <form id="profile_form" method="post" action="{{route('admin.manage_profiles.patient.update',['UserID'=>$patient->UserID])}}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
                     <div class="card-body">
                         <div class="form-group">
                             <label for="patient_name">Patient Name</label>
-                            <input type="text" class="form-control" id="patient_name" placeholder="Enter patient name">
+                            <input type="text" class="form-control" id="patient_name" name="PatientName" value="{{old('PatientName',$patient->PatientName)}}" placeholder="Enter patient name">
+                            @error('PatientName')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-                        <div class="form-group">
-                            <label for="gender">Gender: </label>
-                            <div class="icheck-success d-inline">
-                                <input type="radio" name="gender" checked id="gender_male">
-                                <label for="gender_male">Male</label>
-                            </div>
-                            <div class="icheck-success d-inline">
-                                <input type="radio" name="gender" id="gender_female">
-                                <label for="gender_female">Female</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>DOB:</label>
-                            <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
-                                <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        <div class="form-group row">
+                            <label for="gender" class="col-sm-2">Gender: </label>
+                            <div class="col-sm-10">
+                                <div class="icheck-success d-inline">
+                                    <input type="radio" name="PatientGender" value="Male" id="gender_male" @if($patient->PatientGender=='Male') checked @endif>
+                                    <label for="gender_male">Male</label>
+                                </div>
+                                <div class="icheck-info d-inline">
+                                    <input type="radio" name="PatientGender" value="Female" id="gender_female" @if($patient->PatientGender=='Female') checked @endif>
+                                    <label for="gender_female">Female</label>
                                 </div>
                             </div>
+                            @error('PatientGender')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2">DOB:</label>
+                            <div class="col-sm-10">
+                                <input type="date" name="PatientDOB" class="form-control" value="{{old('PatientDOB',date('Y-m-d',strtotime($patient->PatientDOB)))}}" min="1950-01-01" max="2050-12-31" />
+                            </div>
+
+                            <!-- <div class="input-group date" id="patient_dob" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" name="PatientDOB" value="1991/03/03" data-target="#patient_dob" />
+                                <div class="input-group-append" data-target="#patient_dob" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div> -->
+                            @error('PatientDOB')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label>Blood Group</label>
-                            <select class="form-control select2bs4" style="width: 100%;">
-                                <option selected="selected">Alabama</option>
-                                <option>Alaska</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option>
+                            <select class="form-control select2bs4" id="bloodgroup_id" name="BloodGroupID" style="width: 100%;">
+                                <option value="none">-----Select-----</option>
+                                @foreach($bloodGroups as $bloodGroup)
+                                <option @if($patient->BloodGroupID==$bloodGroup->BloodGroupID) selected="selected" @endif value="{{$bloodGroup->BloodGroupID}}">{{$bloodGroup->BloodGroupName}}</option>
+                                @endforeach
                             </select>
+                            @error('BloodGroupID')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label for="patient_height">Height</label>
-                                <input type="text" class="form-control" id="patient_height" name="patient_height" placeholder="Enter patient height">
+                                <label for="patient_height">Height(cm)</label>
+                                <input type="text" class="form-control" id="patient_height" name="PatientHeight" value="{{old('PatientHeight',$patient->PatientHeight)}}" placeholder="Enter patient height">
                             </div>
                             <div class="col-md-6">
-                                <label for="patient_weight">Weight</label>
-                                <input type="text" class="form-control" id="patient_weight" name="patient_weight" placeholder="Enter patient weight">
+                                <label for="patient_weight">Weight(kg)</label>
+                                <input type="text" class="form-control" id="patient_weight" name="PatientWeight" value="{{old('PatientWeight',$patient->PatientWeight)}}" placeholder="Enter patient weight">
                             </div>
+                            @error('PatientHeight')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                            @error('PatientWeight')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="chronic_disease">Patient Chronic Disease</label>
-                            <input type="text" class="form-control" id="chronic_disease" name="chronic_disease" placeholder="Enter patient chronic disease">
+                            <input type="text" class="form-control" id="chronic_disease" name="PatientChronicDisease" value="{{old('PatientChronicDisease',$patient->PatientChronicDisease)}}" placeholder="Enter patient chronic disease">
+                            @error('PatientChronicDisease')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="permanent_medicine">Patient Permanent Medicines</label>
-                            <input type="text" class="form-control" id="permanent_medicine" name="permanent_medicine" placeholder="Enter patient permanent medicines">
+                            <textarea id="permanent_medicine" name="PatientPermanentMedicine" class="form-control" cols="3" rows="">{{$patient->PatientPermanentMedicines}}</textarea>
+                            @error('PatientPermanentMedicine')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <label for="permanent_medicine">Emergency Contact Number</label>
-                            <input type="text" class="form-control" id="permanent_medicine" name="permanent_medicine" placeholder="Emergency contact number">
+                            <label for="emergency_contact_number">Emergency Contact Number</label>
+                            <input type="text" class="form-control" id="emergency_contact_number" name="EmergencyContactNo" placeholder="Emergency contact no" value="{{old('EmergencyContactNo',$patient->EmergencyContactNo)}}">
+                            @error('EmergencyContactNo')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="profile_image_upload">Profile Image Upload</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="profile_image_upload">
+                                    <input type="file" class="custom-file-input" id="profile_image_upload" name="PatientProfileImage">
                                     <label class="custom-file-label" for="profile_image_upload">Choose file</label>
                                 </div>
-                                <div class="input-group-append">
+                                <!-- <div class="input-group-append">
                                     <span class="input-group-text">Upload</span>
-                                </div>
+                                </div> -->
                             </div>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            <span id="selected_profile_image">{{$patient->PatientProfileImage}}</span>
+                            @error('PatientProfileImage')
+                            <span class="text-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -220,14 +292,15 @@
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         });
 
+        $("#profile_image_upload").change(function(){
+            $('#selected_profile_image').html(this.value);
+        });
+        //Date range picker
+        // $('#patient_dob').datetimepicker({
+        //     format: 'L'
+        // });
 
     });
-
-
-    // $("#example1").DataTable({
-    //   "responsive": true, "lengthChange": false, "autoWidth": false,
-    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 </script>
 
 @endsection

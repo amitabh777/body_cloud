@@ -14,7 +14,8 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'Email' => 'required|email|max:150|unique:users,Email,' . $this->UserID . ',UserID',
+            'Phone' => 'required|digits:11|unique:users,Phone,' . $this->UserID . ',UserID',
         ];
     }
 
@@ -26,5 +27,27 @@ class UserUpdateRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'Phone.min' => 'Phone must be 11 digits',
+            'Phone.max' => 'Phone must be 11 digits',
+        ];
+    }
+
+     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        //modify data before validation
     }
 }

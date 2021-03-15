@@ -67,6 +67,28 @@ class EloquentUserRepository implements UserRepository
         }
         return $user;
     }
+    /**
+     * Update only user data without profile
+     *
+     * @param array $data [with exact db field columns]
+     * @param integer $UserID
+     * @return void
+     */
+    public function updateUserWithoutProfile(array $data, int $UserID)
+    {
+        //Hash encrypt password
+        //$data['Password'] = Hash::make($data['Password']);
+        DB::beginTransaction();
+        try {
+            $update = User::where('UserID',$UserID)->update($data);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Update user without profile failed ' . $e->getMessage());
+            return false;
+        }
+        return true;;
+    }
 
     public function isAdmin($user)
     {

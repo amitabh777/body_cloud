@@ -40,7 +40,7 @@
                             <input type="checkbox" class="patient_status_checkbox" data-UserID="{{$patient->user->UserID}}" name="checkbox_status_{{$patient->PatientID}}" @if($patient->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
                         </td>
                         <td>
-                            <a href="{{route('admin.manage_profiles.patient.edit',$patient->PatientID)}}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{{route('admin.manage_profiles.patient.edit',$patient->UserID)}}" class="btn btn-primary btn-sm">Edit</a>
                         </td>
                     </tr>
                     @endforeach

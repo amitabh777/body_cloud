@@ -23,7 +23,7 @@ class BloodGroupsTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        BloodGroup::where('BloodGroupName', '!=', 'nothing')->delete();
+        BloodGroup::truncate();//where('BloodGroupName', '!=', 'nothing')->delete();
         // factory(BloodGroup::class, 3)->create();
 
         $groups = ['A', 'O', 'B', 'A+', 'B+', 'ABO', 'AB'];      

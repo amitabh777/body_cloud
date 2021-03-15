@@ -1,13 +1,14 @@
 <?php
 return [
     'roles' => [
-        'super_admin' => 'super_admin',
+        
         'patient' => 'Patient',
         'hospital' => 'Hospital',
         'insurance_company' => 'InsuranceCompany',
         'lab' => 'Lab',
         'doctor' => 'Doctor',
-        'ambulance' => 'Ambulance'
+        'ambulance' => 'Ambulance',
+        'super_admin' => 'super_admin',
     ],
     
     'role_slugs' => [

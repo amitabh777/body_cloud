@@ -81,9 +81,15 @@ class User extends Authenticatable
     }
 
     //get Role
+    public function role()
+    {
+        $rel = $this->hasOne(UserRole::class, 'UserID', 'UserID')->first();
+        return $rel->role();
+    }
+    //get Role
     public function userRole()
     {
-        return $this->hasOne(UserRole::class, 'UserID', 'UserID')->first();
+        return $this->hasOne(UserRole::class, 'UserID', 'UserID');//->first();
     }
 
     public function scopeGenerateToken()

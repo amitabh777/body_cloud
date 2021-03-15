@@ -29,14 +29,18 @@ Route::namespace('Api\Auth')->group(function () {
     Route::post('logout', 'LoginController@logout')->middleware(['auth:api']);
 });
 
+//public routes
 Route::namespace('Api')->group(function(){
     Route::get('blood_groups','BloodGroupController@index');
     Route::get('medical_sectors','MedicalSectorController@index');
 });
 
-//Profile endpoints with authentication
-Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check'])->group(function(){
+Route::namespace('Api')->middleware(['auth:api'])->group(function(){
     Route::get('user/me', 'UserController@myProfile'); //view profile 
+});
+
+//Profile endpoints with authentication
+Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check'])->group(function(){   
     Route::post('update', 'ProfileController@update');
     Route::post('image/upload', 'ProfileController@uploadProfileImage');
     Route::post('documents/upload', 'DocumentController@store');

@@ -33,7 +33,7 @@ class EloquentProfileRepository implements ProfileRepository
     protected $ambulanceModel;
     protected $laboratoryModel;
     protected $insuranceModel;
-    function __construct(Patient $patient, Doctor $doctor,Hospital $hospital,Ambulance $ambulance,Laboratory $laboratory,InsuranceCompany $insuranceCompany)
+    function __construct(Patient $patient, Doctor $doctor, Hospital $hospital, Ambulance $ambulance, Laboratory $laboratory, InsuranceCompany $insuranceCompany)
     {
         $this->patientModel = $patient;
         $this->doctorModel = $doctor;
@@ -42,12 +42,19 @@ class EloquentProfileRepository implements ProfileRepository
         $this->laboratoryModel = $laboratory;
         $this->insuranceModel = $insuranceCompany;
     }
-
-    public function patientProfileUpdate($data,$userid){
+    /**
+     * patient profile update
+     *
+     * @param Array $data
+     * @param int $userid
+     * @return void
+     */
+    public function patientProfileUpdate($data, $userid)
+    {
         $success = false;
         DB::beginTransaction();
-        try { 
-            $this->patientModel->where('UserID',$userid)->update($data);
+        try {
+            $this->patientModel->where('UserID', $userid)->update($data);
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
@@ -55,23 +62,24 @@ class EloquentProfileRepository implements ProfileRepository
             Log::error('patient profile update failed');
             Log::error($e->getMessage());
         }
-        return $success?$success:$e->getMessage();
+        return $success ? $success : $e->getMessage();
     }
     //doctor profile update
-    public function doctorProfileUpdate($data,$userid){
-        $doctor = $this->doctorModel->where('UserID',$userid)->first();
-        $success = false;       
+    public function doctorProfileUpdate($data, $userid)
+    {
+        $doctor = $this->doctorModel->where('UserID', $userid)->first();
+        $success = false;
         DB::beginTransaction();
         try {
-            $this->doctorModel->where('UserID',$userid)->update($data['ProfileData']);
+            $this->doctorModel->where('UserID', $userid)->update($data['ProfileData']);
             //set specializations sectors
-            $this->setDoctorSpecialization($data['SpecializeIn'],$doctor->DoctorID);
+            $this->setDoctorSpecialization($data['SpecializeIn'], $doctor->DoctorID);
             //set visiting hours
-            $this->setVisitingHours($data['VisitingHours'],$doctor->DoctorID,config('user.const.role_slugs.doctor'));
+            $this->setVisitingHours($data['VisitingHours'], $doctor->DoctorID, config('user.const.role_slugs.doctor'));
             //set experience
-            $this->setDoctorExperience($data['Experiences'],$doctor->DoctorID);
+            $this->setDoctorExperience($data['Experiences'], $doctor->DoctorID);
             //set awards details
-            $this->setDoctorAwards($data['Awards'],$doctor->DoctorID);
+            $this->setDoctorAwards($data['Awards'], $doctor->DoctorID);
 
             DB::commit(); //success
             $success = true;
@@ -80,19 +88,20 @@ class EloquentProfileRepository implements ProfileRepository
             Log::error('update failed ');
             Log::error($e->getMessage());
         }
-        return $success?$success:$e->getMessage();
+        return $success ? $success : $e->getMessage();
     }
     //Hospital profile update
-    public function hospitalProfileUpdate($data,$userid){
-        $hospital = $this->hospitalModel->where('UserID',$userid)->first();
+    public function hospitalProfileUpdate($data, $userid)
+    {
+        $hospital = $this->hospitalModel->where('UserID', $userid)->first();
         $success = false;
         DB::beginTransaction();
-        try { 
-            $this->hospitalModel->where('UserID',$userid)->update($data['ProfileData']);
+        try {
+            $this->hospitalModel->where('UserID', $userid)->update($data['ProfileData']);
             //set specializations sectors
-            $this->setHospitalSpecialization($data['SpecializeIn'],$hospital->HospitalID);
+            $this->setHospitalSpecialization($data['SpecializeIn'], $hospital->HospitalID);
             //set visiting hours
-            $this->setVisitingHours($data['VisitingHours'],$hospital->HospitalID,config('user.const.role_slugs.hospital'));
+            $this->setVisitingHours($data['VisitingHours'], $hospital->HospitalID, config('user.const.role_slugs.hospital'));
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
@@ -100,15 +109,16 @@ class EloquentProfileRepository implements ProfileRepository
             Log::error('update failed ');
             Log::error($e->getMessage());
         }
-        return $success?$success:$e->getMessage();
+        return $success ? $success : $e->getMessage();
     }
     //Ambulance profile update
-    public function ambulanceProfileUpdate($data,$userid){
-       //ambulance $ambulance = $this->ambulanceModel->where('UserID',$userid)->first();
+    public function ambulanceProfileUpdate($data, $userid)
+    {
+        //ambulance $ambulance = $this->ambulanceModel->where('UserID',$userid)->first();
         $success = false;
         DB::beginTransaction();
-        try { 
-            $this->ambulanceModel->where('UserID',$userid)->update($data['ProfileData']);
+        try {
+            $this->ambulanceModel->where('UserID', $userid)->update($data['ProfileData']);
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
@@ -116,17 +126,17 @@ class EloquentProfileRepository implements ProfileRepository
             Log::error('ambulance update failed ');
             Log::error($e->getMessage());
         }
-        return $success?$success:$e->getMessage();
+        return $success ? $success : $e->getMessage();
     }
     //Laboratory profile update
     public function laboratoryProfileUpdate($data, $userid)
     {
-        $laboratory = $this->laboratoryModel->where('UserID',$userid)->first();
+        $laboratory = $this->laboratoryModel->where('UserID', $userid)->first();
         $success = false;
         DB::beginTransaction();
-        try { 
-            $this->laboratoryModel->where('UserID',$userid)->update($data['ProfileData']);
-            $this->setVisitingHours($data['VisitingHours'],$laboratory->LaboratoryID,config('user.const.role_slugs.lab'));
+        try {
+            $this->laboratoryModel->where('UserID', $userid)->update($data['ProfileData']);
+            $this->setVisitingHours($data['VisitingHours'], $laboratory->LaboratoryID, config('user.const.role_slugs.lab'));
 
             DB::commit(); //success
             $success = true;
@@ -135,18 +145,18 @@ class EloquentProfileRepository implements ProfileRepository
             Log::error('laboratory profile update failed: ');
             Log::error($e->getMessage());
         }
-        return $success?$success:$e->getMessage();
+        return $success ? $success : $e->getMessage();
     }
-    
+
     //Insurance profile update
     public function insuranceCompanyProfileUpdate($data, $userid)
     {
-        $insuranceCompany = $this->insuranceModel->where('UserID',$userid)->first();
+        $insuranceCompany = $this->insuranceModel->where('UserID', $userid)->first();
         $success = false;
         DB::beginTransaction();
-        try { 
-            $this->insuranceModel->where('UserID',$userid)->update($data['ProfileData']);
-            $this->setVisitingHours($data['VisitingHours'],$insuranceCompany->InsuranceCompanyID,config('user.const.role_slugs.insurance_company'));
+        try {
+            $this->insuranceModel->where('UserID', $userid)->update($data['ProfileData']);
+            $this->setVisitingHours($data['VisitingHours'], $insuranceCompany->InsuranceCompanyID, config('user.const.role_slugs.insurance_company'));
             DB::commit(); //success
             $success = true;
         } catch (Exception $e) {
@@ -154,7 +164,7 @@ class EloquentProfileRepository implements ProfileRepository
             Log::error('insurance company profile update failed: ');
             Log::error($e->getMessage());
         }
-        return $success?$success:$e->getMessage();
+        return $success ? $success : $e->getMessage();
     }
     //set visiting hours
     public function setVisitingHours($visitingHours, $profileID, $roleSlug)
@@ -162,13 +172,13 @@ class EloquentProfileRepository implements ProfileRepository
         if (!$visitingHours || empty($visitingHours)) {
             Log::error('Visiting hours not defined');
             return false;
-        }     
+        }
 
         $now = Carbon::now();
         $rows = [];
         $profileIDKey = CustomHelper::getProfileIdKey($roleSlug); //get profile id column name
-         //delete old entries
-        VisitingHour::where([$profileIDKey=>$profileID])->delete();        
+        //delete old entries
+        VisitingHour::where([$profileIDKey => $profileID])->delete();
         $days = is_array($visitingHours) ? $visitingHours : json_decode($visitingHours, true);
         if ($days['days']) {
             foreach ($days['days'] as $day => $details) {
@@ -184,8 +194,8 @@ class EloquentProfileRepository implements ProfileRepository
             }
         }
         //Insert into visitng hours
-        $res =VisitingHour::insert($rows);
-        if(!$res){
+        $res = VisitingHour::insert($rows);
+        if (!$res) {
             return false;
         }
         return true;
@@ -200,7 +210,7 @@ class EloquentProfileRepository implements ProfileRepository
     {
         $now = Carbon::now();
         $sectors = [];
-        if ($sectorIDs!=null && is_array($sectorIDs)) {
+        if ($sectorIDs != null && is_array($sectorIDs)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['SectorID' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
             }
@@ -218,16 +228,16 @@ class EloquentProfileRepository implements ProfileRepository
     {
         $now = Carbon::now();
         //delete previous entries
-        DoctorSpecialization::where('DoctorID',$doctorID)->delete();
+        DoctorSpecialization::where('DoctorID', $doctorID)->delete();
         $sectors = [];
         $res = false;
         if ($sectorIDs && is_array($sectorIDs)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['SpecializeIn' => $sectorID, 'DoctorID' => $doctorID, 'CreatedAt' => $now->toDateTimeString()];
             }
-           $res= DoctorSpecialization::insert($sectors);
+            $res = DoctorSpecialization::insert($sectors);
         } else {
-         //  $res= DoctorSpecialization::create(['SpecializeIn' => $sectorIDs, 'DoctorID' => $doctorID]);
+            //  $res= DoctorSpecialization::create(['SpecializeIn' => $sectorIDs, 'DoctorID' => $doctorID]);
         }
         return $res;
     }
@@ -242,18 +252,18 @@ class EloquentProfileRepository implements ProfileRepository
     {
         $now = Carbon::now();
         //delete previous entries
-        HospitalSector::where('HospitalID',$hospitalID)->delete();
+        HospitalSector::where('HospitalID', $hospitalID)->delete();
         $sectors = [];
         $res = false;
-        if ($sectorIDs!=null && is_array($sectorIDs)) {
+        if ($sectorIDs != null && is_array($sectorIDs)) {
             foreach ($sectorIDs as $sectorID) {
                 $sectors[] = ['MedicalSectorID' => $sectorID, 'HospitalID' => $hospitalID, 'CreatedAt' => $now->toDateTimeString()];
             }
-           $res= HospitalSector::insert($sectors);
+            $res = HospitalSector::insert($sectors);
         }
         return $res;
     }
-    
+
     /**
      * Method setDoctorExpirence
      * set expirences of doctor
@@ -262,24 +272,25 @@ class EloquentProfileRepository implements ProfileRepository
      *
      * @return void
      */
-    public function setDoctorExperience($experiencesJson,$doctorID){
+    public function setDoctorExperience($experiencesJson, $doctorID)
+    {
         $now = Carbon::now();
         //delete previous entries
-        DoctorExperience::where('DoctorID',$doctorID)->delete();
+        DoctorExperience::where('DoctorID', $doctorID)->delete();
         $experienceRows = [];
         $res = false;
-        if ($experiencesJson!=null) {
+        if ($experiencesJson != null) {
             $experiences = is_array($experiencesJson) ? $experiencesJson : json_decode($experiencesJson, true);
             foreach ($experiences as $experience) {
                 $experienceRows[] = [
-                    'DoctorID' => $doctorID, 
-                    'Institute' => $experience['Institute'], 
-                    'ExperienceFrom' => $experience['ExperienceFrom'], 
-                    'ExperienceTo' => $experience['ExperienceTo'], 
+                    'DoctorID' => $doctorID,
+                    'Institute' => $experience['Institute'],
+                    'ExperienceFrom' => $experience['ExperienceFrom'],
+                    'ExperienceTo' => $experience['ExperienceTo'],
                     'CreatedAt' => $now->toDateTimeString()
                 ];
             }
-           $res= DoctorExperience::insert($experienceRows);
+            $res = DoctorExperience::insert($experienceRows);
         }
         return $res;
     }
@@ -290,23 +301,24 @@ class EloquentProfileRepository implements ProfileRepository
      * @param int $doctorID
      * @return void
      */
-    public function setDoctorAwards($awardsJson,$doctorID){
+    public function setDoctorAwards($awardsJson, $doctorID)
+    {
         $now = Carbon::now();
         //delete previous entries
-        DoctorAward::where('DoctorID',$doctorID)->delete();
+        DoctorAward::where('DoctorID', $doctorID)->delete();
         $awardRows = [];
         $res = false;
-        if ($awardsJson!=null) {
-           $awards = is_array($awardsJson) ? $awardsJson : json_decode($awardsJson, true);
+        if ($awardsJson != null) {
+            $awards = is_array($awardsJson) ? $awardsJson : json_decode($awardsJson, true);
             foreach ($awards as $award) {
                 $awardRows[] = [
-                    'DoctorID' => $doctorID, 
-                    'AwardName' => $award['AwardName'], 
-                    'AwardFor' => $award['AwardFor'], 
+                    'DoctorID' => $doctorID,
+                    'AwardName' => $award['AwardName'],
+                    'AwardFor' => $award['AwardFor'],
                     'CreatedAt' => $now->toDateTimeString()
                 ];
             }
-           $res= DoctorAward::insert($awardRows);
+            $res = DoctorAward::insert($awardRows);
         }
         return $res;
     }
@@ -345,5 +357,4 @@ class EloquentProfileRepository implements ProfileRepository
         }
         return false;
     }
-
 }

@@ -5,9 +5,18 @@ namespace Modules\User\Http\Controllers\Admin;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\User\Http\Requests\UserUpdateRequest;
+use Modules\User\Repositories\UserRepository;
 
 class UserController extends Controller
 {
+    protected $userRepository;
+
+    public function __construct(UserRepository $user)
+    {
+        $this->userRepository = $user;
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -33,7 +42,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       
     }
 
     /**
@@ -62,13 +70,16 @@ class UserController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $UserID)
     {
-        print_r($id);
-        echo'tedfsjflkjdslkf: ';
-        print_r($request->all());
-
-        
+        $fields = ['Email', 'Phone', 'Address', 'Status'];
+        $data = $request->only($fields);
+         $data['status'] = $request->input('Status','Inactive');
+        $res = $this->userRepository->updateUserWithoutProfile($data, $UserID);
+        if (!$res) {
+            return redirect()->back()->with(['status'=> 'failed','message'=>'Unable to update']);
+        }
+        return redirect()->back()->with(['status'=> 'success','message'=>'User details updated']);
     }
 
     /**

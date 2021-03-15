@@ -7,7 +7,6 @@ use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 
 class Authenticate extends Middleware
@@ -20,55 +19,77 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        dd('fdshfgdshjgfhj');
         if (!$request->expectsJson()) {
+            dd('tesrf');
             //Check if request is from backend/super admin
             if (strpos($request->url(), 'admin') !== false) {
                 return route('admin.login.index');
             }
             return route('/');
         }
-    }   
+    }
+
+    /**
+     * Get the path the user should be redirected to.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    // protected function redirectTo($request)
+    // {
+    //     // return route('login');
+    // }
 
     public function handle($request, Closure $next, ...$guards)
     {
-        if ( (!empty($guards) && $guards[0] == 'web') || (empty($guards))) {
-            if (Auth::guard('web')->guest()) {
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response('Unauthorized.', 401);
-                } else {
-                    // $response = [
-                    //     'status' => 401,
-                    //     'message' => 'Unauthorized: api_token required'
-                    // ];
-                    // return Response::json($response);
-                    //Check if request is from backend/super admin
-                    if (strpos($request->url(), 'admin') !== false) {
-                        return redirect()->route('admin.login.index');
-                    }
-                    return redirect('/');
-                }
-            }
+        //handle api request
+        if (!empty($guards) && $guards[0] == 'api') {
+            return $this->handleApiGuard($request, $next);
         }
-
-        if ($guards[0] == 'api') {
-            if (Auth::guard('api')->guest()) {
-
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response('Unauthorized.', 401);
-                } else {
-                    $response = [
-                        'status' => 401,
-                        'message' => 'Unauthorized: api_token required'
-                    ];
-                    return Response::json($response);
-                }
-            }
-
-            $user = User::where('api_token', $request->api_token)->first();
-            Auth::login($user);
+        //handle web request/guard
+        if (Auth::guard('web')->guest()) {
+            return $this->handleWebGuard($request, $next);
         }
+        return $next($request);
+    }
 
+    /**
+     * handle Api requests if access_token valid or not
+     *
+     * @param Request $request
+     * @return mixed 
+     */
+    public function handleApiGuard($request, $next)
+    {
+        if (Auth::guard('api')->guest()) {
+            $response = [
+                'status' => 400,
+                'message' => 'Unauthorized: invalid api_token'
+            ];
+            return Response::json($response);
+        }
+        //setting api guard for authenticated api user 
+        Auth::shouldUse('api');
+        return $next($request);
+    }
+
+    /**
+     * Handle web guard
+     *
+     * @param Request $request
+     * @param $next
+     * @return void
+     */
+    public function handleWebGuard($request, $next)
+    {
+        //handle if user is unauthorized
+        if ($request->ajax() || $request->wantsJson()) {
+            return response('Unauthorized.', 401);
+        }
+        //redirect to login if admin is unauthorized
+        if ($request->route()->getprefix() == '/admin') {
+           // return redirect()->route('login');
+        }
 
         return $next($request);
     }

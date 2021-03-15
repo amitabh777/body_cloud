@@ -2,13 +2,26 @@
 
 namespace Modules\User\Http\Controllers\Admin;
 
+use App\Helpers\CustomHelper;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\User\Entities\BloodGroup;
+use Modules\User\Entities\Hospital;
 use Modules\User\Entities\Patient;
+use Modules\User\Http\Requests\PatientUpdateRequest;
+use Modules\User\Repositories\ProfileRepository;
 
 class PatientController extends Controller
 {
+    protected $profileRepository;
+
+    public function __construct(ProfileRepository $profile)
+    {
+        $this->profileRepository = $profile;
+    }
+
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -17,7 +30,7 @@ class PatientController extends Controller
     {
         // $patients = Patient::paginate(10);
         $patients = Patient::with(['user'])->get();
-        return view('user::admin.manage_profiles.patients',compact('patients'));
+        return view('user::admin.manage_profiles.patients', compact('patients'));
     }
 
     /**
@@ -54,10 +67,11 @@ class PatientController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($patientID)
+    public function edit($userID)
     {
-        $patient = Patient::where('PatientID',$patientID)->first();
-        return view('user::admin.manage_profiles.edit_patient',compact('patient'));
+        $patient = Patient::where('UserID', $userID)->first();
+        $bloodGroups = BloodGroup::active()->get();
+        return view('user::admin.manage_profiles.edit_patient', compact('patient', 'bloodGroups'));
     }
 
     /**
@@ -66,9 +80,25 @@ class PatientController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(PatientUpdateRequest $request, $userID)
     {
-        print_r($request->all());
+        $fields = ['PatientName', 'PatientGender', 'PatientDOB', 'BloodGroupID', 'PatientHeight', 'PatientWeight', 'PatientChronicDisease', 'PatientPermanentMedicines', 'EmergencyContactNo'];
+        $data = $request->only($fields);
+        $data['PatientDOB'] = date('Y-m-d',strtotime( $data['PatientDOB']));
+        $profileImage =  $request->file('PatientProfileImage', null);
+        if ($profileImage != null) {
+            $path = CustomHelper::uploadProfileImage($profileImage);
+            if ($path != false) {
+                //store file path
+                $data['PatientProfileImage'] = $path;
+            }
+        }
+
+        $res = $this->profileRepository->patientProfileUpdate($data, $userID);
+        if ($res !== true) {
+            return redirect()->back()->with(['status' => 'failed', 'message' => $res]);
+        }
+        return redirect()->back()->with(['status' => 'success', 'message' => 'Patient profile updated']);
     }
 
     /**
