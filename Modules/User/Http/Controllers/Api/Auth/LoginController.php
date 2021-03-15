@@ -47,7 +47,7 @@ class LoginController extends Controller
             return response()->json(['data' => ['is_active' => 'Inactive'], 'message' => 'Phone number not verified.', 'status' => 400]);
         }
         $user = User::find(Auth::user()->UserID); //get user
-        $role = $user->userRole()->role; //User Role
+        $role = $user->userRole->role; //User Role
         $profile = $user->profile($role->RoleSlug); //User profile
         $user->api_token = $user->generateToken();
         $user->save();

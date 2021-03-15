@@ -459,6 +459,7 @@ class RegistrationController extends Controller
             'PatientHeight' => 'required|numeric|min:100|max:270',
             'PatientWeight' => 'required',
             'EmergencyContactNo' => 'required|min:11|max:11',
+            'BloodGroupID'=>'exists:blood_groups,BloodGroupID'
         ];
         $message = [
             'PatientHeight.min' => 'Height should be more than 100 cm',

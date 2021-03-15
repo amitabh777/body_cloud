@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\User\Entities\BloodGroup;
+use Modules\User\Entities\DocumentType;
 use Modules\User\Entities\Hospital;
 use Modules\User\Entities\Patient;
 use Modules\User\Http\Requests\PatientUpdateRequest;
@@ -71,7 +72,8 @@ class PatientController extends Controller
     {
         $patient = Patient::where('UserID', $userID)->first();
         $bloodGroups = BloodGroup::active()->get();
-        return view('user::admin.manage_profiles.edit_patient', compact('patient', 'bloodGroups'));
+        $documenetTypes = DocumentType::active()->get();
+        return view('user::admin.manage_profiles.edit_patient', compact('patient', 'bloodGroups','documenetTypes'));
     }
 
     /**
@@ -85,6 +87,7 @@ class PatientController extends Controller
         $fields = ['PatientName', 'PatientGender', 'PatientDOB', 'BloodGroupID', 'PatientHeight', 'PatientWeight', 'PatientChronicDisease', 'PatientPermanentMedicines', 'EmergencyContactNo'];
         $data = $request->only($fields);
         $data['PatientDOB'] = date('Y-m-d',strtotime( $data['PatientDOB']));
+        $data['BloodGroupID'] = ($data['BloodGroupID']!='none')?$data['BloodGroupID']:null;
         $profileImage =  $request->file('PatientProfileImage', null);
         if ($profileImage != null) {
             $path = CustomHelper::uploadProfileImage($profileImage);

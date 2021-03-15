@@ -71,20 +71,20 @@
 
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Document Uploads</h3>
+                    <h3 class="card-title">Documents Uploads</h3>
                 </div>
                 <form id="documents_upload_form">
                     <div class="card-body">
                         <div class="form-group">
                             <label for="documents_upload">Document Types</label>
                             <select class="form-control select2bs4" style="width: 100%;">
+                            <select class="form-control select2bs4" id="document_type_id" name="DocumentTypeID" style="width: 100%;">
+                               @foreach($documentTypes as $documentType)
+                                <option value="{{$documentType->documentTypeID}}">{{$documentType->DocumentTypeName}}</option>
+                                @endforeach
+                            </select>
                                 <option selected="selected">Alabama</option>
-                                <option>Alaska</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option>
+                                
                             </select>
                         </div>
                         <div class="form-group">

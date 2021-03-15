@@ -18,4 +18,9 @@ class DocumentType extends Model
     {
         return $query->where('DocumentTypeName', config('user.const.document_types.registered_paper'));
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('Status', 'Active');
+    }
 }
