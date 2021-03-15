@@ -16,7 +16,7 @@ class DocumentTypesTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-        DocumentType::truncate(); //where('DocumentTypeDesc','!=','nothing')->delete(); //deleting old entries
+        DocumentType::where('DocumentTypeDesc','!=','nothing')->delete(); //deleting old entries
         $docTypes = config('user.const.document_types');       
         foreach($docTypes as $type){
             $row = array('DocumentTypeName'=>$type,'DocumentTypeDesc'=>'test');
