@@ -61,12 +61,9 @@ class UserController extends Controller
         $response = [];
         $user = $request->user(); //Auth::user();
         $response = $user->toArray();
-        //$user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole->role; //User Role
         $profile = $user->profile($role->RoleSlug); //User profile        
-        //merge in user response
-        // $user['UserType'] = $role->RoleSlug; 
-        // $user['Profile'] = $profile; 
+        //merge in user response       
         $response['UserType'] = $role->RoleSlug; 
         $response['Profile'] = $profile->toArray();  
         if($user->isDoctor()){      

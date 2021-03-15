@@ -32,10 +32,11 @@ class Doctor extends Model
     }
 
     public function medicalSectors(){
-        return $this->hasMany(DoctorSector::class,'DoctorID','DoctorID');
+        return $this->hasMany(DoctorSector::class,'DoctorID','DoctorID');//->with(['sector']);
     }
 
     public function hospital(){
         return $this->hasOne(Hospital::class,'HospitalID','HospitalID');
     }
+
 }

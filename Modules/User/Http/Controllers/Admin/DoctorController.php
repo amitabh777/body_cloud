@@ -55,7 +55,8 @@ class DoctorController extends Controller
      */
     public function show($userID)
     {
-        $doctor = Doctor::where('UserID', $userID)->first();     
+        $doctor = Doctor::where('UserID', $userID)->first();    
+       // dd($doctor->medicalSectors[0]->sector);
         return view('user::admin.manage_profiles.show_doctor',compact('doctor'));
     }
 
