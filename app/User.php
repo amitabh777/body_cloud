@@ -99,7 +99,7 @@ class User extends Authenticatable
     
     public function scopeIsSuperAdmin()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.super_admin')) {
             return true;
         }
@@ -107,7 +107,7 @@ class User extends Authenticatable
     }
     public function scopeIsPatient()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.patient')) {
             return true;
         }
@@ -115,7 +115,7 @@ class User extends Authenticatable
     }
     public function scopeIsDoctor()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.doctor')) {
             return true;
         }
@@ -123,7 +123,7 @@ class User extends Authenticatable
     }
     public function scopeIsHospital()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.hospital')) {
             return true;
         }
@@ -131,7 +131,7 @@ class User extends Authenticatable
     }
     public function scopeIsAmbulance()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.ambulance')) {
             return true;
         }
@@ -139,7 +139,7 @@ class User extends Authenticatable
     }
     public function scopeIsLaboratory()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.lab')) {
             return true;
         }
@@ -147,7 +147,7 @@ class User extends Authenticatable
     }
     public function scopeIsInsuranceCompany()
     {
-        $userRole = $this->userRole();
+        $userRole = $this->userRole;
         if ($userRole->role->RoleSlug == config('user.const.role_slugs.insurance_company')) {
             return true;
         }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Modules\User\Entities\Doctor;
 
 class UserController extends Controller
 {
@@ -57,14 +58,22 @@ class UserController extends Controller
     public function myProfile(Request $request)
     {
         //get authenticated user
+        $response = [];
         $user = $request->user(); //Auth::user();
+        $response = $user->toArray();
         //$user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole->role; //User Role
         $profile = $user->profile($role->RoleSlug); //User profile        
         //merge in user response
-        $user['UserType'] = $role->RoleSlug; 
-        $user['Profile'] = $profile;   
-        return response()->json(['data'=>$user,'message' => 'Success', 'status' => 200]);
+        // $user['UserType'] = $role->RoleSlug; 
+        // $user['Profile'] = $profile; 
+        $response['UserType'] = $role->RoleSlug; 
+        $response['Profile'] = $profile->toArray();  
+        if($user->isDoctor()){      
+          //get hospital name for hospital user profile
+            $response['HospitalName'] =isset($profile->hospital->HospitalName)?$profile->hospital->HospitalName:'' ;
+        }        
+        return response()->json(['data'=>$response,'message' => 'Success', 'status' => 200]);
     }
 
 
