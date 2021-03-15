@@ -60,8 +60,7 @@ class UserController extends Controller
         $user = $request->user(); //Auth::user();
         //$user = User::find(Auth::user()->UserID); //get user
         $role = $user->userRole->role; //User Role
-        $profile = $user->profile($role->RoleSlug); //User profile
-        
+        $profile = $user->profile($role->RoleSlug); //User profile        
         //merge in user response
         $user['UserType'] = $role->RoleSlug; 
         $user['Profile'] = $profile;   

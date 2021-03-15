@@ -4,10 +4,12 @@ namespace Modules\User\Http\Controllers\Api;
 
 use App\Helpers\CustomHelper;
 use App\User;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\User\Repositories\ProfileRepository;
 
@@ -145,7 +147,7 @@ class ProfileController extends Controller
             if ($validate->fails()) {
                 return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
             }
-            $profileData = $this->insuranceCompanyProfileData($request);        
+            $profileData = $this->insuranceCompanyProfileData($request);
             $allData['ProfileData'] = $profileData;
             $allData['VisitingHours'] = $request->input('VisitingHours', null);
 
@@ -175,8 +177,8 @@ class ProfileController extends Controller
         ];
         $message = [
             'RoleSlug.required' => 'Role is required',
-            'Phone.min'=>'Phone must be 11 digits',
-            'Phone.max'=>'Phone must be 11 digits',
+            'Phone.min' => 'Phone must be 11 digits',
+            'Phone.max' => 'Phone must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message, []);
     }
@@ -193,23 +195,23 @@ class ProfileController extends Controller
         ];
         $message = [
             'PatientHeight.min' => 'Height should be more than 100 cm',
-            'EmergencyContactNo.min'=>'EmergencyContactNo must be 11 digits',
-            'EmergencyContactNo.max'=>'EmergencyContactNo must be 11 digits',
+            'EmergencyContactNo.min' => 'EmergencyContactNo must be 11 digits',
+            'EmergencyContactNo.max' => 'EmergencyContactNo must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message);
     }
 
     public function validateDoctorProfile($data)
     {
-        $hospitalIDRule ='';
-        if(isset($data['HospitalID']) && $data['HospitalID']!=null){
+        $hospitalIDRule = '';
+        if (isset($data['HospitalID']) && $data['HospitalID'] != null) {
             $hospitalIDRule = 'exists:hospitals,HospitalID';
         }
         $userRules = [
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
-            'Website'=>'url',
-            'HospitalID'=>$hospitalIDRule
+            'Website' => 'url',
+            'HospitalID' => $hospitalIDRule
         ];
         return Validator::make($data, $userRules);
     }
@@ -220,7 +222,7 @@ class ProfileController extends Controller
             'HospitalName' => 'required',
             'ContactName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'VisitingHours' => 'required',
-            'Website'=>'url',            
+            'Website' => 'url',
         ];
         return Validator::make($data, $userRules);
     }
@@ -238,7 +240,7 @@ class ProfileController extends Controller
         $userRules = [
             'CompanyName' => 'required',
             'VisitingHours' => 'required',
-            'Website'=>'url'
+            'Website' => 'url'
         ];
         return Validator::make($data, $userRules, [], []);
     }
@@ -247,7 +249,7 @@ class ProfileController extends Controller
         $userRules = [
             'CompanyName' => 'required',
             'VisitingHours' => 'required',
-            'Website'=>'url'
+            'Website' => 'url'
         ];
         return Validator::make($data, $userRules);
     }
@@ -296,7 +298,7 @@ class ProfileController extends Controller
             'DoctorName' => $request->input('DoctorName'),
             'DoctorInfo' => $request->input('DoctorInfo', ''),
             'DoctorGender' => $request->input('Gender'),
-            'HospitalID' => $request->input('HospitalID', null),            
+            'HospitalID' => $request->input('HospitalID', null),
             'DoctorWebsite' => $request->input('Website', null),
             // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
             // 'DoctorBankName' => $request->input('DoctorBankName', null),
@@ -361,23 +363,37 @@ class ProfileController extends Controller
      */
     public function uploadProfileImage(Request $request)
     {
-        $rule = ['RoleSlug' => 'required', 'ProfileImage' => 'required', 'UserID' => 'required'];
+        $rule = ['RoleSlug' => 'required', 'ProfileImage' => 'required'];
         $validate = Validator::make($request->all(), $rule);
         if ($validate->fails()) {
             return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
         }
-
-        $role = $request->RoleSlug;       
+        $authUser = $request->user('api');
+        $role = $request->RoleSlug;
         if ($request->hasFile('ProfileImage')) {
-            $file = $request->file('ProfileImage');
-            $path = CustomHelper::uploadProfileImage($file);
-            if (!$path) {
-                return response()->json(['message' => 'could not upload', 'status' => 400]);
+            $success = false;
+            $error = '';            
+            try {
+                $file = $request->file('ProfileImage');
+                $path = CustomHelper::uploadProfileImage($file);
+                if (!$path) {
+                    return response()->json(['message' => 'could not upload', 'status' => 400]);
+                }
+                $model = CustomHelper::getModelUserRole($role); //get model dynamically according to role
+                $profileImageKey = CustomHelper::getProfileImageKey($role); //dynamically get profile id field 
+                $model::where('UserID', $authUser->UserID)->update([$profileImageKey => $path]);
+                $success = true;
+            } catch (Exception $e) {
+                $success = false;
+                Log::error('error in uploading profile image: ' . $e->getMessage());
+                $error = $e->getMessage();
             }
-            $model = CustomHelper::getModelUserRole($role); //get model dynamically according to role
-            $profileImageKey = CustomHelper::getProfileImageKey($role); //dynamically get profile id field 
-            $model::where('UserID', $request->UserID)->update([$profileImageKey => $path]);
-            return response()->json(['message' => 'success', 'status' => 200]);
+            if ($success) {
+                $imgUrl = env('APP_URL').'public/storage/'.$path;
+                return response()->json(['message' => 'success', 'data' => ['profile_image_url'=>$imgUrl], 'status' => 200]);
+            } else {
+                return response()->json(['message' => 'unable to upload', 'data' => ['error' => $error], 'status' => 400]);
+            }
         } else {
             return response()->json(['message' => 'ProfileImage not found', 'status' => 400]);
         }

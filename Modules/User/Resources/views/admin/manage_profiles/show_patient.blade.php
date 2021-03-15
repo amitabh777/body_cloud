@@ -46,38 +46,8 @@
 
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Documents Uploads</h3>
+                    <h3 class="card-title">Documents</h3>
                 </div>
-                <form id="documents_upload_form" action="{{route('admin.manage_documents.upload')}}" method="post" enctype="multipart/form-data">
-                @csrf
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="documents_upload">Document Types</label>
-                            <select class="form-control select2bs4" id="document_type_id" name="DocumentTypeID" style="width: 100%;">
-                               @foreach($documentTypes as $documentType)
-                                <option value="{{$documentType->documentTypeID}}">{{$documentType->DocumentTypeName}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="documents_upload">Upload Documents</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="documents_upload" name="DocumentFiles">
-                                    <label class="custom-file-label" for="documents_upload">Choose files</label>
-                                </div>
-                                <!-- <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.card-body -->
-
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
             </div>
             <!-- /.card -->
         </div>
@@ -141,29 +111,15 @@
                         </div>
                         <div class="form-group">
                             <label for="profile_image_upload">Profile Image</label>
-                            <img src="{{asset('storage/'.$patient->)}}"  />
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="profile_image_upload" name="PatientProfileImage">
-                                    <label class="custom-file-label" for="profile_image_upload">Choose file</label>
-                                </div>
-                                <!-- <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div> -->
+                            <div>
+                            @if($patient->PatientProfileImage!=null)
+                            <img src="{{asset('storage/'.$patient->PatientProfileImage)}}" width="200" height="150" />
+                            @endif
                             </div>
-                            <span id="selected_profile_image">{{$patient->PatientProfileImage}}</span>
-                            @error('PatientProfileImage')
-                            <span class="text-danger" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                            
                         </div>
                     </div>
                     <!-- /.card-body -->
-
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
                 </form>
             </div>
             <!-- /.card -->

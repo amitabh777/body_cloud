@@ -39,6 +39,8 @@ Route::prefix('admin/manage-profiles')->namespace('Admin')->middleware(['auth'])
     Route::patch('patients/{UserID}','PatientController@update')->name('admin.manage_profiles.patient.update');
     
     Route::get('doctors','DoctorController@index')->name('admin.manage_profiles.doctor.index');
+    Route::get('doctors/{UserID}','DoctorController@show')->name('admin.manage_profiles.doctor.show');
+
     Route::get('doctors/{UserID}/edit','DoctorController@edit')->name('admin.manage_profiles.doctor.edit');
     Route::patch('doctors/{UserID}','DoctorController@update')->name('admin.manage_profiles.doctor.update');
     

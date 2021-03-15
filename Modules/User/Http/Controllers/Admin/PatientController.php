@@ -61,8 +61,7 @@ class PatientController extends Controller
     public function show($userID)
     {
         $patient = Patient::where('UserID', $userID)->first();
-        $documentTypes = DocumentType::active()->get();
-        return view('user::admin.manage_profiles.show_patient',compact('patient','documentTypes'));
+        return view('user::admin.manage_profiles.show_patient',compact('patient'));
     }
 
     /**
