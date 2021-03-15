@@ -72,8 +72,8 @@ class PatientController extends Controller
     {
         $patient = Patient::where('UserID', $userID)->first();
         $bloodGroups = BloodGroup::active()->get();
-        $documenetTypes = DocumentType::active()->get();
-        return view('user::admin.manage_profiles.edit_patient', compact('patient', 'bloodGroups','documenetTypes'));
+        $documentTypes = DocumentType::active()->get();
+        return view('user::admin.manage_profiles.edit_patient', compact('patient', 'bloodGroups','documentTypes'));
     }
 
     /**

@@ -77,14 +77,10 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="documents_upload">Document Types</label>
-                            <select class="form-control select2bs4" style="width: 100%;">
                             <select class="form-control select2bs4" id="document_type_id" name="DocumentTypeID" style="width: 100%;">
                                @foreach($documentTypes as $documentType)
                                 <option value="{{$documentType->documentTypeID}}">{{$documentType->DocumentTypeName}}</option>
                                 @endforeach
-                            </select>
-                                <option selected="selected">Alabama</option>
-                                
                             </select>
                         </div>
                         <div class="form-group">
