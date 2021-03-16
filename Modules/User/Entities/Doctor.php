@@ -28,7 +28,7 @@ class Doctor extends Model
     }
     
     public function documents(){
-        return $this->hasMany(Document::class,'DoctorID','DoctorID')->select(['DoctorID','DocumentFile','DocumentTypeID']);
+        return $this->hasMany(Document::class,'DoctorID','DoctorID')->select(['DoctorID','DocumentFile','DocumentTypeID','DocumentID']);
     }
 
     public function medicalSectors(){

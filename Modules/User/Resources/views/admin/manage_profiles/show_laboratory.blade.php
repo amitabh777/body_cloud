@@ -46,6 +46,13 @@
                 <div class="card-header">
                     <h3 class="card-title">Documents</h3>
                 </div>
+                <div class="card-body">
+                @if($laboratory->documents)
+                    @foreach($laboratory->documents as $document)
+                        <a href="{{asset('storage/'.$document->DocumentFile)}}" target="__blank">{{$document->documentType->DocumentTypeName}}</a></br>
+                    @endforeach
+                @endif
+                </div>
             </div>
            
         </div>

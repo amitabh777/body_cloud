@@ -14,7 +14,6 @@
                 </div>
                 <!-- form start -->
                 <form id="user_form">
-                    @csrf
                     <div class="card-body">
                         <div class="form-group">
                             <label for="UniqueID">UniqueID</label>
@@ -23,7 +22,7 @@
                         <div class="form-group">
                             <label for="email">Email</label>
                             <span>{{$patient->user->Email}}</span>
-                          
+
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
@@ -38,17 +37,24 @@
                             <div class="custom-control custom-switch custom-control custom-switch-off-danger custom-switch-on-success">
                                 <input type="checkbox" class="custom-control-input patient_status_checkbox" id="Status" name="Status" value="Active" data-UserID="{{$patient->user->UserID}}" @if($patient->user->Status=='Active') checked @endif >
                                 <label class="custom-control-label" for="Status">Active/Inactive</label>
-                            </div>                          
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
 
-            <div class="card card-primary">
+            <!-- <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">Documents</h3>
                 </div>
-            </div>
+                <div class="card-body">
+                    <div class="form-group">
+          
+                        <label>Document Type</label>
+              
+                    </div>
+                </div>
+            </div> -->
             <!-- /.card -->
         </div>
         <div class="col-md-6">
@@ -81,11 +87,11 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2">DOB:</label>
-                           <span>{{$patient->PatientDOB}}</span>
+                            <span>{{$patient->PatientDOB}}</span>
                         </div>
                         <div class="form-group">
                             <label>Blood Group: </label>
-                            <span>{{$patient->bloodgroup?$patient->bloodgroup->BloodGroupName:''}}</span>                           
+                            <span>{{$patient->bloodgroup?$patient->bloodgroup->BloodGroupName:''}}</span>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
@@ -95,7 +101,7 @@
                             <div class="col-md-6">
                                 <label for="patient_weight">Weight(kg)</label>
                                 <span>{{$patient->PatientHeight}}</span>
-                            </div>                          
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="chronic_disease">Patient Chronic Disease </label>
@@ -112,11 +118,11 @@
                         <div class="form-group">
                             <label for="profile_image_upload">Profile Image</label>
                             <div>
-                            @if($patient->PatientProfileImage!=null)
-                            <img src="{{asset('storage/'.$patient->PatientProfileImage)}}" width="200" height="150" />
-                            @endif
+                                @if($patient->PatientProfileImage!=null)
+                                <img src="{{asset('storage/'.$patient->PatientProfileImage)}}" width="200" height="150" />
+                                @endif
                             </div>
-                            
+
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -161,7 +167,7 @@
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         });
 
-        $("#profile_image_upload").change(function(){
+        $("#profile_image_upload").change(function() {
             $('#selected_profile_image').html(this.value);
         });
         //Date range picker

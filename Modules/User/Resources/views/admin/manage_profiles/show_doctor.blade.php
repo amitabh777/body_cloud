@@ -46,6 +46,11 @@
                 <div class="card-header">
                     <h3 class="card-title">Documents</h3>
                 </div>
+                @if($doctor->documents)
+                    @foreach($doctor->documents as $document)
+                        <a href="{{asset('storage/'.$document->DocumentFile)}}" target="__blank">{{$document->documentType->DocumentTypeName}}</a>
+                    @endforeach
+                @endif
             </div>
 
             <div class="card card-primary">
