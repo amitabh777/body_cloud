@@ -62,7 +62,7 @@ class UserController extends Controller
         $user = $request->user(); //Auth::user();
         $response = $user->toArray();
         $role = $user->userRole->role; //User Role
-        $profile = $user->profile($role->RoleSlug); //User profile        
+        $profile = $user->profile($role->RoleSlug)->load('documents'); //User profile        
         //merge in user response       
         $response['UserType'] = $role->RoleSlug; 
         $response['Profile'] = $profile->toArray();  

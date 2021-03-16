@@ -142,7 +142,6 @@ class CustomHelper
         $wrongDateArray = explode('-',$date);
         $rightDate = $wrongDateArray[0].'-'.$wrongDateArray[2].'-'.$wrongDateArray[1];
         return $rightDate;
-
     }
 
 }

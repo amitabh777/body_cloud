@@ -57,7 +57,8 @@ class BloodGroupController extends Controller
      */
     public function edit($id)
     {
-        return view('user::edit');
+        dd($id);
+        return view('user::admin.master_data.edit_bloodgroup');
     }
 
     /**

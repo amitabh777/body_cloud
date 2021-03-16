@@ -41,24 +41,23 @@ class LoginController extends Controller
         $auth = Auth::attempt(['Phone' => $data['Phone'], 'password' => $data['Password']]);
         if (!$auth) {
             return response()->json(['message' => 'Invalid Credentials', 'status' => 400]);
-        }        
+        }
         if (Auth::user()->Status != config('user.const.account_status.active')) {
             Auth::logout();
             return response()->json(['data' => ['is_active' => 'Inactive'], 'message' => 'Phone number not verified.', 'status' => 400]);
         }
         $response = [];
         $user = $request->user(); //User::find(Auth::user()->UserID); //get user   
-        $response= $user->toArray();  
+        $response = $user->toArray();
         // $role = $user->userRole->role; //User Role
         $profile = $user->profile($user->role->RoleSlug); // ($role->RoleSlug); //User profile
-        // $user->api_token = $user->generateToken();
-        // $user->save();
+        $user->api_token = $user->generateToken(); //generate new token
+        $user->save();
         //merge in user response
         //  $user['UserType'] = $user->role->RoleSlug;
         //  $user['Profile'] = $profile;
-         $response['UserType'] = $user->role->RoleSlug;
-         $response['Profile'] = $profile;
-
+        $response['UserType'] = $user->role->RoleSlug;
+        $response['Profile'] = $profile;
         return response()->json(['data' => $response, 'message' => 'Success Login', 'status' => 200]);
     }
     /**
@@ -72,12 +71,12 @@ class LoginController extends Controller
         $userRules = [
             'Phone' => 'required|min:11|max:11',
             'Password' => ['required', 'string', 'min:8'],
-            'DeviceToken'=>'required',
-            'DeviceType'=>'required|in:android,ios',
+            'DeviceToken' => 'required',
+            'DeviceType' => 'required|in:android,ios',
         ];
         $message = [
-            'Phone.min'=>'Phone must be 11 digits',
-            'Phone.max'=>'Phone must be 11 digits',
+            'Phone.min' => 'Phone must be 11 digits',
+            'Phone.max' => 'Phone must be 11 digits',
         ];
         return Validator::make($data, $userRules, $message, []);
     }
@@ -92,5 +91,4 @@ class LoginController extends Controller
         Auth::logout();
         return response()->json(['status' => 200, 'message' => 'logout']);
     }
-    
 }
