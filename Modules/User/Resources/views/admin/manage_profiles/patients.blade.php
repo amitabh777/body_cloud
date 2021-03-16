@@ -94,8 +94,17 @@
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         });
 
+    $('input.patient_status_checkbox').on('change',function(){
+        console.log('tesf')
+        console.log(this.value);
+    });
+    // $("input[data-bootstrap-switch]").change(function(){
+    //     console.log('tefdsf');
+    //   //$(this).bootstrapSwitch('state', $(this).prop('checked'));
+    // });
 
     });
+
 
 
     // $("#example1").DataTable({
