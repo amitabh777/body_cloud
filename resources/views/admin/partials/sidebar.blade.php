@@ -76,14 +76,14 @@ $route = Route::currentRouteName();
             <p>
               Manage Profiles
               <i class="fas fa-angle-left right"></i>
-              <span class="badge badge-info right">2</span>
+              
             </p>
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{route('admin.manage_profiles.patient.index')}}" class="nav-link">
               <i class="nav-icon fas fa-file"></i>
-                <p>Patient <span class="badge badge-info right">2</span></p>
+                <p>Patient </p>
               </a>
             </li>
             <li class="nav-item">
@@ -112,7 +112,7 @@ $route = Route::currentRouteName();
             </li>
             <li class="nav-item">
               <a href="{{route('admin.manage_profiles.insurance_company.index')}}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
+              <i class="nav-icon fas fa-file"></i>
                 <p>Insurance Company</p>
               </a>
             </li>           
