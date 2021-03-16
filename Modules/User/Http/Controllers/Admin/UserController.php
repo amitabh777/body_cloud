@@ -2,6 +2,7 @@
 
 namespace Modules\User\Http\Controllers\Admin;
 
+use App\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -90,5 +91,23 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * update user status Active/Inactive
+     *
+     * @param int $userID
+     * @return void
+     */
+    public function updateUserStatus(Request $request,$userID){
+        $data = $request->all();       
+        if(!isset($data['Status'])){
+            return response()->json(['message'=>'Status required','status'=>'failed'],400);
+        }
+        $res= User::where('UserID',$userID)->update(['Status'=>$data['Status']]);
+        if(!$res){
+            return response()->json(['message'=>'update failed','status'=>'failed'],500);
+        }
+        return response()->json(['message'=>'update success','status'=>'success'],200);
     }
 }

@@ -34,7 +34,9 @@
                         <td>{{$hospital->HospitalWebsite}}</td>
                         <td>{{$hospital->HospitalContactName}}</td>
                         <td>
-                            <input type="checkbox" class="hospital_status_checkbox" data-UserID="{{$hospital->user->UserID}}" name="checkbox_status_{{$hospital->HospitalID}}" @if($hospital->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            <!-- <input type="checkbox" class="hospital_status_checkbox" data-UserID="{{$hospital->user->UserID}}" name="checkbox_status_{{$hospital->HospitalID}}" @if($hospital->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"> -->
+                            <input type="checkbox" class="user_status_checkbox" data-UserID="{{$hospital->user->UserID}}" name="checkbox_status_{{$hospital->UserID}}" @if($hospital->user->Status=='Active') checked @endif data-update_url="{{route('admin.user.status.update',$hospital->UserID)}}"  data-off-text="Inactive" data-on-text="Active">
+
                         </td>
                         <td>
                         <a href="{{route('admin.manage_profiles.hospital.show',$hospital->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
@@ -66,37 +68,7 @@
 
 @endsection
 
-
 @section('script')
-<script>
-    $(function() {
-        // $("#example1").DataTable({
-        //   "responsive": true, "lengthChange": false, "autoWidth": false,
-        // //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        $('#hospital_datatable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
-
-        $("input[data-bootstrap-switch]").each(function() {
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        });
-
-
-    });
-
-
-    // $("#example1").DataTable({
-    //   "responsive": true, "lengthChange": false, "autoWidth": false,
-    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-</script>
+<script src="{{asset('assets/admin/js/pages_js/hospital.js')}}"></script>
 
 @endsection

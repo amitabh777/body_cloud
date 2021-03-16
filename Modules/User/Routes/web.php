@@ -55,7 +55,15 @@ Route::prefix('admin/manage-profiles')->namespace('Admin')->middleware(['auth'])
     
     Route::get('insurance-companies','InsuranceCompanyController@index')->name('admin.manage_profiles.insurance_company.index');
     Route::get('insurance-companies/{UserID}','InsuranceCompanyController@show')->name('admin.manage_profiles.insurance_company.show');
+
 });
+
+//Manage profiles
+Route::prefix('admin/manage-users')->namespace('Admin')->group(function(){
+    Route::post('status/{UserID}','UserController@updateUserStatus')->name('admin.user.status.update');
+});
+
+
 
 //Documents upload
 Route::prefix('admin/manage-documents')->namespace('Admin')->middleware(['auth'])->group(function(){

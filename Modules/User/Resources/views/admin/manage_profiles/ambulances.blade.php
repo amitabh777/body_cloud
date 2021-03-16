@@ -33,7 +33,9 @@
                         <td>{{$ambulance->AmbulanceNumber}}</td>
                         <td>{{$ambulance->hospital?$ambulance->hospital->HospitalID:''}}</td>
                         <td>
-                            <input type="checkbox" class="ambulance_active_checkbox" data-UserID="{{$ambulance->user->UserID}}" name="checkbox_status_{{$ambulance->AmbulanceID}}" @if($ambulance->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            <!-- <input type="checkbox" class="ambulance_active_checkbox" data-UserID="{{$ambulance->user->UserID}}" name="checkbox_status_{{$ambulance->AmbulanceID}}" @if($ambulance->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"> -->
+                            <input type="checkbox" class="user_status_checkbox" data-UserID="{{$ambulance->user->UserID}}" name="checkbox_status_{{$ambulance->UserID}}" @if($ambulance->user->Status=='Active') checked @endif data-update_url="{{route('admin.user.status.update',$ambulance->UserID)}}"  data-off-text="Inactive" data-on-text="Active">
+
                         </td>
                         <td>
                         <a href="{{route('admin.manage_profiles.ambulance.show',$ambulance->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
@@ -67,35 +69,6 @@
 
 
 @section('script')
-<script>
-    $(function() {
-        // $("#example1").DataTable({
-        //   "responsive": true, "lengthChange": false, "autoWidth": false,
-        // //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        $('#ambulance_datatable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
-
-        $("input[data-bootstrap-switch]").each(function() {
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        });
-
-
-    });
-
-
-    // $("#example1").DataTable({
-    //   "responsive": true, "lengthChange": false, "autoWidth": false,
-    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-</script>
+<script src="{{asset('assets/admin/js/pages_js/ambulance.js')}}"></script>
 
 @endsection

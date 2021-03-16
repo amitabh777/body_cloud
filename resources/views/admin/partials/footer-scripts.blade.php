@@ -21,8 +21,14 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset('assets/admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 
+<!-- Toastr -->
+<script src="{{asset('assets/admin/plugins/toastr/toastr.min.js')}}"></script>
+
 <!-- AdminLTE App -->
 <script src="{{asset('assets/admin/js/dist/adminlte.min.js')}}"></script>
+
+<!-- Custom js access on all admin pages -->
+<script src="{{asset('assets/admin/js/custom.js')}}"></script>
 
 <script>
   //Initialize Select2 Elements

@@ -33,7 +33,9 @@
                         <td>{{$insuranceCompany->InsuranceCompanyWebsite}}</td>
                         <td>{{$insuranceCompany->InsuranceCompanyInfo}}</td>
                         <td>
-                            <input type="checkbox" class="insurance_company_active_checkbox" data-UserID="{{$insuranceCompany->user->UserID}}" name="checkbox_status_{{$insuranceCompany->insuranceCompanyID}}" @if($insuranceCompany->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            <!-- <input type="checkbox" class="insurance_company_active_checkbox" data-UserID="{{$insuranceCompany->user->UserID}}" name="checkbox_status_{{$insuranceCompany->insuranceCompanyID}}" @if($insuranceCompany->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"> -->
+                            <input type="checkbox" class="user_status_checkbox" data-UserID="{{$insuranceCompany->user->UserID}}" name="checkbox_status_{{$insuranceCompany->UserID}}" @if($insuranceCompany->user->Status=='Active') checked @endif data-update_url="{{route('admin.user.status.update',$insuranceCompany->UserID)}}"  data-off-text="Inactive" data-on-text="Active">
+
                         </td>
                         <td>
                         <a href="{{route('admin.manage_profiles.insurance_company.show',$insuranceCompany->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
@@ -67,35 +69,5 @@
 
 
 @section('script')
-<script>
-    $(function() {
-        // $("#example1").DataTable({
-        //   "responsive": true, "lengthChange": false, "autoWidth": false,
-        // //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        $('#insurance_company_datatable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
-
-        $("input[data-bootstrap-switch]").each(function() {
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        });
-
-
-    });
-
-
-    // $("#example1").DataTable({
-    //   "responsive": true, "lengthChange": false, "autoWidth": false,
-    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-</script>
-
+<script src="{{asset('assets/admin/js/pages_js/insurance.js')}}"></script>
 @endsection

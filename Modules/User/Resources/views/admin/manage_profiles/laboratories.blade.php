@@ -33,7 +33,9 @@
                         <td>{{$laboratory->LaboratoryWebsite}}</td>
                         <td>{{$laboratory->LaboratoryInfo}}</td>                       
                         <td>
-                            <input type="checkbox" class="laboratory_active_checkbox" data-UserID="{{$laboratory->user->UserID}}" name="checkbox_status_{{$laboratory->LaboratoryID}}" @if($laboratory->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            <!-- <input type="checkbox" class="laboratory_active_checkbox" data-UserID="{{$laboratory->user->UserID}}" name="checkbox_status_{{$laboratory->LaboratoryID}}" @if($laboratory->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"> -->
+                            <input type="checkbox" class="user_status_checkbox" data-UserID="{{$laboratory->user->UserID}}" name="checkbox_status_{{$laboratory->UserID}}" @if($laboratory->user->Status=='Active') checked @endif data-update_url="{{route('admin.user.status.update',$laboratory->UserID)}}"  data-off-text="Inactive" data-on-text="Active">
+
                         </td>
                         <td>
                         <a href="{{route('admin.manage_profiles.laboratory.show',$laboratory->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
@@ -67,35 +69,7 @@
 
 
 @section('script')
-<script>
-    $(function() {
-        // $("#example1").DataTable({
-        //   "responsive": true, "lengthChange": false, "autoWidth": false,
-        // //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+<script src="{{asset('assets/admin/js/pages_js/laboratory.js')}}"></script>
 
-        $('#laboratory_datatable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
-
-        $("input[data-bootstrap-switch]").each(function() {
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        });
-
-
-    });
-
-
-    // $("#example1").DataTable({
-    //   "responsive": true, "lengthChange": false, "autoWidth": false,
-    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-</script>
 
 @endsection

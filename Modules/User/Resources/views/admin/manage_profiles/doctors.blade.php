@@ -32,7 +32,9 @@
                         <td>{{$doctor->hospital?$doctor->hospital->HospitalName:''}}</td>
                        
                         <td>
-                            <input type="checkbox" class="doctor_status_checkbox" data-UserID="{{$doctor->user->UserID}}" name="checkbox_status_{{$doctor->UserID}}" @if($doctor->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                            <!-- <input type="checkbox" class="doctor_status_checkbox" data-UserID="{{$doctor->user->UserID}}" name="checkbox_status_{{$doctor->UserID}}" @if($doctor->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"> -->
+                            <input type="checkbox" class="user_status_checkbox" data-UserID="{{$doctor->user->UserID}}" name="checkbox_status_{{$doctor->UserID}}" @if($doctor->user->Status=='Active') checked @endif data-update_url="{{route('admin.user.status.update',$doctor->UserID)}}"  data-off-text="Inactive" data-on-text="Active">
+
                         </td>
                         <td>
                         <!-- <a href="{{route('admin.manage_profiles.doctor.edit',$doctor->UserID)}}" class="btn btn-primary btn-sm">Edit</a> -->
@@ -68,30 +70,7 @@
 
 
 @section('script')
-<script>
-    $(function() {
-        // $("#example1").DataTable({
-        //   "responsive": true, "lengthChange": false, "autoWidth": false,
-        // //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+<script src="{{asset('assets/admin/js/pages_js/doctor.js')}}"></script>
 
-        $('#doctor_datatable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
-
-        $("input[data-bootstrap-switch]").each(function() {
-            $(this).bootstrapSwitch('state', $(this).prop('checked'));
-        });
-
-
-    });
-
-</script>
 
 @endsection
