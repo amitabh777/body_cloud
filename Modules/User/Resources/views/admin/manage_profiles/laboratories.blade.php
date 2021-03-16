@@ -36,8 +36,9 @@
                             <input type="checkbox" class="laboratory_active_checkbox" data-UserID="{{$laboratory->user->UserID}}" name="checkbox_status_{{$laboratory->LaboratoryID}}" @if($laboratory->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-sm">Edit</button>
-                        </td>
+                        <a href="{{route('admin.manage_profiles.laboratory.show',$laboratory->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
+
+                    </td>
                     </tr>
                     @endforeach
                 </tbody>

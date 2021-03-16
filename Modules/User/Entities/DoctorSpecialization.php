@@ -15,4 +15,8 @@ class DoctorSpecialization extends Model
    
     protected $primaryKey = 'DoctorSpecializationID';
 
+    public function sector(){
+        return $this->hasOne(MedicalSector::class,'MedicalSectorID','SpecializeIn')->select(['MedicalSectorID','MedicalSectorName', 'MedicalSectorDesc', 'Status']);
+    }
+
 }

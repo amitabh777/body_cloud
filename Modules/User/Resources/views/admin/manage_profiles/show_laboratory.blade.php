@@ -1,11 +1,10 @@
 @extends('admin.layouts.dashboard-datatables')
 
-@section('page_title') Patient Edit @endsection
+@section('page_title') Laboratory @endsection
 @section('content')
 
 <div class="container-fluid">
     <div class="row">
-        <!-- left column -->
         <div class="col-md-6">
             <!-- general form elements -->
             <div class="card card-primary">
@@ -18,27 +17,26 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="UniqueID">UniqueID</label>
-                            <span>{{$patient->user->UniqueID}}</span>
+                            <span>{{$laboratory->user->UniqueID}}</span>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <span>{{$patient->user->Email}}</span>
-                          
+                            <span>{{$laboratory->user->Email}}</span>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <span>{{$patient->user->Phone}}</span>
+                            <span>{{$laboratory->user->Phone}}</span>
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <span>{{$patient->user->Addres}}</span>
+                            <span>{{$laboratory->user->Addres}}</span>
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>
                             <div class="custom-control custom-switch custom-control custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input patient_status_checkbox" id="Status" name="Status" value="Active" data-UserID="{{$patient->user->UserID}}" @if($patient->user->Status=='Active') checked @endif >
+                                <input type="checkbox" class="custom-control-input patient_status_checkbox" id="Status" name="Status" value="Active" data-UserID="{{$laboratory->user->UserID}}" @if($laboratory->user->Status=='Active') checked @endif >
                                 <label class="custom-control-label" for="Status">Active/Inactive</label>
-                            </div>                          
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -49,8 +47,9 @@
                     <h3 class="card-title">Documents</h3>
                 </div>
             </div>
-            <!-- /.card -->
+           
         </div>
+
         <div class="col-md-6">
             <!-- general form elements -->
             <div class="card card-primary">
@@ -59,64 +58,40 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form id="profile_form">
-                    @csrf
+                <form>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="patient_name">Patient Name</label>
-                            <span>{{$patient->PatientName}}</span>
+                            <label for="doctor_name">Company Name: </label>
+                            <span>{{$laboratory->LaboratoryCompanyName}}</span>
                         </div>
-                        <div class="form-group row">
-                            <label for="gender" class="col-sm-2">Gender: </label>
-                            <div class="col-sm-10">
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" name="PatientGender" value="Male" id="gender_male" @if($patient->PatientGender=='Male') checked @endif>
-                                    <label for="gender_male">Male</label>
-                                </div>
-                                <div class="icheck-info d-inline">
-                                    <input type="radio" name="PatientGender" value="Female" id="gender_female" @if($patient->PatientGender=='Female') checked @endif>
-                                    <label for="gender_female">Female</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2">DOB:</label>
-                           <span>{{$patient->PatientDOB}}</span>
+
+                        <div class="form-group">
+                            <label>Info: </label>
+                            <p>{{$laboratory->LaboratoryInfo}}</p>
                         </div>
                         <div class="form-group">
-                            <label>Blood Group: </label>
-                            <span>{{$patient->bloodgroup?$patient->bloodgroup->BloodGroupName:''}}</span>                           
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <label for="patient_height">Height(cm)</label>
-                                <span>{{$patient->PatientHeight}}</span>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="patient_weight">Weight(kg)</label>
-                                <span>{{$patient->PatientHeight}}</span>
-                            </div>                          
+                            <label>Laboratory Website: </label>
+                            <span>{{$laboratory->LaboratoryWebsite}}</span>
                         </div>
                         <div class="form-group">
-                            <label for="chronic_disease">Patient Chronic Disease </label>
-                            <span>{{$patient->PatientChronicDisease}}</span>
+                            <label for="bank_account_no">Bank Account No</label>
+                            <span>{{$laboratory->LaboratoryBankAccountNo}}</span>
                         </div>
                         <div class="form-group">
-                            <label for="permanent_medicine">Patient Permanent Medicines</label>
-                            <span>{{$patient->PatientPermanentMedicines}}</span>
+                            <label for="bank_name">Bank Name</label>
+                            <span>{{$laboratory->LaboratoryBankName}}</span>
                         </div>
                         <div class="form-group">
-                            <label for="emergency_contact_number">Emergency Contact Number</label>
-                            <span>{{$patient->EmergencyContactNo}}</span>
+                            <label for="min_reservation_charge">Min reservation charge</label>
+                            <span>{{$laboratory->LaboratoryMinReservationCharge}}</span>
                         </div>
                         <div class="form-group">
                             <label for="profile_image_upload">Profile Image</label>
                             <div>
-                            @if($patient->PatientProfileImage!=null)
-                            <img src="{{asset('storage/'.$patient->PatientProfileImage)}}" width="200" height="150" />
-                            @endif
+                                @if($laboratory->AmbulanceProfileImage!=null)
+                                <img src="{{asset('storage/'.$laboratory->AmbulanceProfileImage)}}" width="200" height="150" />
+                                @endif
                             </div>
-                            
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -161,7 +136,7 @@
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
         });
 
-        $("#profile_image_upload").change(function(){
+        $("#profile_image_upload").change(function() {
             $('#selected_profile_image').html(this.value);
         });
         //Date range picker

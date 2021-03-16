@@ -22,7 +22,6 @@
                         <div class="form-group">
                             <label for="email">Email</label>
                             <span>{{$doctor->user->Email}}</span>
-
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
@@ -48,7 +47,60 @@
                     <h3 class="card-title">Documents</h3>
                 </div>
             </div>
-            <!-- /.card -->
+
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Medical Sectors</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group">
+                        @if($doctorSectors)
+                        @foreach($doctorSectors as $sector)
+                        <span class="badge badge-info">{{$sector->sector->MedicalSectorName}}</span>
+                        @endforeach
+                        @endif
+
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+
+            </div>
+            <!-- expereinces -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Experiences</h3>
+                </div>
+               
+                <div class="card-body">
+                    <div class="form-group">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Institute</th>
+                                    <th scope="col">From</th>
+                                    <th scope="col">To</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if($doctor->experiences)
+                                @foreach($doctor->experiences as $experience)
+                                <tr>
+                                    <td>{{$experience->Institute}}</td>
+                                    <td>{{$experience->ExperienceFrom}}</td>
+                                    <td>{{$experience->ExperienceTo}}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+
+
+                        </table>
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
         </div>
 
         <div class="col-md-6">
@@ -118,71 +170,56 @@
             </div>
             <!-- /.card -->
 
-        </div>
-        <div class="col-md-6">
-            <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Medical Sectors</h3>
+                    <h3 class="card-title">Specialization</h3>
                 </div>
-                <form>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="doctor_name">Doctor Name</label>
-                            <span>{{$doctor->DoctorName}}</span>
-                        </div>
-                        <div class="form-group row">
-                            <label for="gender" class="col-sm-2">Gender: </label>
-                            <div class="col-sm-10">
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" name="DoctorGender" value="Male" id="gender_male" @if($doctor->DoctorGender=='Male') checked @endif>
-                                    <label for="gender_male">Male</label>
-                                </div>
-                                <div class="icheck-info d-inline">
-                                    <input type="radio" name="DoctorGender" value="Female" id="gender_female" @if($doctor->DoctorGender=='Female') checked @endif>
-                                    <label for="gender_female">Female</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2">DOB:</label>
-                            <span>{{$doctor->DoctorDOB}}</span>
-                        </div>
-                        <div class="form-group">
-                            <label>Hospital: </label>
-                            @if($doctor->hospital)
-                            <span>{{$doctor->hospital->HospitalName}}</span>
-                            @endif
-                        </div>
-                        <div class="form-group">
-                            <label for="doctor_website">Doctor Website</label>
-                            <span>{{$doctor->DoctorWebsite}}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="bank_account_no">Bank Account No</label>
-                            <span>{{$doctor->DoctorBankAccountNo}}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="bank_name">Doctor Bank Name</label>
-                            <span>{{$doctor->DoctorBankName}}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="min_reservation_charge">Min reservation charge</label>
-                            <span>{{$doctor->DoctorMinReservationCharge}}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="profile_image_upload">Profile Image</label>
-                            <div>
-                                @if($doctor->DoctorProfileImage!=null)
-                                <img src="{{asset('storage/'.$doctor->DoctorProfileImage)}}" width="200" height="150" />
-                                @endif
-                            </div>
-                        </div>
+
+                <div class="card-body">
+                    <div class="form-group">
+                        @if($specializations)
+                        @foreach($specializations as $specialization)
+                        <span class="badge badge-info">{{$specialization->sector->MedicalSectorName}}</span>
+                        @endforeach
+                        @endif
+
                     </div>
-                    <!-- /.card-body -->
-                </form>
+                </div>
+                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
+<!-- Awards -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Awards</h3>
+                </div>
+               
+                <div class="card-body">
+                    <div class="form-group">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Award Name</th>
+                                    <th scope="col">For</th>                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if($doctor->awards)
+                                @foreach($doctor->awards as $award)
+                                <tr>
+                                    <td>{{$award->AwardName}}</td>
+                                    <td>{{$award->AwardFor}}</td>
+                                   
+                                </tr>
+                                @endforeach
+                                @endif
+
+
+                        </table>
+
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
 
         </div>
     </div>

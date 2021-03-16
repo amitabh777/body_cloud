@@ -36,7 +36,8 @@
                             <input type="checkbox" class="insurance_company_active_checkbox" data-UserID="{{$insuranceCompany->user->UserID}}" name="checkbox_status_{{$insuranceCompany->insuranceCompanyID}}" @if($insuranceCompany->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-sm">Edit</button>
+                        <a href="{{route('admin.manage_profiles.insurance_company.show',$insuranceCompany->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
+
                         </td>
                     </tr>
                     @endforeach

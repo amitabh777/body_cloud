@@ -300,9 +300,9 @@ class ProfileController extends Controller
             'DoctorGender' => $request->input('Gender'),
             'HospitalID' => $request->input('HospitalID', null),
             'DoctorWebsite' => $request->input('Website', null),
-            // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
-            // 'DoctorBankName' => $request->input('DoctorBankName', null),
-            // 'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
+            'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
+            'DoctorBankName' => $request->input('DoctorBankName', null),
+            'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
         ];
     }
     /**
@@ -372,7 +372,7 @@ class ProfileController extends Controller
         $role = $request->RoleSlug;
         if ($request->hasFile('ProfileImage')) {
             $success = false;
-            $error = '';            
+            $error = '';
             try {
                 $file = $request->file('ProfileImage');
                 $path = CustomHelper::uploadProfileImage($file);
@@ -389,8 +389,8 @@ class ProfileController extends Controller
                 $error = $e->getMessage();
             }
             if ($success) {
-                $imgUrl = env('APP_URL').'public/storage/'.$path;
-                return response()->json(['message' => 'success', 'data' => ['profile_image_url'=>$imgUrl], 'status' => 200]);
+                $imgUrl = env('APP_URL') . 'public/storage/' . $path;
+                return response()->json(['message' => 'success', 'data' => ['profile_image_url' => $imgUrl], 'status' => 200]);
             } else {
                 return response()->json(['message' => 'unable to upload', 'data' => ['error' => $error], 'status' => 400]);
             }

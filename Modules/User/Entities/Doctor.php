@@ -32,11 +32,22 @@ class Doctor extends Model
     }
 
     public function medicalSectors(){
-        return $this->hasMany(DoctorSector::class,'DoctorID','DoctorID');//->with(['sector']);
+       return $this->hasMany(DoctorSector::class,'DoctorID','DoctorID');//->with(['sector']);
+        // return $this->hasManyThrough(MedicalSector::class,DoctorSector::class,'DoctorID','MedicalSectorID','DoctorID','DoctorID');//->with(['sector']);
+    }
+    public function specializations(){
+       return $this->hasMany(DoctorSpecialization::class,'DoctorID','DoctorID');//->with(['sector']);
     }
 
     public function hospital(){
         return $this->hasOne(Hospital::class,'HospitalID','HospitalID');
+    }
+
+    public function experiences(){
+        return $this->hasMany(DoctorExperience::class,'DoctorID','DoctorID');
+    }
+    public function awards(){
+        return $this->hasMany(DoctorAward::class,'DoctorID','DoctorID');
     }
 
 }

@@ -43,9 +43,11 @@ class AmbulanceController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
-    {
-        return view('user::show');
+    public function show($userID)
+    {                      
+        $ambulance = Ambulance::where('UserID', $userID)->first();     
+        return view('user::admin.manage_profiles.show_ambulance',compact('ambulance'));
+    
     }
 
     /**

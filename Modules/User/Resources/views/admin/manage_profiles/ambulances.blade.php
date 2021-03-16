@@ -36,7 +36,8 @@
                             <input type="checkbox" class="ambulance_active_checkbox" data-UserID="{{$ambulance->user->UserID}}" name="checkbox_status_{{$ambulance->AmbulanceID}}" @if($ambulance->user->Status=='Active') checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success">
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-sm">Edit</button>
+                        <a href="{{route('admin.manage_profiles.ambulance.show',$ambulance->UserID)}}" class="btn btn-primary btn-sm">View Details</a>
+
                         </td>
                     </tr>
                     @endforeach

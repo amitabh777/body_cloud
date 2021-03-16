@@ -23,5 +23,5 @@ class DoctorSector extends Model
     public function sector(){
         return $this->hasOne(MedicalSector::class,'MedicalSectorID','SectorID')->select(['MedicalSectorID','MedicalSectorName', 'MedicalSectorDesc', 'Status']);
     }
-    
+        
 }

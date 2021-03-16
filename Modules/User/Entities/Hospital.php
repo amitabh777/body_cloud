@@ -24,10 +24,13 @@ class Hospital extends Model
     }
     
     public function documents(){
-        return $this->hasMany(Document::class,'DoctorID','DoctorID')->select(['DoctorID','DocumentFile','DocumentTypeID']);
+        return $this->hasMany(Document::class,'HospitalID','HospitalID')->select(['HospitalID','DocumentFile','DocumentTypeID']);
     }
 
     public function scopeActive($query){
         return $query->where('Status','Active');
      }
+     public function medicalSectors(){
+        return $this->hasMany(HospitalSector::class,'HospitalID','HospitalID');
+    }
 }

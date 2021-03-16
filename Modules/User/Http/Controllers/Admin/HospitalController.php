@@ -43,9 +43,12 @@ class HospitalController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show($userID)
     {
-        return view('user::show');
+        $hospital = Hospital::where('UserID', $userID)->first();
+        $hospitalSectors= $hospital->medicalSectors()->with(['sector'])->get();
+        return view('user::admin.manage_profiles.show_hospital',compact('hospital','hospitalSectors'));
+  
     }
 
     /**
