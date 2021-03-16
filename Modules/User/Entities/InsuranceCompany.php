@@ -20,7 +20,7 @@ class InsuranceCompany extends Model
         'CreatedAt', 'UpdatedAt'
     ];
 
-    protected $with = ['documents'];
+    // protected $with = ['documents'];
 
     public function user()
     {
