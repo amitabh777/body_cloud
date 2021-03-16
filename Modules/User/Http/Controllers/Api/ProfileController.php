@@ -353,7 +353,7 @@ class ProfileController extends Controller
         return [
             'InsuranceCompanyName' => $request->input('CompanyName'),
             'InsuranceCompanyInfo' => $request->input('CompanyInfo', ''),
-            'InsuranceCompanyWebsite' => $request->input('Website'),
+            'InsuranceCompanyWebsite' => $request->input('Website',''),
         ];
     }
 
