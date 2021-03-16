@@ -37,7 +37,7 @@
                             </div>
                         </td>
                         <td>
-                        <a href="" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{route('admin.master_data.bloodgroups.edit',$bloodgroup->BloodGroupID)}}" class="btn btn-primary btn-sm">Edit</a>
 
                         </td>
                     </tr>
