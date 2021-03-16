@@ -57,7 +57,7 @@ class BloodGroupController extends Controller
      */
     public function edit($id)
     {
-        $bloodgroup = BloodGroup::where('BloodGroupID')->first();
+        $bloodgroup = BloodGroup::where('BloodGroupID',$id)->first();
         return view('user::admin.master_data.edit_bloodgroup',compact('bloodgroup'));
     }
 

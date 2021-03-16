@@ -65,8 +65,9 @@ Route::prefix('admin/manage-users')->namespace('Admin')->group(function(){
 //manage master data
 Route::prefix('admin/master-data')->namespace('Admin')->group(function(){
     Route::get('bloodgroups','BloodGroupController@index')->name('admin.master_data.bloodgroups.index');
-    Route::get('bloodgroups/{BloodGroupID}','BloodGroupController@edit')->name('admin.master_data.bloodgroups.edit');
+    Route::get('bloodgroups/{BloodGroupID}/edit','BloodGroupController@edit')->name('admin.master_data.bloodgroups.edit');
     Route::patch('bloodgroups/{BloodGroupId}/status','BloodGroupController@updateStatus')->name('admin.master_data.bloodgroup.status.update');
+    Route::patch('bloodgroups/{BloodGroupId}','BloodGroupController@update')->name('admin.master_data.bloodgroup.update');
 });
 
 
