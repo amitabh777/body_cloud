@@ -16,7 +16,7 @@ class Hospital extends Model
    
     protected $primaryKey = 'HospitalID';
 
-    protected $with = ['documents'];
+    // protected $with = ['documents'];
 
     public function user()
     {
