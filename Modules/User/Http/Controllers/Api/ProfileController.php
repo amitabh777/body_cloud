@@ -86,7 +86,7 @@ class ProfileController extends Controller
             if ($validate->fails()) {
                 return response()->json(['message' => $validate->errors()->first(), 'status' => 400]);
             }
-            $profileData = $this->doctorProfileData($request);
+            $profileData = $this->doctorProfileData($request);           
             $allData['ProfileData'] = $profileData;
             $allData['SpecializeIn'] = $request->input('SpecializeIn', null);
             $allData['VisitingHours'] = $request->input('VisitingHours', null);
@@ -188,7 +188,7 @@ class ProfileController extends Controller
         $userRules = [
             'PatientName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
-            'DOB' => 'required',
+            //'DOB' => 'date_format:Y-m-d',
             'PatientHeight' => 'required|numeric|min:100|max:250',
             'PatientWeight' => 'required|numeric',
             'EmergencyContactNo' => 'required|max:11|min:11',
@@ -198,7 +198,7 @@ class ProfileController extends Controller
             'EmergencyContactNo.min' => 'EmergencyContactNo must be 11 digits',
             'EmergencyContactNo.max' => 'EmergencyContactNo must be 11 digits',
         ];
-        return Validator::make($data, $userRules, $message);
+        return Validator::make($data, $userRules, $message);        
     }
 
     public function validateDoctorProfile($data)
@@ -210,8 +210,9 @@ class ProfileController extends Controller
         $userRules = [
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'Gender' => 'required',
-            'Website' => 'url',
-            'HospitalID' => $hospitalIDRule
+            //'Website' => 'url',
+            'HospitalID' => $hospitalIDRule,
+          //  'DOB'=>'date_format:Y-m-d'
         ];
         return Validator::make($data, $userRules);
     }
@@ -221,8 +222,7 @@ class ProfileController extends Controller
         $userRules = [
             'HospitalName' => 'required',
             'ContactName' => 'required|regex:/^[a-zA-Z ]+$/u',
-            'VisitingHours' => 'required',
-            'Website' => 'url',
+            'VisitingHours' => 'required',          
         ];
         return Validator::make($data, $userRules);
     }
@@ -239,8 +239,7 @@ class ProfileController extends Controller
     {
         $userRules = [
             'CompanyName' => 'required',
-            'VisitingHours' => 'required',
-            'Website' => 'url'
+            'VisitingHours' => 'required',           
         ];
         return Validator::make($data, $userRules, [], []);
     }
@@ -248,8 +247,7 @@ class ProfileController extends Controller
     {
         $userRules = [
             'CompanyName' => 'required',
-            'VisitingHours' => 'required',
-            'Website' => 'url'
+            'VisitingHours' => 'required',          
         ];
         return Validator::make($data, $userRules);
     }
@@ -278,7 +276,7 @@ class ProfileController extends Controller
         return [
             'PatientName' => $request->input('PatientName'),
             'PatientGender' => $request->input('Gender'),
-            'PatientDOB' => $request->input('DOB'),
+            'PatientDOB' =>$request->input('DOB',null),
             'BloodGroupID' => $request->input('BloodGroupID', null),
             'PatientHeight' => (float)$request->input('PatientHeight'),
             'PatientWeight' => (float)$request->input('PatientWeight'),
@@ -303,6 +301,7 @@ class ProfileController extends Controller
             'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
             'DoctorBankName' => $request->input('DoctorBankName', null),
             'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),
+            'DoctorDOB'=>$request->input('DOB',null),
         ];
     }
     /**

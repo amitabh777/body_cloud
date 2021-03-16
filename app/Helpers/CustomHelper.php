@@ -133,4 +133,16 @@ class CustomHelper
         return $newUniqueId;
     }
 
+    /**
+     * Convert YYYYDDMM to db compatible format YYYYMMDD
+     * @param string $date
+     * @return string $date
+     */
+    public static function convertYYYYDDMMToYYYYMMDD($date){
+        $wrongDateArray = explode('-',$date);
+        $rightDate = $wrongDateArray[0].'-'.$wrongDateArray[2].'-'.$wrongDateArray[1];
+        return $rightDate;
+
+    }
+
 }

@@ -38,26 +38,7 @@ function updateUserStatus(url, userID, status) {
         error: function (data) {
             console.log('error: ');
             console.log(data);
-            toastr.error('Failed')
-            // let obj = data.responseJSON;
-            // console.log(obj);
-            // if (typeof obj.errors != 'undefined') {
-            //     $("div#validation_errors").append('<h5>Errors found in form, fix and resubmit!</h5>');
-            //     for (let key in obj.errors) {
-            //         for (let index in obj.errors[key]) {
-            //             // $("#" + key).parent().append('<span>' + obj.errors[key][index] + '</span><br>');
-            //             $("div#validation_errors").append('<span>' + obj.errors[key][index] + '</span><br>');
-            //         }
-
-            //     }
-            //     $('html, body').animate({
-            //         scrollTop: $("div#validation_errors").offset().top - 70,
-            //     }, 1000);
-
-            // } else {
-            //     //backend error
-            //     location.reload();
-            // }
+            toastr.error('Failed');           
         }
     });
 }

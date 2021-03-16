@@ -74,6 +74,54 @@ $route = Route::currentRouteName();
           <a href="#" class="nav-link active1">
             <i class="nav-icon fas fa-copy"></i>
             <p>
+              Master Data
+              <i class="fas fa-angle-left right"></i>
+              
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{route('admin.master_data.bloodgroups.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Blood Groups </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.doctor.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Doctor</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.hospital.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Hospital</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.ambulance.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Ambulance</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.laboratory.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Laboratory</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.manage_profiles.insurance_company.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Insurance Company</p>
+              </a>
+            </li>           
+          </ul>
+        </li>
+        <li class="nav-item menu-open2">
+          <a href="#" class="nav-link active1">
+            <i class="nav-icon fas fa-copy"></i>
+            <p>
               Manage Profiles
               <i class="fas fa-angle-left right"></i>
               
@@ -118,11 +166,9 @@ $route = Route::currentRouteName();
             </li>           
           </ul>
         </li>
-
        
         <li class="nav-item">
           <a href="#" class="nav-link">
-            <i class="nav-icon far fa-circle text-info"></i>
             <form method="post" action="{{route('logout')}}">
               @csrf
               <button type="submit" class="btn btn-primary">Logout</button>

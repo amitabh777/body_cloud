@@ -475,7 +475,7 @@ class RegistrationController extends Controller
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'DoctorGender' => 'required|in:Male,Female',
             'VisitingHours' => 'required',
-            'DoctorWebsite' => 'url',
+           // 'DoctorWebsite' => 'url',
         ];
         $message = [];
         return Validator::make($request->all(), $userRules, $message);
@@ -487,7 +487,7 @@ class RegistrationController extends Controller
             'HospitalName' => 'required',
             'HospitalContactName' => 'required',
             'VisitingHours' => 'required',
-            'HospitalWebsite' => 'url'
+            //'HospitalWebsite' => 'url'
         ];
         return Validator::make($request->all(), $userRules);
     }
@@ -538,7 +538,7 @@ class RegistrationController extends Controller
             'UserID' => '',
             'PatientName' => $request->input('PatientName'),
             'PatientGender' => $request->input('PatientGender'),
-            'PatientDOB' => $request->input('PatientDOB'),
+            'PatientDOB' =>$request->input('PatientDOB',null),
             'BloodGroupID' => $request->input('BloodGroupID', null),
             'PatientHeight' => (float) $request->input('PatientHeight'),
             'PatientWeight' => (float)$request->input('PatientWeight'),
@@ -557,6 +557,7 @@ class RegistrationController extends Controller
             'DoctorGender' => $request->input('DoctorGender'),
             'HospitalID' => $request->input('HospitalID', null),
             'DoctorWebsite' => $request->input('DoctorWebsite', null),
+            'DoctorDOB'=>$request->input('DoctorDOB',null),
             // 'DoctorBankAccountNo' => $request->input('DoctorBankAccountNo', null),
             // 'DoctorBankName' => $request->input('DoctorBankName', null),
             // 'DoctorMinReservationCharge' => $request->input('DoctorMinReservationCharge', null),

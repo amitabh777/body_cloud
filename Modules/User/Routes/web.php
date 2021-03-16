@@ -62,7 +62,11 @@ Route::prefix('admin/manage-profiles')->namespace('Admin')->middleware(['auth'])
 Route::prefix('admin/manage-users')->namespace('Admin')->group(function(){
     Route::post('status/{UserID}','UserController@updateUserStatus')->name('admin.user.status.update');
 });
-
+//manage master data
+Route::prefix('admin/master-data')->namespace('Admin')->group(function(){
+    Route::get('bloodgroups','BloodGroupController@index')->name('admin.master_data.bloodgroups.index');
+    Route::patch('bloodgroups/{BloodGroupId}/status','BloodGroupController@updateStatus')->name('admin.master_data.bloodgroup.status.update');
+});
 
 
 //Documents upload
