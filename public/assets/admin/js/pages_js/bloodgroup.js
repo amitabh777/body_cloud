@@ -36,10 +36,14 @@ $(function () {
                 return;
             }
             var url = $(this).data('url');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN':csrfToken
+                }
+            });
             $.ajax({
                 url: url,
-                // type: 'DELETE',
-                 method: 'DELETE',
+                 type: 'DELETE',               
                 data: {
                     _token: csrfToken
                 },
