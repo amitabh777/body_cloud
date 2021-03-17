@@ -38,9 +38,9 @@ $(function () {
             var url = $(this).data('url');
             console.log('csrf: ' + csrfToken);
             $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                }
+                // headers: {
+                //     'X-CSRF-TOKEN': csrfToken
+                // }
             });
             $.ajax({
                 url: url,
