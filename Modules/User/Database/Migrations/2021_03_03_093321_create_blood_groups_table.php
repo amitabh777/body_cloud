@@ -16,7 +16,7 @@ class CreateBloodGroupsTable extends Migration
         Schema::create('blood_groups', function (Blueprint $table) {
             $table->integerIncrements('BloodGroupID')->unsigned();
             $table->string('BloodGroupName',30);
-            $table->string('BloodGroupDesc',100);
+            $table->string('BloodGroupDesc',100)->nullable();
             $table->enum('Status',['Active','Inactive'])->default('Active');
             $table->timestamp('CreatedAt')->nullable();
             $table->timestamp('UpdatedAt')->nullable();

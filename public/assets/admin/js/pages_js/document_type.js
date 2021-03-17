@@ -3,7 +3,7 @@ $(function () {
 
     $(document).ready(function () {
 
-        $('#bloodgroups_datatable').DataTable({
+        $('#document_types_datatable').DataTable({
             "paging": true,
             "lengthChange": false,
             "searching": true,
@@ -14,19 +14,17 @@ $(function () {
         });
 
         //status update
-        $('input.bloodgroup_status_checkbox').click(function () {
+        $('input.docuemnt_type_status_checkbox').click(function () {
             var url = $(this).data('status_update_url');
             var status = 'Active';
-            var bloodgroupId = $(this).data('bloodgroup_id');
+            var documentTypeId = $(this).data('document_type_id');
             console.log(url);
             if ($(this).prop("checked") == true) {
                 status = 'Active';
-                console.log("Checkbox is checked.");
             } else if ($(this).prop("checked") == false) {
                 status = 'Inactive';
-                console.log("Checkbox is unchecked.");
             }
-            updateBloodgroupStatus(url, status, bloodgroupId);
+            updateDocumentTypeStatus(url, status);
         });
 
         //delete
@@ -73,8 +71,8 @@ $(function () {
     }
     
 
-    //update bloodgroup status
-    function updateBloodgroupStatus(url, status, bloodgroupId) {
+    //update documenttype status
+    function updateDocumentTypeStatus(url, status) {
         var data = {
             Status: status,
             _token: csrfToken,

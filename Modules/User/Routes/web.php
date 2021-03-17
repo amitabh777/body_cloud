@@ -66,8 +66,23 @@ Route::prefix('admin/manage-users')->namespace('Admin')->group(function(){
 Route::prefix('admin/master-data')->namespace('Admin')->group(function(){
     Route::get('bloodgroups','BloodGroupController@index')->name('admin.master_data.bloodgroups.index');
     Route::get('bloodgroups/{BloodGroupID}/edit','BloodGroupController@edit')->name('admin.master_data.bloodgroups.edit');
-    Route::patch('bloodgroups/{BloodGroupId}/status','BloodGroupController@updateStatus')->name('admin.master_data.bloodgroup.status.update');
-    Route::patch('bloodgroups/{BloodGroupId}','BloodGroupController@update')->name('admin.master_data.bloodgroup.update');
+    Route::get('bloodgroups/create','BloodGroupController@create')->name('admin.master_data.bloodgroups.create');
+    Route::patch('bloodgroups/{BloodGroupID}/status','BloodGroupController@updateStatus')->name('admin.master_data.bloodgroup.status.update');
+    Route::patch('bloodgroups/{BloodGroupID}','BloodGroupController@update')->name('admin.master_data.bloodgroup.update');
+    Route::post('bloodgroups','BloodGroupController@store')->name('admin.master_data.bloodgroup.store');
+    Route::delete('bloodgroups/{BloodGroupID}','BloodGroupController@destroy')->name('admin.master_data.bloodgroups.destroy');
+
+    Route::get('document-types','DocumentTypeController@index')->name('admin.master_data.document_types.index');
+    Route::get('document-types/{DocumentTypeID}/edit','DocumentTypeController@edit')->name('admin.master_data.document_type.edit');
+    Route::get('document-types/create','DocumentTypeController@create')->name('admin.master_data.document_types.create');
+    Route::patch('document-types/{DocumentTypeID}/status','DocumentTypeController@updateStatus')->name('admin.master_data.document_type.status.update');
+    Route::patch('document-types/{DocumentTypeID}','DocumentTypeController@update')->name('admin.master_data.document_type.update');
+    Route::post('document-types','DocumentTypeController@store')->name('admin.master_data.document_type.store');
+    Route::delete('document-types/{DocumentTypeID}','DocumentTypeController@destroy')->name('admin.master_data.document_type.destroy');
+
+    
+    Route::get('medical-sectors','MedicalSectorController@index')->name('admin.master_data.medical_sectors.index');
+
 });
 
 

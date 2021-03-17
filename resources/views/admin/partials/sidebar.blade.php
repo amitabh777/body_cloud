@@ -87,35 +87,18 @@ $route = Route::currentRouteName();
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{route('admin.manage_profiles.doctor.index')}}" class="nav-link">
+            <a href="{{route('admin.master_data.document_types.index')}}" class="nav-link">
               <i class="nav-icon fas fa-file"></i>
-                <p>Doctor</p>
+                <p>Document Types</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{route('admin.manage_profiles.hospital.index')}}" class="nav-link">
+              <a href="{{route('admin.master_data.medical_sectors.index')}}" class="nav-link">
               <i class="nav-icon fas fa-file"></i>
-                <p>Hospital</p>
+                <p>Medical Sectors</p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="{{route('admin.manage_profiles.ambulance.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-file"></i>
-                <p>Ambulance</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.manage_profiles.laboratory.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-file"></i>
-                <p>Laboratory</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.manage_profiles.insurance_company.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-file"></i>
-                <p>Insurance Company</p>
-              </a>
-            </li>           
+                    
           </ul>
         </li>
         <li class="nav-item menu-open2">

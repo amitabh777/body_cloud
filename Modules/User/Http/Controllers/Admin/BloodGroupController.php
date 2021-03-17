@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Modules\User\Entities\BloodGroup;
+use Modules\User\Http\Requests\Admin\BloodGroupCreateRequest;
 use Modules\User\Http\Requests\Admin\BloodGroupUpdateRequest;
 
 class BloodGroupController extends Controller
@@ -27,7 +28,7 @@ class BloodGroupController extends Controller
      */
     public function create()
     {
-        return view('user::create');
+        return view('user::admin.master_data.create_bloodgroup');
     }
 
     /**
@@ -35,9 +36,15 @@ class BloodGroupController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(BloodGroupCreateRequest $request)
     {
-        //
+        $data = $request->only(['BloodGroupName','BloodGroupDesc','Status']);
+        $data['Status'] = $request->input('Status','Inactive');
+        $res = BloodGroup::create($data);
+        if(!$res){
+            return redirect()->back()->with(['status'=>'error','message'=>'unable to create']);
+        }
+        return redirect()->route('admin.master_data.bloodgroups.index')->with(['status'=>'success','message'=>'Bloodgroup created']);
     }
 
     /**
@@ -69,7 +76,13 @@ class BloodGroupController extends Controller
      */
     public function update(BloodGroupUpdateRequest $request, $id)
     {
-        dd($request->all());
+        $data = $request->only(['BloodGroupName','BloodGroupDesc','Status']);
+        $data['Status'] = $request->input('Status','Inactive');
+        $res = BloodGroup::where('BloodGroupID',$id)->update($data);
+        if(!$res){
+            return redirect()->back()->with(['status'=>'failed','message'=>'bloodgroup not updated']);
+        }
+        return redirect()->back()->with(['status'=>'success','message'=>'bloodgroup updated']);
     } 
     
     /**
@@ -100,6 +113,12 @@ class BloodGroupController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $res = BloodGroup::where('BloodGroupID',$id)->delete();
+        if(!$res){
+            $response = response()->json(['message'=>'Delete failed','errors'=>[]],500);
+        }
+        $response = response()->json(['message'=>'Deleted'],200);
+
+        return $response;
     }
 }
