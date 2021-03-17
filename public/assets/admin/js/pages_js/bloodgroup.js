@@ -36,6 +36,7 @@ $(function () {
                 return;
             }
             var url = $(this).data('url');
+            console.log('csrf: '+csrfToken);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN':csrfToken
