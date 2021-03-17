@@ -38,7 +38,8 @@ $(function () {
             var url = $(this).data('url');
             $.ajax({
                 url: url,
-                type: 'DELETE',
+                // type: 'DELETE',
+                 method: 'DELETE',
                 data: {
                     _token: csrfToken
                 },
