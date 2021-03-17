@@ -1,8 +1,6 @@
 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 $(function () {
-
     $(document).ready(function () {
-
         $('#bloodgroups_datatable').DataTable({
             "paging": true,
             "lengthChange": false,
@@ -36,12 +34,11 @@ $(function () {
                 return;
             }
             var url = $(this).data('url');
-            console.log('csrf: ' + csrfToken);
-            $.ajaxSetup({
-                // headers: {
-                //     'X-CSRF-TOKEN': csrfToken
-                // }
-            });
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': csrfToken
+            //     }
+            // });
             $.ajax({
                 url: url,
                // type: 'DELETE',
@@ -56,7 +53,7 @@ $(function () {
                     toastMsgBeforeRedirect('Deleted').then(function (res) {
                         location.reload();
                     });
-                    // toastr.success('deleted');               
+                    // toastr.success('deleted');              
 
                 },
                 error: function error(msg) {
@@ -87,12 +84,12 @@ $(function () {
         var data = {
             Status: status,
             _token: csrfToken,
-            // _method:'PATCH'
+             _method:'PATCH'
         };
         $.ajax({
             url: url,
             data: JSON.stringify(data),
-            type: 'PATCH',
+            type: 'post',
             contentType: 'application/json',
             processData: false,
             dataType: 'json',

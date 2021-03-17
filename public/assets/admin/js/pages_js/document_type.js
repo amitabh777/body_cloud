@@ -36,9 +36,10 @@ $(function () {
             var url = $(this).data('url');
             $.ajax({
                 url: url,
-                type: 'DELETE',
+                type: 'post',
                 data: {
-                    _token: csrfToken
+                    _token: csrfToken,
+                    _method:'DELETE'
                 },
                 success: function success(result) {
                     console.log('success'); 
@@ -76,12 +77,12 @@ $(function () {
         var data = {
             Status: status,
             _token: csrfToken,
-            // _method:'PATCH'
+             _method:'PATCH'
         };
         $.ajax({
             url: url,
             data: JSON.stringify(data),
-            type: 'PATCH',
+            type: 'POST',
             contentType: 'application/json',
             processData: false,
             dataType: 'json',
