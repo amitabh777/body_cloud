@@ -30,55 +30,56 @@ $(function () {
         });
 
         //delete
-        $('.bloodgroup-delete').on('click',function(){
+        $('.bloodgroup-delete').on('click', function () {
             var con = confirm('Are you confirm?');
             if (!con) {
                 return;
             }
             var url = $(this).data('url');
-            console.log('csrf: '+csrfToken);
+            console.log('csrf: ' + csrfToken);
             $.ajaxSetup({
                 headers: {
-                    'X-CSRF-TOKEN':csrfToken
+                    'X-CSRF-TOKEN': csrfToken
                 }
             });
             $.ajax({
                 url: url,
-                 method: 'DELETE', 
+                method: 'DELETE',
 
                 data: {
                     _token: csrfToken
                 },
+                dataType: "JSON",
                 success: function success(result) {
-                    console.log('success'); 
-                    toastMsgBeforeRedirect('Deleted').then(function(res){
-                         location.reload();
-                    });   
+                    console.log('success');
+                    toastMsgBeforeRedirect('Deleted').then(function (res) {
+                        location.reload();
+                    });
                     // toastr.success('deleted');               
-                    
+
                 },
                 error: function error(msg) {
                     console.log('something went wrong');
                     toastr.error('unable to delete');
-                   // location.reload();
+                    // location.reload();
                 }
             });
         });
 
     });
 
-    function toastMsgBeforeRedirect(msg){
-        return new Promise(function(resolve, reject) {
-        // "Producing Code" (May take some time)
-        toastr.success(msg);
-          resolve('success'); // when successful
-          setTimeout(() => {
-              console.log('tes')
-          }, 1000);
-          //reject();  // when error
+    function toastMsgBeforeRedirect(msg) {
+        return new Promise(function (resolve, reject) {
+            // "Producing Code" (May take some time)
+            toastr.success(msg);
+            resolve('success'); // when successful
+            setTimeout(() => {
+                console.log('tes')
+            }, 1000);
+            //reject();  // when error
         });
     }
-    
+
 
     //update bloodgroup status
     function updateBloodgroupStatus(url, status, bloodgroupId) {
