@@ -47,7 +47,8 @@ $(function () {
                 type: 'DELETE',
 
                 data: {
-                    _token: csrfToken
+                    _token: csrfToken,
+                    _method: 'DELETE'
                 },
                 dataType: "JSON",
                 success: function success(result) {
