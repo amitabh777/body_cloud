@@ -44,7 +44,8 @@ $(function () {
             });
             $.ajax({
                 url: url,
-                 type: 'DELETE',               
+                 method: 'DELETE', 
+
                 data: {
                     _token: csrfToken
                 },
