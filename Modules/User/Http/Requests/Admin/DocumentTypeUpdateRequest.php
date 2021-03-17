@@ -4,7 +4,7 @@ namespace Modules\User\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BloodGroupCreateRequest extends FormRequest
+class DocumentTypeUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,8 @@ class BloodGroupCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'BloodGroupName' => 'required',
-            'BloodGroupDesc'=>'required',
+            'DocumentTypeName' => 'required',
+            'DocumentTypeDesc' => 'required',
             'Status'=>'in:Active,Inactive',
         ];
     }

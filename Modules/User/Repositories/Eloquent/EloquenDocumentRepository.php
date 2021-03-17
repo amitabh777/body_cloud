@@ -71,17 +71,17 @@ class EloquentDocumentRepository implements DocumentRepository
      * @param string $doctype
      * @return boolean
      */
-    public function uploadDocuments($files, $role, $profileId, $docuemntType)
+    public function uploadDocuments($files, $role, $profileId, $documentType)
     {
         $now = Carbon::now();
         //multiple uploads
         if ($files) {
-            $docType = DocumentType::where('DocumentTypeName', $docuemntType)->first();
+            $docType = DocumentType::where('DocumentTypeName', $documentType)->first();
             $profileKey = CustomHelper::getProfileIdKey($role);
             $uploadedFiles = [];
             foreach ($files as $file) {
                 $fileName = $file->hashName();
-                $path = $file->storeAs('documents/'.$docuemntType, $fileName,'public');
+                $path = $file->storeAs('documents/'.$documentType, $fileName,'public');
                 if ($path) {
                     $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $path, 'CreatedAt' => $now->toDateTimeString());
                 }

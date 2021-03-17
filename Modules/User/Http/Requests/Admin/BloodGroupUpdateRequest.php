@@ -15,6 +15,7 @@ class BloodGroupUpdateRequest extends FormRequest
     {
         return [
             'BloodGroupName' => 'required',
+            'BloodGroupDesc'=>'required',
             'Status'=>'in:Active,Inactive',
         ];
     }

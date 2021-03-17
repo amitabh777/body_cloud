@@ -18,18 +18,18 @@
                     @method('PATCH')
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="bloodgroup_name">BloodGroup Name</label>
-                            <input type="text" class="form-control" id="bloodgroup_name" name="BloodGroupName" value="{{old('BloodGroupName',$bloodgroup->BloodGroupName)}}" required>
-                            @error('BloodGroupName')
+                            <label for="document_type_name">Document Type Name</label>
+                            <input type="text" class="form-control" id="document_type_name" name="DocumentTypeName" value="{{old('DocumentTypeName',$documentType->DocumentTypeName)}}" required>
+                            @error('DocumentTypeName')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="bloodgroup_desc">Description</label>
-                            <textarea  name="BloodGroupDesc" class="form-control" id="bloodgroup_desc">{{$bloodgroup->BloodGroupDesc}}</textarea>
-                            @error('BloodGroupDesc')
+                            <label for="document_type_desc">Description</label>
+                            <textarea  name="DocumentTypeDesc" class="form-control" id="document_type_desc">{{$documentType->DocumentTypeDesc}}</textarea>
+                            @error('DocumentTypeDesc')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -38,7 +38,7 @@
                         <div class="form-group">
                             <label for="status">Status</label>
                             <div class="custom-control custom-switch custom-control custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input bloodgroup_status_checkbox" id="Status" name="Status" value="Active" data-bloodgroupID="{{$bloodgroup->BloodGroupID}}" @if($bloodgroup->Status=='Active') checked @endif >
+                                <input type="checkbox" class="custom-control-input document_type_status_checkbox" id="Status" name="Status" value="Active" data-documentTypeID="{{$documentType->DocumentTypeID}}" @if($documentType->Status=='Active') checked @endif >
                                 <label class="custom-control-label" for="Status">Active/Inactive</label>
                             </div>
                             @error('Status')

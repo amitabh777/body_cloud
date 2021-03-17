@@ -1,6 +1,6 @@
 @extends('admin.layouts.dashboard-datatables')
 
-@section('page_title') Document Types <a href="{{route('admin.master_data.document_types.create')}}" class="btn btn-primary">Add</a> @endsection
+@section('page_title') Medical Sectors <a href="{{route('admin.master_data.medical_sector.create')}}" class="btn btn-primary">Add</a> @endsection
 @section('content')
 
 <div class="container-fluid">
@@ -16,7 +16,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <table id="document_types_datatable" class="table table-bordered table-striped">
+            <table id="medical_sectors_datatable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th scope="header">Name</th>
@@ -26,21 +26,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($documentTypes as $documentType)
+                    @foreach($medicalSectors as $medicalSector)
                     <tr>
-                        <td>{{$documentType->DocumentTypeName}}</td>
-                        <td>{{$documentType->DocumentTypeDesc}}</td>
+                        <td>{{$medicalSector->MedicalSectorName}}</td>
+                        <td>{{$medicalSector->MedicalSectorDesc}}</td>                        
                         <td>
                             <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input docuemnt_type_status_checkbox" id="document_type_status_{{$documentType->DocumentTypeID}}" @if($documentType->Status=='Active') checked @endif data-document_type_id="{{$documentType->DocumentTypeID}}" data-status_update_url="{{route('admin.master_data.document_type.status.update',$documentType->DocumentTypeID)}}">
-                                <label class="custom-control-label" for="document_type_status_{{$documentType->DocumentTypeID}}"></label>
+                                <input type="checkbox" class="custom-control-input medical_sector_status_checkbox" id="medical_sector_status_{{$medicalSector->MedicalSectorID}}" @if($medicalSector->Status=='Active') checked @endif data-medical_sector_id="{{$medicalSector->MedicalSectorID}}" data-status_update_url="{{route('admin.master_data.medical_sector.status.update',$medicalSector->MedicalSectorID)}}">
+                                <label class="custom-control-label" for="medical_sector_status_{{$medicalSector->MedicalSectorID}}"></label>
                             </div>
                         </td>
                         <td>
-                            <!-- edit -->
-                            <a href="{{route('admin.master_data.document_type.edit',$documentType->DocumentTypeID)}}" class="btn btn-primary btn-sm">Edit</a>
-                            <!-- Delete -->
-                            <span class="btn btn-danger btn-sm document_type-delete" data-DocumentTypeID="{{$documentType->DocumentTypeID}}" data-url="{{route('admin.master_data.document_type.destroy',['DocumentTypeID'=>$documentType->DocumentTypeID])}}">Delete</span>
+                        <!-- edit -->
+                        <a href="{{route('admin.master_data.medical_sector.edit',$medicalSector->MedicalSectorID)}}" class="btn btn-primary btn-sm">Edit</a>
+                        <!-- delete -->
+                        <span class="btn btn-danger btn-sm medical_sector-delete" data-medical_sector_id="{{$medicalSector->MedicalSectorID}}" data-url="{{route('admin.master_data.medical_sector.destroy',['MedicalSectorID'=>$medicalSector->MedicalSectorID])}}">Delete</span>
                         </td>
                     </tr>
                     @endforeach
@@ -71,7 +71,7 @@
 @endsection
 
 @section('script')
-<script src="{{asset('assets/admin/js/pages_js/document_type.js')}}"></script>
+<script src="{{asset('assets/admin/js/pages_js/medical_sector.js')}}"></script>
 
 
 @endsection

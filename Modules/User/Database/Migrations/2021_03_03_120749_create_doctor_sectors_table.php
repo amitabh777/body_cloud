@@ -21,12 +21,12 @@ class CreateDoctorSectorsTable extends Migration
                 $table->integer('SectorID')->unsigned();
                 $table->timestamp('CreatedAt')->nullable();
                 $table->timestamp('UpdatedAt')->nullable();
-                $table->foreign('DoctorID')
-                    ->references('DoctorID')
-                    ->on('doctors')->OnDelete('cascade');
-                $table->foreign('SectorID')
-                    ->references('MedicalSectorID')
-                    ->on('medical_sectors')->OnDelete('cascade');
+                // $table->foreign('DoctorID')
+                //     ->references('DoctorID')
+                //     ->on('doctors')->OnDelete('cascade');
+                // $table->foreign('SectorID')
+                //     ->references('MedicalSectorID')
+                //     ->on('medical_sectors')->OnDelete('cascade');
             });
         }
     }

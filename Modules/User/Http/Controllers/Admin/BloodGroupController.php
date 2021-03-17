@@ -111,8 +111,13 @@ class BloodGroupController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $confirm = $request->input('confirm',false);  //check if confirmed to delete or not
+        $res = $this->isBloodGroupUsed($id);
+        if($res && $confirm=="false"){           
+            return response()->json(['message'=>'DocumentType already used in documents table','status'=>'already_used']);
+        }
         $res = BloodGroup::where('BloodGroupID',$id)->delete();
         if(!$res){
             $response = response()->json(['message'=>'Delete failed','errors'=>[]],500);
@@ -120,5 +125,19 @@ class BloodGroupController extends Controller
         $response = response()->json(['message'=>'Deleted'],200);
 
         return $response;
+    }
+
+     /**
+     * Check if blood group is used with existing data
+     * @param int $id [BloodGroupID]
+     * @return boolean
+     */
+    public function isBloodGroupUsed($id)
+    {
+        $exist = BloodGroup::where('BloodGroupID', $id)->first();
+        if (!$exist) {
+            return false; //not associated
+        }
+        return true;
     }
 }

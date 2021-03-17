@@ -39,29 +39,7 @@ $(function () {
             //         'X-CSRF-TOKEN': csrfToken
             //     }
             // });
-            $.ajax({
-                url: url,
-               // type: 'DELETE',
-                method: 'post',
-                data: {
-                    _token: csrfToken,
-                    _method: 'DELETE'
-                },
-                dataType: "JSON",
-                success: function success(result) {
-                    console.log('success');
-                    toastMsgBeforeRedirect('Deleted').then(function (res) {
-                        location.reload();
-                    });
-                    // toastr.success('deleted');              
-
-                },
-                error: function error(msg) {
-                    console.log('something went wrong');
-                    toastr.error('unable to delete');
-                    // location.reload();
-                }
-            });
+            deleteBloodGroup(url,false);            
         });
 
     });
@@ -125,6 +103,45 @@ $(function () {
         //         toastr.error('Failed');               
         //     }
         // });
+    }
+
+    //delete bloodgroup
+    function deleteBloodGroup(url,confirmExistDelete){
+        $.ajax({
+            url: url,
+           // type: 'DELETE',
+            method: 'post',
+            data: {
+                _token: csrfToken,
+                _method: 'DELETE',
+                confirm: confirmExistDelete
+            },
+            dataType: "JSON",
+            success: function success(result) {
+                console.log('success');
+                if (result.status == 'already_used') {                   
+                    var con = confirm('Blood group already used by existing user, Are you confirm?');
+                    if (!con) {
+                        toastr.warning('Already used');
+                        return;
+                    }else{    
+                        console.log('resending');
+                        deleteBloodGroup(url,true); //resend delete request with confirm true                 
+                    }
+                } else {
+                    toastMsgBeforeRedirect('Deleted').then(function (res) {
+                         location.reload();
+                    });
+                }
+                // toastr.success('deleted');             
+
+            },
+            error: function error(msg) {
+                console.log('something went wrong');
+                toastr.error('unable to delete');
+                // location.reload();
+            }
+        });
     }
 
 });
