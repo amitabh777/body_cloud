@@ -4,7 +4,7 @@ namespace Modules\User\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DocumentTypeUpdateRequest extends FormRequest
+class LabTestUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,8 @@ class DocumentTypeUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'DocumentTypeName' => 'required|unique:document_types,DocumentTypeName,'.$this->DocumentTypeID.',DocumentTypeID',
-            'DocumentTypeDesc' => 'required',
+            'LabTestName' => 'required|unique:lab_tests,LabTestName,'.$this->LabTestID.',LabTestID',
+            'LabTestDesc'=>'required',
             'Status'=>'in:Active,Inactive',
         ];
     }

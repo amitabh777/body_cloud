@@ -455,7 +455,7 @@ class RegistrationController extends Controller
         $userRules = [
             'PatientName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'PatientGender' => 'required',
-            'PatientDOB' => 'required',
+            'PatientDOB' => 'required|date_format:Y-m-d',
             'PatientHeight' => 'required|numeric|min:100|max:270',
             'PatientWeight' => 'required',
             'EmergencyContactNo' => 'required|min:11|max:11',
@@ -628,7 +628,7 @@ class RegistrationController extends Controller
             $uploadedFiles = [];
             foreach ($files as $file) {
                 $fileName = $file->hashName();
-                $path = $file->storeAs('documents/registered_papers', $fileName,'public');
+                $path = $file->storeAs('documents/'.$doctype, $fileName,'public');
                 if ($path) {
                     $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $path, 'CreatedAt' => $now->toDateTimeString());
                 }

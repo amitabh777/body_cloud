@@ -14,7 +14,7 @@ class BloodGroupUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'BloodGroupName' => 'required',
+            'BloodGroupName' => 'required|unique:blood_groups,BloodGroupName,'.$this->BloodGroupID.',BloodGroupID',
             'BloodGroupDesc'=>'required',
             'Status'=>'in:Active,Inactive',
         ];

@@ -104,6 +104,24 @@ $route = Route::currentRouteName();
                 <p>Roles</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{route('admin.master_data.insurance_categories.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Insurance Category</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.master_data.lab_tests.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Lab Test</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.master_data.lab_service_categories.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Lab Service Category</p>
+              </a>
+            </li>
                     
           </ul>
         </li>

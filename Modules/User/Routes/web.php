@@ -64,6 +64,7 @@ Route::prefix('admin/manage-users')->namespace('Admin')->group(function () {
 });
 //manage master data
 Route::prefix('admin/master-data')->namespace('Admin')->group(function () {
+    //Bloodgroups
     Route::get('bloodgroups', 'BloodGroupController@index')->name('admin.master_data.bloodgroups.index');
     Route::get('bloodgroups/{BloodGroupID}/edit', 'BloodGroupController@edit')->name('admin.master_data.bloodgroups.edit');
     Route::get('bloodgroups/create', 'BloodGroupController@create')->name('admin.master_data.bloodgroups.create');
@@ -72,6 +73,7 @@ Route::prefix('admin/master-data')->namespace('Admin')->group(function () {
     Route::post('bloodgroups', 'BloodGroupController@store')->name('admin.master_data.bloodgroup.store');
     Route::delete('bloodgroups/{BloodGroupID}', 'BloodGroupController@destroy')->name('admin.master_data.bloodgroups.destroy');
 
+    //Document Type
     Route::get('document-types', 'DocumentTypeController@index')->name('admin.master_data.document_types.index');
     Route::get('document-types/{DocumentTypeID}/edit', 'DocumentTypeController@edit')->name('admin.master_data.document_type.edit');
     Route::get('document-types/create', 'DocumentTypeController@create')->name('admin.master_data.document_types.create');
@@ -80,6 +82,7 @@ Route::prefix('admin/master-data')->namespace('Admin')->group(function () {
     Route::post('document-types', 'DocumentTypeController@store')->name('admin.master_data.document_type.store');
     Route::delete('document-types/{DocumentTypeID}', 'DocumentTypeController@destroy')->name('admin.master_data.document_type.destroy');
 
+    //Medical sectors
     Route::get('medical-sectors', 'MedicalSectorController@index')->name('admin.master_data.medical_sectors.index');
     Route::get('medical-sectors/{MedicalSectorID}/edit', 'MedicalSectorController@edit')->name('admin.master_data.medical_sector.edit');
     Route::get('medical-sectors/create', 'MedicalSectorController@create')->name('admin.master_data.medical_sector.create');
@@ -97,6 +100,33 @@ Route::prefix('admin/master-data')->namespace('Admin')->group(function () {
     Route::post('roles', 'RoleController@store')->name('admin.master_data.role.store');
      Route::delete('roles/{RoleID}', 'RoleController@destroy')->name('admin.master_data.role.destroy');
     
+    //Insurance category
+    Route::get('insurance-categories', 'InsuranceCategoryController@index')->name('admin.master_data.insurance_categories.index');
+    Route::get('insurance-categories/{InsuranceCategoryID}/edit', 'InsuranceCategoryController@edit')->name('admin.master_data.insurance_category.edit');
+    Route::get('insurance-categories/create', 'InsuranceCategoryController@create')->name('admin.master_data.insurance_category.create');
+    Route::patch('insurance-categories/{InsuranceCategoryID}/status', 'InsuranceCategoryController@updateStatus')->name('admin.master_data.insurance_category.status.update');
+    Route::patch('insurance-categories/{InsuranceCategoryID}', 'InsuranceCategoryController@update')->name('admin.master_data.insurance_category.update');
+    Route::post('insurance-categories', 'InsuranceCategoryController@store')->name('admin.master_data.insurance_category.store');
+    Route::delete('insurance-categories/{InsuranceCategoryID}', 'InsuranceCategoryController@destroy')->name('admin.master_data.insurance_category.destroy');
+    
+    //Lab Test
+    Route::get('lab-tests', 'LabTestController@index')->name('admin.master_data.lab_tests.index');
+    Route::get('lab-tests/{LabTestID}/edit', 'LabTestController@edit')->name('admin.master_data.lab_test.edit');
+    Route::get('lab-tests/create', 'LabTestController@create')->name('admin.master_data.lab_test.create');
+    Route::patch('lab-tests/{LabTestID}/status', 'LabTestController@updateStatus')->name('admin.master_data.lab_test.status.update');
+    Route::patch('lab-tests/{LabTestID}', 'LabTestController@update')->name('admin.master_data.lab_test.update');
+    Route::post('lab-tests', 'LabTestController@store')->name('admin.master_data.lab_test.store');
+    Route::delete('lab-tests/{LabTestID}', 'LabTestController@destroy')->name('admin.master_data.lab_test.destroy');
+    
+    //Lab Service category
+    Route::get('lab-service-categories', 'LabServiceCategoryController@index')->name('admin.master_data.lab_service_categories.index');
+    Route::get('lab-service-categories/{categoryId}/edit', 'LabServiceCategoryController@edit')->name('admin.master_data.lab_service_category.edit');
+    Route::get('lab-service-categories/create', 'LabServiceCategoryController@create')->name('admin.master_data.lab_service_category.create');
+    Route::patch('lab-service-categories/{categoryId}/status', 'LabServiceCategoryController@updateStatus')->name('admin.master_data.lab_service_category.status.update');
+    Route::patch('lab-service-categories/{categoryId}', 'LabServiceCategoryController@update')->name('admin.master_data.lab_service_category.update');
+    Route::post('lab-service-categories', 'LabServiceCategoryController@store')->name('admin.master_data.lab_service_category.store');
+    Route::delete('lab-service-categories/{categoryId}', 'LabServiceCategoryController@destroy')->name('admin.master_data.lab_service_category.destroy');
+
 });
 
 

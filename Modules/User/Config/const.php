@@ -1,7 +1,6 @@
 <?php
 return [
-    'roles' => [
-        
+    'roles' => [        
         'patient' => 'Patient',
         'hospital' => 'Hospital',
         'insurance_company' => 'InsuranceCompany',
