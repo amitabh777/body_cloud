@@ -26,7 +26,8 @@ class LabServiceCategoryController extends Controller
      */
     public function create()
     {
-        return view('user::create');
+        //todo
+        return view('user::admin.master_data.create_lab_service_category');
     }
 
     /**
