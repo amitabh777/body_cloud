@@ -1,7 +1,7 @@
 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 $(function () {
 
-    $('#lab_service_category_datatable').DataTable({
+    $('#lab_service_categories_datatable').DataTable({
         "paging": true,
         "lengthChange": false,
         "searching": true,

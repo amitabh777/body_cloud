@@ -69,7 +69,13 @@ class UserController extends Controller
         if($user->isDoctor()){      
           //get hospital name for hospital user profile
             $response['HospitalName'] =isset($profile->hospital->HospitalName)?$profile->hospital->HospitalName:'' ;
-        }        
+        }
+        if($user->isPatient()){    
+             
+            //get blood group name for patient user profile
+              $response['BloodGroupName'] =isset($profile->bloodGroup->BloodGroupName)?$profile->bloodGroup->BloodGroupName:'' ;
+          }  
+
         return response()->json(['data'=>$response,'message' => 'Success', 'status' => 200]);
     }
 
