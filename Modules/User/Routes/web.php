@@ -90,18 +90,13 @@ Route::prefix('admin/master-data')->namespace('Admin')->group(function () {
     
     //Roles
     Route::get('roles', 'RoleController@index')->name('admin.master_data.roles.index');
-    // Route::get('medical-sectors/{MedicalSectorID}/edit', 'MedicalSectorController@edit')->name('admin.master_data.medical_sector.edit');
-    // Route::get('medical-sectors/create', 'MedicalSectorController@create')->name('admin.master_data.medical_sector.create');
-    // Route::patch('medical-sectors/{MedicalSectorID}/status', 'MedicalSectorController@updateStatus')->name('admin.master_data.medical_sector.status.update');
-    // Route::patch('medical-sectors/{MedicalSectorID}', 'MedicalSectorController@update')->name('admin.master_data.medical_sector.update');
-    // Route::post('medical-sectors', 'MedicalSectorController@store')->name('admin.master_data.medical_sector.store');
-    // Route::delete('medical-sectors/{MedicalSectorID}', 'MedicalSectorController@destroy')->name('admin.master_data.medical_sector.destroy');
+    Route::get('roles/{RoleID}/edit', 'RoleController@edit')->name('admin.master_data.role.edit');
+    Route::get('roles/create', 'RoleController@create')->name('admin.master_data.role.create');
+    // Route::patch('roles/{RoleID}/status', 'RoleController@updateStatus')->name('admin.master_data.medical_sector.status.update');
+    Route::patch('roles/{RoleID}', 'RoleController@update')->name('admin.master_data.role.update');
+    Route::post('roles', 'RoleController@store')->name('admin.master_data.role.store');
+     Route::delete('roles/{RoleID}', 'RoleController@destroy')->name('admin.master_data.role.destroy');
     
-
-
-
-
-  //  Route::resource('roles', 'RoleController')->prefix('admin/master-data')->middleware(['auth']);
 });
 
 

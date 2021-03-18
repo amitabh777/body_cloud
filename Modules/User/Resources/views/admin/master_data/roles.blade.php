@@ -1,6 +1,6 @@
 @extends('admin.layouts.dashboard-datatables')
 
-@section('page_title') Roles <a href="{{route('admin.master_data.roles.create')}}" class="btn btn-primary">Add</a> @endsection
+@section('page_title') Roles <a href="{{route('admin.master_data.role.create')}}" class="btn btn-primary">Add</a> @endsection
 @section('content')
 
 <div class="container-fluid">
@@ -16,7 +16,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <table id="bloodgroups_datatable" class="table table-bordered table-striped">
+            <table id="roles_datatable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th scope="header">Role Name</th>
@@ -26,19 +26,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($bloodgroups as $bloodgroup)
+                    @foreach($roles as $role)
                     <tr>
-                        <td>{{$bloodgroup->BloodGroupName}}</td>
-                        <td>{{$bloodgroup->BloodGroupDesc}}</td>
+                        <td>{{$role->RoleName}}</td>
+                        <td>{{$role->RoleSlug}}</td>
                         <td>
-                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input bloodgroup_status_checkbox" id="bloodgroup_status_{{$bloodgroup->BloodGroupID}}" @if($bloodgroup->Status=='Active') checked @endif data-bloodgroup_id="{{$bloodgroup->BloodGroupID}}" data-status_update_url="{{route('admin.master_data.bloodgroup.status.update',$bloodgroup->BloodGroupID)}}">
-                                <label class="custom-control-label" for="bloodgroup_status_{{$bloodgroup->BloodGroupID}}"></label>
-                            </div>
+                           {{$role->parentRole?$role->parentRole->RoleName:''}}
                         </td>
                         <td>
-                            <a href="{{route('admin.master_data.bloodgroups.edit',$bloodgroup->BloodGroupID)}}" class="btn btn-primary btn-sm">Edit</a>
-                            <span class="btn btn-danger btn-sm bloodgroup-delete" data-bloodgroupID="{{$bloodgroup->BloodGroupID}}" data-url="{{route('admin.master_data.bloodgroups.destroy',['BloodGroupID'=>$bloodgroup->BloodGroupID])}}">Delete</span>
+                            <a href="{{route('admin.master_data.role.edit',$role->RoleID)}}" class="btn btn-primary btn-sm">Edit</a>
+                            <span class="btn btn-danger btn-sm role-delete" data-roleID="{{$role->RoleID}}" data-url="{{route('admin.master_data.role.destroy',['RoleID'=>$role->RoleID])}}">Delete</span>
 
                         </td>
                     </tr>
@@ -70,7 +67,7 @@
 @endsection
 
 @section('script')
-<script src="{{asset('assets/admin/js/pages_js/bloodgroup.js')}}"></script>
+<script src="{{asset('assets/admin/js/pages_js/role.js')}}"></script>
 
 
 @endsection

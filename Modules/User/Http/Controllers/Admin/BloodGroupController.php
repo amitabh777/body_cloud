@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Modules\User\Entities\BloodGroup;
+use Modules\User\Entities\Patient;
 use Modules\User\Http\Requests\Admin\BloodGroupCreateRequest;
 use Modules\User\Http\Requests\Admin\BloodGroupUpdateRequest;
 
@@ -82,7 +83,7 @@ class BloodGroupController extends Controller
         if(!$res){
             return redirect()->back()->with(['status'=>'failed','message'=>'bloodgroup not updated']);
         }
-        return redirect()->back()->with(['status'=>'success','message'=>'bloodgroup updated']);
+        return redirect()->route('admin.master_data.bloodgroups.index')->with(['status'=>'success','message'=>'bloodgroup updated']);
     } 
     
     /**
@@ -116,7 +117,7 @@ class BloodGroupController extends Controller
         $confirm = $request->input('confirm',false);  //check if confirmed to delete or not
         $res = $this->isBloodGroupUsed($id);
         if($res && $confirm=="false"){           
-            return response()->json(['message'=>'DocumentType already used in documents table','status'=>'already_used']);
+            return response()->json(['message'=>'Bloodgroup already used by patient','status'=>'already_used']);
         }
         $res = BloodGroup::where('BloodGroupID',$id)->delete();
         if(!$res){
@@ -134,7 +135,7 @@ class BloodGroupController extends Controller
      */
     public function isBloodGroupUsed($id)
     {
-        $exist = BloodGroup::where('BloodGroupID', $id)->first();
+        $exist = Patient::where('BloodGroupID', $id)->first();
         if (!$exist) {
             return false; //not associated
         }

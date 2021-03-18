@@ -35,6 +35,10 @@ class Role extends Model
     }    
     public function scopeLaboratory($query){
         return $query->where('RoleSlug', config('user.const.role_slugs.lab'));
-    }    
+    }  
+    
+    public function parentRole(){
+        return $this->hasOne(Role::class,'RoleID','ParentRoleID');
+    }
 
 }

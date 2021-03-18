@@ -72,7 +72,7 @@ $route = Route::currentRouteName();
         </li>
         <li class="nav-item menu-open2">
           <a href="#" class="nav-link active1">
-            <i class="nav-icon fas fa-copy"></i>
+          <i class="far fa-circle nav-icon"></i>
             <p>
               Master Data
               <i class="fas fa-angle-left right"></i>
@@ -98,12 +98,18 @@ $route = Route::currentRouteName();
                 <p>Medical Sectors</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{route('admin.master_data.roles.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>Roles</p>
+              </a>
+            </li>
                     
           </ul>
         </li>
         <li class="nav-item menu-open2">
           <a href="#" class="nav-link active1">
-            <i class="nav-icon fas fa-copy"></i>
+          <i class="far fa-circle nav-icon"></i>
             <p>
               Manage Profiles
               <i class="fas fa-angle-left right"></i>

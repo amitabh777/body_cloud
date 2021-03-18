@@ -39,7 +39,7 @@ $(function () {
             //         'X-CSRF-TOKEN': csrfToken
             //     }
             // });
-            deleteBloodGroup(url,false);            
+            deleteBloodGroup(url, false);
         });
 
     });
@@ -62,7 +62,7 @@ $(function () {
         var data = {
             Status: status,
             _token: csrfToken,
-             _method:'PATCH'
+            _method: 'PATCH'
         };
         $.ajax({
             url: url,
@@ -82,34 +82,14 @@ $(function () {
                 toastr.error('Status failed');
             }
         });
-        // $.ajax({
-        //     url: url,
-        //     //  type: 'post',
-        //     method: 'post',
-        //     data: data,
-        //     dataType: 'JSON',
-        //     //  contentType: false,
-        //     // cache: false,
-        //     // processData: false,
-        //     success: function (data) {
-        //         console.log('success');
-        //         console.log(data);
-        //         toastr.success('Updated');
-        //         // location.href = '/seller/products';
-        //     },
-        //     error: function (data) {
-        //         console.log('error: ');
-        //         console.log(data);
-        //         toastr.error('Failed');               
-        //     }
-        // });
+
     }
 
     //delete bloodgroup
-    function deleteBloodGroup(url,confirmExistDelete){
+    function deleteBloodGroup(url, confirmExistDelete) {
         $.ajax({
             url: url,
-           // type: 'DELETE',
+            // type: 'DELETE',
             method: 'post',
             data: {
                 _token: csrfToken,
@@ -119,18 +99,18 @@ $(function () {
             dataType: "JSON",
             success: function success(result) {
                 console.log('success');
-                if (result.status == 'already_used') {                   
+                if (result.status == 'already_used') {
                     var con = confirm('Blood group already used by existing user, Are you confirm?');
                     if (!con) {
                         toastr.warning('Already used');
                         return;
-                    }else{    
+                    } else {
                         console.log('resending');
-                        deleteBloodGroup(url,true); //resend delete request with confirm true                 
+                        deleteBloodGroup(url, true); //resend delete request with confirm true                 
                     }
                 } else {
                     toastMsgBeforeRedirect('Deleted').then(function (res) {
-                         location.reload();
+                        location.reload();
                     });
                 }
                 // toastr.success('deleted');             
