@@ -499,9 +499,14 @@ class RegistrationController extends Controller
     //validate Ambulance profile data
     public function validateAmbulanceProfile($request)
     {
+        $hospitalID= $request->input('HospitalID',null);       
+        if($hospitalID == null){
+            $request->request->remove('HospitalID');
+        }  
         $userRules = [
             'ContactName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'AmbulanceNumber' => 'required',
+            'HospitalID'=> 'exists:hospitals,HospitalID'
         ];
         return Validator::make($request->all(), $userRules);
     }
@@ -623,7 +628,7 @@ class RegistrationController extends Controller
             $uploadedFiles = [];
             foreach ($files as $file) {
                 $fileName = $file->hashName();
-                $path = $file->storeAs('documents/registered_papers', $fileName);
+                $path = $file->storeAs('documents/registered_papers', $fileName,'public');
                 if ($path) {
                     $uploadedFiles[] =  array('DocumentTypeID' => $docType->DocumentTypeID, $profileKey => $profileId, 'DocumentFile' => $path, 'CreatedAt' => $now->toDateTimeString());
                 }
