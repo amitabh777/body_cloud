@@ -51,8 +51,9 @@ class LoginController extends Controller
         $response = $user->toArray();
         // $role = $user->userRole->role; //User Role
         $profile = $user->profile($user->role->RoleSlug); // ($role->RoleSlug); //User profile
-        // $user->api_token = $user->generateToken(); //generate new token
-        // $user->save();
+        $user->api_token = $user->generateToken(); //generate new token
+        $user->save();
+        $response['api_token'] = $user->api_token; //return newly generated api_token
         //merge in user response
         //  $user['UserType'] = $user->role->RoleSlug;
         //  $user['Profile'] = $profile;
