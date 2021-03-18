@@ -479,7 +479,8 @@ class RegistrationController extends Controller
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'DoctorGender' => 'required|in:Male,Female',
             'VisitingHours' => 'required',
-            'HospitalID'=> 'exists:hospitals,HospitalID'
+            'HospitalID'=> 'exists:hospitals,HospitalID',
+            'DoctorDOB'=>'date_format:Y-m-d'
            // 'DoctorWebsite' => 'url',
         ];
         $message = [];
