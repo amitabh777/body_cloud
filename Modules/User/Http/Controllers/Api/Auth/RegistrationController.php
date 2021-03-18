@@ -471,6 +471,10 @@ class RegistrationController extends Controller
 
     public function validateDoctorProfile($request)
     {
+        $hospitalID= $request->input('HospitalID',null);       
+        if($hospitalID == null){
+            $request->request->remove('HospitalID');
+        }  
         $userRules = [
             'DoctorName' => 'required|regex:/^[a-zA-Z ]+$/u',
             'DoctorGender' => 'required|in:Male,Female',
