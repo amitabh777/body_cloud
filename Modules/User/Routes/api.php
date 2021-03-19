@@ -45,7 +45,7 @@ Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check']
     
     Route::post('image/upload', 'ProfileController@uploadProfileImage');
     Route::post('documents/upload', 'DocumentController@store');
-    Route::post('documents/delete/{document_id}', 'DocumentController@destroy');
+    Route::post('documents/{document_id}/delete', 'DocumentController@destroy');
     
 });
 
