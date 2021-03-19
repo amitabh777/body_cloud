@@ -77,7 +77,7 @@ class EloquentDocumentRepository implements DocumentRepository
         //multiple uploads
         if ($files) {
             $docType = DocumentType::where('DocumentTypeName', $documentType)->first();
-            $profileKey = CustomHelper::getProfileIdKey($role);
+            $profileKey = CustomHelper::getProfileIdKey($role);           
             $uploadedFiles = [];
             foreach ($files as $file) {
                 $fileName = $file->hashName();

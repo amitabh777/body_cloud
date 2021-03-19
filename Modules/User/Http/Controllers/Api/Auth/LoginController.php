@@ -4,11 +4,13 @@ namespace Modules\User\Http\Controllers\Api\Auth;
 
 use App\Helpers\CustomHelper;
 use App\User;
+use Exception;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -46,20 +48,32 @@ class LoginController extends Controller
             Auth::logout();
             return response()->json(['data' => ['is_active' => 'Inactive'], 'message' => 'Phone number not verified.', 'status' => 400]);
         }
-        $response = [];
-        $user = $request->user(); //User::find(Auth::user()->UserID); //get user   
-        $response = $user->toArray();
-        // $role = $user->userRole->role; //User Role
-        $profile = $user->profile($user->role->RoleSlug); // ($role->RoleSlug); //User profile
-        $user->api_token = $user->generateToken(); //generate new token
-        $user->save();
-        $response['api_token'] = $user->api_token; //return newly generated api_token
-        //merge in user response
-        //  $user['UserType'] = $user->role->RoleSlug;
-        //  $user['Profile'] = $profile;
-        $response['UserType'] = $user->role->RoleSlug;
-        $response['Profile'] = $profile;
-        return response()->json(['data' => $response, 'message' => 'Success Login', 'status' => 200]);
+        $responseData = [];
+        $loginSuccess = 0;
+        $responseJson = '';
+        try {
+            $user = $request->user(); //User::find(Auth::user()->UserID); //get user   
+            $responseData = $user->toArray();
+         
+            if ($user->userRole == null) {
+                throw new Exception("User role does not exist", 1);
+            }
+            $role = $user->userRole->role; //$user->userRole->role; //User Role
+            $profile = $user->profile($role->RoleSlug);  //User profile
+            $user->api_token = $user->generateToken(); //generate new token
+            $user->save();
+            $responseData['api_token'] = $user->api_token; //return newly generated api_token
+            $responseData['UserType'] = $user->role->RoleSlug;
+            $responseData['Profile'] = $profile;
+            $loginSuccess = 1;
+        } catch (Exception $e) {
+            $responseJson = response()->json(['data' => [], 'message' => 'Login failed', 'status' => 400, 'error_log' => $e->getMessage()]);
+            Log::error('Api Login Error: ' . $e->getMessage());
+        }
+        if ($loginSuccess) {
+            $responseJson =  response()->json(['data' => $responseData, 'message' => 'Success Login', 'status' => 200]);
+        }
+        return $responseJson;
     }
     /**
      * validate Login Credentials

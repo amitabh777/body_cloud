@@ -27,7 +27,7 @@ $(function () {
     });
 
     //delete
-    $('.lab_service_category').on('click', function () {
+    $('.lab_service_category-delete').on('click', function () {
         var con = confirm('Are you confirm?');
         if (!con) {
             return;

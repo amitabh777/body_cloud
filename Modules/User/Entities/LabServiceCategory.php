@@ -12,10 +12,12 @@ class LabServiceCategory extends Model
     const UPDATED_AT = 'UpdatedAt';
 
     protected $table = 'lab_service_categories';
-    protected $fillable = [];
-    
-    // protected static function newFactory()
-    // {
-    //     return \Modules\User\Database\factories\LabServiceCategoryFactory::new();
-    // }
+    protected $fillable = ['LabServiceCategoryName','LabServiceCategoryDesc','Status'];
+
+    protected $primaryKey = 'LabServiceCategoryID';    
+
+    public function scopeActive($query){
+       return $query->where('Status','Active');
+    }
+
 }

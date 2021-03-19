@@ -42,8 +42,10 @@ Route::namespace('Api')->middleware(['auth:api'])->group(function(){
 //Profile endpoints with authentication
 Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check'])->group(function(){   
     Route::post('update', 'ProfileController@update');
+    
     Route::post('image/upload', 'ProfileController@uploadProfileImage');
     Route::post('documents/upload', 'DocumentController@store');
+    Route::post('documents/delete/{document_id}', 'DocumentController@destroy');
     
 });
 

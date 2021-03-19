@@ -1,6 +1,6 @@
 @extends('admin.layouts.dashboard-datatables')
 
-@section('page_title') Create Lab Service Category  @endsection
+@section('page_title') Edit Lab Service Category  @endsection
 @section('content')
 
 <div class="container-fluid">
@@ -10,25 +10,26 @@
             <!-- general form elements -->
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Blood Group</h3>
+                    <h3 class="card-title">Lab Service Category</h3>
                 </div>
                 <!-- form start -->
-                <form method="post" action="{{route('admin.master_data.bloodgroup.store')}}">
+                <form method="post" action="{{route('admin.master_data.lab_service_category.update',$labServiceCategory->LabServiceCategoryID)}}">
                     @csrf
+                    @method('PATCH')
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="bloodgroup_name">BloodGroup Name</label>
-                            <input type="text" class="form-control" id="bloodgroup_name" name="BloodGroupName" value="{{old('BloodGroupName')}}" required>
-                            @error('BloodGroupName')
+                            <label for="lab_service_category_name">Lab Service Category Name</label>
+                            <input type="text" class="form-control" id="lab_service_category_name" name="LabServiceCategoryName" value="{{old('LabServiceCategoryName',$labServiceCategory->LabServiceCategoryName)}}" required>
+                            @error('LabServiceCategoryName')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="bloodgroup_desc">Description</label>
-                            <textarea  name="BloodGroupDesc" class="form-control" id="bloodgroup_desc" required></textarea>
-                            @error('BloodGroupDesc')
+                            <label for="lab_service_category_desc">Description</label>
+                            <textarea name="LabServiceCategoryDesc" class="form-control" id="lab_service_category_desc" required>{{$labServiceCategory->LabServiceCategoryDesc}}</textarea>
+                            @error('LabServiceCategoryDesc')
                             <span class="text-danger" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -37,7 +38,7 @@
                         <div class="form-group">
                             <label for="status">Status</label>
                             <div class="custom-control custom-switch custom-control custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input bloodgroup_status_checkbox" id="Status" checked name="Status" value="Active" >
+                                <input type="checkbox" class="custom-control-input lab_service_category_status_checkbox" id="Status" name="Status" value="Active"  @if($labServiceCategory->Status=='Active') checked @endif>
                                 <label class="custom-control-label" for="Status">Active/Inactive</label>
                             </div>
                             @error('Status')

@@ -40,7 +40,7 @@
                             <!-- edit -->
                             <a href="{{route('admin.master_data.lab_service_category.edit',$labServiceCategory->LabServiceCategoryID)}}" class="btn btn-primary btn-sm">Edit</a>
                             <!-- delete -->
-                            <span class="btn btn-danger btn-sm lab_service_category-delete" data-lab_service_category_id="{{$labServiceCategory->LabServiceCategoryID}}" data-url="{{route('admin.master_data.lab_service_category.destroy',['LabTestID'=>$labServiceCategory->LabServiceCategoryID])}}">Delete</span>
+                            <span class="btn btn-danger btn-sm lab_service_category-delete" data-lab_service_category_id="{{$labServiceCategory->LabServiceCategoryID}}" data-url="{{route('admin.master_data.lab_service_category.destroy',['categoryId'=>$labServiceCategory->LabServiceCategoryID])}}">Delete</span>
                         </td>
                     </tr>
                     @endforeach
