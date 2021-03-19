@@ -28,7 +28,6 @@ return [
     ],
 
     'document_types'=>[
-        'image'=>'image',
         'registered_paper'=>'registered_paper',
         'driving_license'=>'driving_license',
     ],

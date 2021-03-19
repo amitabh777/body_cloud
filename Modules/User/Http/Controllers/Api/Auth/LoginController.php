@@ -53,18 +53,17 @@ class LoginController extends Controller
         $responseJson = '';
         try {
             $user = $request->user(); //User::find(Auth::user()->UserID); //get user   
-            $responseData = $user->toArray();
-         
+            $responseData = $user->select(['UserID','UniqueID','Email','Phone','Status','api_token'])->first();       
             if ($user->userRole == null) {
                 throw new Exception("User role does not exist", 1);
             }
             $role = $user->userRole->role; //$user->userRole->role; //User Role
-            $profile = $user->profile($role->RoleSlug);  //User profile
+            $profile = $user->customeProfileForLogin($role->RoleSlug);  //User profile          
             $user->api_token = $user->generateToken(); //generate new token
             $user->save();
             $responseData['api_token'] = $user->api_token; //return newly generated api_token
             $responseData['UserType'] = $user->role->RoleSlug;
-            $responseData['Profile'] = $profile;
+            $responseData['Profile'] = $profile;//->select(['PatientName','EmergencyContactNo','PatientProfileImage'])->first();
             $loginSuccess = 1;
         } catch (Exception $e) {
             $responseJson = response()->json(['data' => [], 'message' => 'Login failed', 'status' => 400, 'error_log' => $e->getMessage()]);
