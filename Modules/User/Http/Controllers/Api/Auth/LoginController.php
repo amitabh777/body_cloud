@@ -52,7 +52,7 @@ class LoginController extends Controller
         $loginSuccess = 0;
         $responseJson = '';
         try {
-            $user =$request->user('api'); //User::find(Auth::user()->UserID); //get user   
+            $user =$request->user(); //User::find(Auth::user()->UserID); //get user   
             $responseData = $user->toArray(); //->select(['UserID','UniqueID','Email','Phone','Status','api_token'])->first();       
             if ($user->userRole == null) {
                 throw new Exception("User role does not exist", 1);
