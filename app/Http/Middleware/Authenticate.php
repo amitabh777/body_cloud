@@ -43,7 +43,7 @@ class Authenticate extends Middleware
     public function handle($request, Closure $next, ...$guards)
     {
         //handle api request
-        if (!empty($guards) && $guards[0] == 'api') {
+        if (!empty($guards) && $guards[0] == 'api') {          
             return $this->handleApiGuard($request, $next);
         }
         //handle web request/guard

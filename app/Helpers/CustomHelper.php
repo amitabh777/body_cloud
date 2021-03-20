@@ -86,7 +86,7 @@ class CustomHelper
             $model = Ambulance::class;
         } elseif ($roleSlug == config('user.const.role_slugs.lab')) {
             $model = Laboratory::class;
-        } elseif ($roleSlug == config('user.const.role_slugs.insurance_companies')) {
+        } elseif ($roleSlug == config('user.const.role_slugs.insurance_company')) {
             $model = InsuranceCompany::class;
         }
         return $model;
@@ -97,7 +97,7 @@ class CustomHelper
      * @param string $roleSlug
      * @return void
      */
-    public static function getProfileImageKey($roleSlug){
+    public static function getProfileImageKey($roleSlug){       
         $profileImageKey=null;
         if ($roleSlug == config('user.const.role_slugs.patient')) {
             $profileImageKey = 'PatientProfileImage';
@@ -109,9 +109,9 @@ class CustomHelper
             $profileImageKey = 'AmbulanceProfileImage';
         } elseif ($roleSlug == config('user.const.role_slugs.lab')) {
             $profileImageKey = 'LaboratoryProfileImage';
-        } elseif ($roleSlug == config('user.const.role_slugs.insurance_companies')) {
+        } elseif ($roleSlug == config('user.const.role_slugs.insurance_company')) {          
             $profileImageKey = 'InsuranceCompanyProfileImage';
-        }
+        }       
         return $profileImageKey;
     }   
     

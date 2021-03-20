@@ -84,17 +84,17 @@ class User extends Authenticatable
     {
         $relation = '';
         if ($type == config('user.const.role_slugs.patient')) {
-            $relation = $this->hasOne(Patient::class, 'UserID', 'UserID')->select(['PatientName As Name','EmergencyContactNo','PatientProfileImage As ProfileImage'])->first();
+            $relation = $this->hasOne(Patient::class, 'UserID', 'UserID')->select(['UserID','PatientName As Name','EmergencyContactNo','PatientProfileImage As ProfileImage'])->first();
         } elseif ($type ==  config('user.const.role_slugs.doctor')) {
-            $relation = $this->hasOne(Doctor::class, 'UserID', 'UserID')->select(['DoctorName As Name','DoctorProfileImage As ProfileImage'])->first();
+            $relation = $this->hasOne(Doctor::class, 'UserID', 'UserID')->select(['UserID','DoctorName As Name','DoctorProfileImage As ProfileImage'])->first();
         } elseif ($type ==  config('user.const.role_slugs.hospital')) {
-            $relation =  $this->hasOne(Hospital::class, 'UserID', 'UserID')->select(['HospitalName As Name','HospitalContactName','HospitalProfileImage As ProfileImage'])->first();
+            $relation =  $this->hasOne(Hospital::class, 'UserID', 'UserID')->select(['UserID','HospitalName As Name','HospitalContactName','HospitalProfileImage As ProfileImage'])->first();
         } elseif ($type == config('user.const.role_slugs.ambulance')) {
-            $relation = $this->hasOne(Ambulance::class, 'UserID', 'UserID')->select(['AmbulanceContactName As Name','AmbulanceProfileImage As ProfileImage'])->first();
+            $relation = $this->hasOne(Ambulance::class, 'UserID', 'UserID')->select(['UserID','AmbulanceContactName As Name','AmbulanceProfileImage As ProfileImage'])->first();
         } elseif ($type == config('user.const.role_slugs.lab')) {
-            $relation = $this->hasOne(Laboratory::class, 'UserID', 'UserID')->select(['LaboratoryCompanyName As Name','LaboratoryProfileImage As ProfileImage'])->first();
+            $relation = $this->hasOne(Laboratory::class, 'UserID', 'UserID')->select(['UserID','LaboratoryCompanyName As Name','LaboratoryProfileImage As ProfileImage'])->first();
         } elseif ($type == config('user.const.role_slugs.insurance_company')) {
-            $relation = $this->hasOne(InsuranceCompany::class, 'UserID', 'UserID')->select(['InsuranceCompanyName As Name','InsuranceCompanyProfileImage As ProfileImage'])->first();
+            $relation = $this->hasOne(InsuranceCompany::class, 'UserID', 'UserID')->select(['UserID','InsuranceCompanyName As Name','InsuranceCompanyProfileImage As ProfileImage'])->first();
         }
         return $relation;
     }

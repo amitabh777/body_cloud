@@ -39,7 +39,7 @@ class LoginController extends Controller
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
-        }
+        }       
         $auth = Auth::attempt(['Phone' => $data['Phone'], 'password' => $data['Password']]);
         if (!$auth) {
             return response()->json(['message' => 'Invalid Credentials', 'status' => 400]);
@@ -57,7 +57,7 @@ class LoginController extends Controller
             if ($user->userRole == null) {
                 throw new Exception("User role does not exist", 1);
             }
-            $role = $user->userRole->role; //$user->userRole->role; //User Role
+            $role = $user->userRole->role; //$user->userRole->role; //User Role         
             $profile = $user->customeProfileForLogin($role->RoleSlug);  //User profile          
             $user->api_token = $user->generateToken(); //generate new token
             $user->save();
