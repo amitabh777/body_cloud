@@ -36,7 +36,6 @@
                         <td>
                             <a href="{{route('admin.master_data.role.edit',$role->RoleID)}}" class="btn btn-primary btn-sm">Edit</a>
                             <span class="btn btn-danger btn-sm role-delete" data-roleID="{{$role->RoleID}}" data-url="{{route('admin.master_data.role.destroy',['RoleID'=>$role->RoleID])}}">Delete</span>
-
                         </td>
                     </tr>
                     @endforeach

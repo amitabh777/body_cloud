@@ -16,13 +16,21 @@ class RoleTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
         $roles = config('user.const.roles');
-        Role::where('RoleSlug','!=','nothing')->delete(); //deleting old entries
-        $roleData = array();
-        foreach($roles as $slug=>$role){
-            $roleData = array('RoleName'=>$role,'RoleSlug'=>$slug);
-             Role::create($roleData);
-        }     
+      //  Role::where('RoleSlug','!=','nothing')->delete(); //deleting old entries
+        $roleData = array();      
+        foreach($roles as $slug=>$role){ 
+            $roleData = array('RoleName'=>$role,'RoleSlug'=>$slug);                
+            Role::firstOrCreate($roleData);
+            // Role::create($roleData);
+        }  
+        
+        //creating staff roles
+        $rolesStaff = config('user.const.roles_staff');
+        foreach($rolesStaff as $slug=>$role){ 
+            $roleData = array('RoleName'=>$role,'RoleSlug'=>$slug);                
+            Role::firstOrCreate($roleData);
+            // Role::create($roleData);
+        }   
     }
 }

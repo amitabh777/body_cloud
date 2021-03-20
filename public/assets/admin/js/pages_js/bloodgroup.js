@@ -28,7 +28,7 @@ $(function () {
         });
 
         //delete
-        $('.bloodgroup-delete').on('click', function () {
+        $('.card-body').on('click','.bloodgroup-delete', function () {
             var con = confirm('Are you confirm?');
             if (!con) {
                 return;

@@ -1,6 +1,19 @@
-$(document).ready(function () {
+$(document).ready(function () {    
+    $('#roles_datatable').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+       // "info": true,
+        "autoWidth": true,
+        "responsive": true,
+        "initComplete": function(){
+            // alert('Data loaded successfully');
+            // onClicPutDelete();
+          }
+    });
 
-    $('.role-delete').on('click', function () {
+    $('.card-body').on('click','.role-delete', function () {
         var con = confirm('Are you confirm?');
         if (!con) {
             return;
@@ -15,6 +28,22 @@ $(document).ready(function () {
     });
 
 });
+
+function onClickPutDelete(){
+  $('.role-delete').on('click', function () {
+        var con = confirm('Are you confirm?');
+        if (!con) {
+            return;
+        }
+        var url = $(this).data('url');
+        // $.ajaxSetup({
+        //     headers: {
+        //         'X-CSRF-TOKEN': csrfToken
+        //     }
+        // });
+        deleteRole(url, false);
+    });
+}
 
 //delete bloodgroup
 function deleteRole(url, confirmExistDelete) {

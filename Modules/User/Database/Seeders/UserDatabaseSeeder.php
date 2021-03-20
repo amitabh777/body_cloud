@@ -38,11 +38,6 @@ $this->userRepository =$userrepo;
             'Password'=>'12345678'
         ];
         $this->userRepository->createWithRoles($superAdmin,config('user.const.role_slugs.super_admin'));
-        // $user= User::create($superAdmin);
-        // $role = Role::where('RoleSlug',config('user.const.role_slugs.super_admin'))->first();
-        // $userRole= ['RoleID'=>$role->RoleID,'UserID'=>$user->UserID];
-        // UserRole::create($userRole);
-
-
+    
     }
 }

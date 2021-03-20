@@ -27,7 +27,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $roles = Role::orderBy('RoleName')->get();
+        $roles = Role::orderBy('RoleName')->where(['ParentRoleID'=>null])->get();
         return view('user::admin.master_data.create_role',compact('roles'));
     }
 
