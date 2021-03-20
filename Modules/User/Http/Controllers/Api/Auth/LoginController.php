@@ -58,7 +58,7 @@ class LoginController extends Controller
                 throw new Exception("User role does not exist", 1);
             }
             $role = $user->userRole->role; //$user->userRole->role; //User Role         
-            $profile = $user->profile($role->RoleSlug);//$user->customeProfileForLogin($role->RoleSlug);  //User profile          
+            $profile = $user->customeProfileForLogin($role->RoleSlug);  //User profile          
             $user->api_token = $user->generateToken(); //generate new token
             $user->save();
             $responseData['api_token'] = $user->api_token; //return newly generated api_token
