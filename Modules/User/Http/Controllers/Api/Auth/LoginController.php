@@ -39,7 +39,7 @@ class LoginController extends Controller
         $validator = $this->validateCredentials($data);
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
-        }       
+        }      
         $auth = Auth::attempt(['Phone' => $data['Phone'], 'password' => $data['Password']]);
         if (!$auth) {
             return response()->json(['message' => 'Invalid Credentials', 'status' => 400]);
@@ -52,13 +52,13 @@ class LoginController extends Controller
         $loginSuccess = 0;
         $responseJson = '';
         try {
-            $user = $request->user(); //User::find(Auth::user()->UserID); //get user   
-            $responseData = $user->select(['UserID','UniqueID','Email','Phone','Status','api_token'])->first();       
+            $user =$request->user('api'); //User::find(Auth::user()->UserID); //get user   
+            $responseData = $user->toArray(); //->select(['UserID','UniqueID','Email','Phone','Status','api_token'])->first();       
             if ($user->userRole == null) {
                 throw new Exception("User role does not exist", 1);
             }
             $role = $user->userRole->role; //$user->userRole->role; //User Role         
-            $profile = $user->customeProfileForLogin($role->RoleSlug);  //User profile          
+            $profile = $user->profile($role->RoleSlug);//$user->customeProfileForLogin($role->RoleSlug);  //User profile          
             $user->api_token = $user->generateToken(); //generate new token
             $user->save();
             $responseData['api_token'] = $user->api_token; //return newly generated api_token
