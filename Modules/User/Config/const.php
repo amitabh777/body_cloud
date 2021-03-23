@@ -10,6 +10,7 @@ return [
         'ambulance' => 'Ambulance',
         'super_admin' => 'Super Admin',      
     ],
+    
     //for role seeder
     'roles_staff'=>[
         'hospital_medical_staff'=>'Hospital medical staff',
