@@ -5,6 +5,7 @@ namespace Modules\User\Http\Controllers\Api;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class StaffController extends Controller
 {
@@ -35,6 +36,14 @@ class StaffController extends Controller
     {
         //get staff details
         //todo staff table needed
+        $res = $this->staffCreateValidation($request);
+        if($res!==true){
+            //if validation not true then return response json 
+            return $res;
+        }
+        $data = array(
+            ''
+        );
         
         print_r('tesdfjklsdjkla');exit;
     }
@@ -78,5 +87,20 @@ class StaffController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function staffCreateValidation($request){
+        $rules = [
+            'first_name' => 'required|string',
+            'last_name' => 'string',
+            'email'=>'required|email|unique:users,Email',
+            'phone'=>'required|digits:10|unique:users,Phone',
+            'staff_role' => 'required|string|in:'.implode(',', array_keys(config('user.const.roles_staff'))),            
+        ];
+        $validator = Validator::make($request->all(), $rules);        
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first(), 'status' => 400]);
+        }
+        return true;
     }
 }

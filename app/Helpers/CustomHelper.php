@@ -143,5 +143,4 @@ class CustomHelper
         $rightDate = $wrongDateArray[0].'-'.$wrongDateArray[2].'-'.$wrongDateArray[1];
         return $rightDate;
     }
-
 }

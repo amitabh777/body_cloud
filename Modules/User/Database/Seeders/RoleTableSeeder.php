@@ -26,7 +26,7 @@ class RoleTableSeeder extends Seeder
         }  
         
         //creating staff roles
-        $rolesStaff = config('user.const.roles_staff');
+        $rolesStaff = config('user.const.roles_staff_labels');
         foreach($rolesStaff as $slug=>$role){ 
             $roleData = array('RoleName'=>$role,'RoleSlug'=>$slug);                
             Role::firstOrCreate($roleData);

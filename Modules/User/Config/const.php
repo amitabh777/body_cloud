@@ -12,7 +12,7 @@ return [
     ],
     
     //for role seeder
-    'roles_staff'=>[
+    'roles_staff_labels'=>[
         'hospital_medical_staff'=>'Hospital medical staff',
         'hospital_lab_staff'=>'Hospital lab staff',
         'hospital_ambulance_staff'=>'Hospital ambulance staff',
@@ -25,6 +25,21 @@ return [
         'insurance_company_admin'=>'Insurance company admin',
         'insurance_company_sales_staff'=>'Insurance company sales staff',
         'insurance_company_accountant_staff'=>'Insurance company account staff'
+    ],
+
+    "roles_staff"=>[
+        'hospital_medical_staff'=>'hospital_medical_staff',
+        'hospital_lab_staff'=>'hospital_lab_staff',
+        'hospital_ambulance_staff'=>'hospital_ambulance_staff',
+        'hospital_admin'=>'hospital_admin',
+
+        'lab_schedule_staff'=>'lab_schedule_staff',
+        'lab_accountant_staff'=>'lab_accountant_staff',
+        'lab_admin'=>'lab_admin',
+
+        'insurance_company_admin'=>'insurance_company_admin',
+        'insurance_company_sales_staff'=>'insurance_company_sales_staff',
+        'insurance_company_accountant_staff'=>'insurance_company_accountant_staff'
     ],
 
     //this array used in code
