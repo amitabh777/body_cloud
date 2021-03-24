@@ -29,7 +29,7 @@ Route::namespace('Api\Auth')->group(function () {
     Route::post('logout', 'LoginController@logout')->middleware(['auth:api']);
 });
 
-//public routes
+//public routes for list
 Route::namespace('Api')->group(function(){
     Route::get('blood_groups','BloodGroupController@index');
     Route::get('medical_sectors','MedicalSectorController@index');
@@ -41,16 +41,22 @@ Route::namespace('Api')->middleware(['auth:api'])->group(function(){
 
 //Profile endpoints with authentication
 Route::namespace('Api')->prefix('profile')->middleware(['auth:api','role_check'])->group(function(){   
-    Route::post('update', 'ProfileController@update');
-    
+    Route::post('update', 'ProfileController@update');    
     Route::post('image/upload', 'ProfileController@uploadProfileImage');
     Route::post('documents/upload', 'DocumentController@store');
     Route::post('documents/{document_id}/delete', 'DocumentController@destroy');
     
 });
-
+//Hospital list
 Route::prefix('hospital')->namespace('Api')->middleware(['auth:api'])->group(function () {
     Route::get('list','HospitalController@index');
+});
+
+//Manage staff
+Route::namespace('Api')->group(function () {
+    Route::get('staffs','StaffController@index');
+    Route::get('staffs/{user_id}','StaffController@show');
+    Route::post('staffs','StaffController@store');
 });
 
 

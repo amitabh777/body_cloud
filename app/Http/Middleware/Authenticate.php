@@ -63,7 +63,7 @@ class Authenticate extends Middleware
     {
         if (Auth::guard('api')->guest()) {
             $response = [
-                'status' => 400,
+                'status' => 401,
                 'message' => 'Unauthorized: invalid api_token'
             ];
             return Response::json($response);
