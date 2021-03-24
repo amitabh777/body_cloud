@@ -349,38 +349,4 @@ class EloquentProfileRepository implements ProfileRepository
         return $res;
     }
 
-    //Create user with roles
-    // public function createWithRoles($data, $role)
-    // {
-    //     //Hash encrypt password
-    //     $data['password'] = Hash::make($data['password']);
-    //     $user = null;
-    //     try {
-    //         $user = DB::transaction(function () use ($data, $role, $user) {
-    //             $user = User::create($data);
-    //             $roleuser = array(
-    //                 'role_id' => $role,
-    //                 'user_id' => $user->id
-    //             );
-    //             RolesUser::create($roleuser);
-    //             Log::info('db trans executed: ');
-    //             return $user;
-    //         });           
-    //         return $user;
-    //     } catch (Exception $e) {
-    //         Log::error('Create user with role: ' . $e->getMessage());
-    //         return false;
-    //     }
-    // }
-
-    public function isAdmin($user)
-    {
-        if (isset($user->roles)) {
-            $role = $user->roles[0]->role;
-            if ($role->slug == config('user.const.roles.admin')) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

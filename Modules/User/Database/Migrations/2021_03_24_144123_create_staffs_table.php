@@ -19,6 +19,7 @@ class CreateStaffsTable extends Migration
             $table->unsignedInteger('UserID');
             $table->string('FirstName',50);
             $table->string('LastName',50)->nullable();
+            $table->enum('Gender', ['Male', 'Female'])->nullable();
             $table->string('ProfileImage', 150)->nullable();
             $table->string('Designation', 70)->nullable();
             $table->timestamp('CreatedAt')->nullable();

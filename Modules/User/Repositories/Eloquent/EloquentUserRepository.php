@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Modules\User\Entities\Role;
-use Modules\User\Entities\RolesUser;
+use Modules\User\Entities\Staff;
 use Modules\User\Entities\UserRole;
 use Modules\User\Repositories\UserRepository;
 
@@ -89,26 +89,60 @@ class EloquentUserRepository implements UserRepository
         }
         return true;;
     }
-
-    public function isAdmin($user)
-    {
-        if (isset($user->roles)) {
-            $role = $user->roles[0]->role;
-            if ($role->slug == config('user.const.roles.admin')) {
-                return true;
-            }
-        }
-        return false;
+    /**
+     * create user(users table) with role
+     * @param array $data
+     * @param string $roleSlug [role slug]
+     * @return mixed [false if error occur or user object if user created]
+     */
+    public function createUserWithRole($data,$roleSlug){
+         //Hash encrypt password
+         $data['Password'] = Hash::make($data['Password']);
+         $data['UniqueID'] = CustomHelper::getNewUniqueId();
+         $user = null;       
+         try {
+             $user = User::create($data);
+             $role = Role::where('RoleSlug', $roleSlug)->first();
+             $userRole = ['RoleID' => $role->RoleID, 'UserID' => $user->UserID];
+             UserRole::create($userRole);
+             Log::info('create user with role executed ');            
+         } catch (Exception $e) {
+             Log::error('Create user with role failed: ' . $e->getMessage());
+             return false;
+         }
+         return $user;
     }
 
-    public function isSeller($user)
-    {
-        if (isset($user->roles)) {
-            $role = $user->roles[0]->role;
-            if ($role->slug == config('user.const.roles.seller')) {
-                return true;
-            }
+    /**
+     * add staff user
+     * @param array $data [user and staff profile data]
+     * @param string $staffRole [role slug for staff]
+     * @return boolean
+     */
+    public function addStaffUser($data,$staffRole){        
+        $userData = $data['user'];
+        $staffProfile = $data['profile'];
+        $transStatus = false;
+        $errorMsg = '';
+        DB::beginTransaction();
+        try{
+            $user = $this->createUserWithRole($userData,$staffRole);
+            $staffProfile['UserID'] = $user->UserID;
+            //add other data to staff profile
+            Staff::create($staffProfile);
+            //transaction finish now commit
+            DB::commit();
+            $transStatus = true;
+        }catch(Exception $e){
+            //something went wrong
+            DB::rollBack();
+            Log::error('Error add staff user : ' . $e->getMessage());     
+            $errorMsg = $e->getMessage();    
         }
-        return false;
+        if(!$transStatus){
+            return $errorMsg;
+        }
+        return $user;
     }
+
 }

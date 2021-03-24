@@ -2,13 +2,25 @@
 
 namespace Modules\User\Http\Controllers\Api;
 
+use App\Helpers\CustomHelper;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Modules\User\Entities\Staff;
+use Modules\User\Repositories\UserRepository;
 
 class StaffController extends Controller
 {
+
+    protected $userRepo;
+    public function __construct(UserRepository $user)
+    {
+        $this->userRepo = $user;
+    }
+
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -34,17 +46,48 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        //get staff details
-        //todo staff table needed
         $res = $this->staffCreateValidation($request);
         if($res!==true){
-            //if validation not true then return response json 
-            return $res;
+            return $res; //if validation not true then return response json 
         }
-        $data = array(
-            ''
+        //get parent user id
+        $parentID = Auth::user()->UserID;
+        $userData = array(
+            'Email'=>$request->email,
+            'Phone'=>$request->phone,
+            'Password'=>$request->password,
+            'ParentID'=>$parentID,            
         );
+        //create staff profile
+        $profileData = array(
+            'FirstName'=>$request->first_name,
+            'LastName'=>$request->input('last_name',''),
+            'Gender'=>$request->input('gender',''),
+            'UserID'=>'',           
+        );
+        $data = array(
+            'user'=>$userData,
+            'profile'=>$profileData
+        );
+        $staffRole = $request->staff_role;
+        $res = $this->userRepo->addStaffUser($data,$staffRole);
+        if($res!==true){
+            return response()->json(['message' => 'something went wrong', 'error'=>$res, 'status' => 400]);
+        }
+        //staff successfully created do other stuff
         
+        //upload profile image
+        $file = $request->file('profile_image','');
+        if($file!=''){
+            $upload = CustomHelper::uploadProfileImage($file);
+            if($upload){
+                Staff::where([''])->update();
+            }
+        }
+        
+
+
+
         print_r('tesdfjklsdjkla');exit;
     }
 
@@ -95,6 +138,9 @@ class StaffController extends Controller
             'last_name' => 'string',
             'email'=>'required|email|unique:users,Email',
             'phone'=>'required|digits:10|unique:users,Phone',
+            'gender'=>'in:Male,Female',
+            'password'=>'required|min:8|max:16',
+            'profile_image'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
             'staff_role' => 'required|string|in:'.implode(',', array_keys(config('user.const.roles_staff'))),            
         ];
         $validator = Validator::make($request->all(), $rules);        
@@ -103,4 +149,5 @@ class StaffController extends Controller
         }
         return true;
     }
+
 }
