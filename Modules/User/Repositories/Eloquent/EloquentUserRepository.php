@@ -124,6 +124,7 @@ class EloquentUserRepository implements UserRepository
         $staffProfile = $data['profile'];
         $transStatus = false;
         $errorMsg = '';
+        $user = [];
         DB::beginTransaction();
         try{
             $user = $this->createUserWithRole($userData,$staffRole);
@@ -142,7 +143,7 @@ class EloquentUserRepository implements UserRepository
         if(!$transStatus){
             return $errorMsg;
         }
-        return $user;
+        return $user; //return user
     }
 
 }

@@ -79,16 +79,15 @@ class StaffController extends Controller
         //upload profile image
         $file = $request->file('profile_image','');
         if($file!=''){
-            $upload = CustomHelper::uploadProfileImage($file);
-            if($upload){
-                Staff::where([''])->update();
+            $uploadPath = CustomHelper::uploadProfileImage($file);
+            if($uploadPath){
+                Staff::where(['ProfileImage'=>$uploadPath])->update();
             }
         }
+        // todo: notify with email/phone
         
 
-
-
-        print_r('tesdfjklsdjkla');exit;
+        return response()->json(['message' => 'Success', 'status' => 200]);
     }
 
     /**
